@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>恶意代码 | wanyanblog</title><meta name="author" content="wan yan"><meta name="copyright" content="wan yan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1.病毒与木马：   病毒（Virus）：指编制或在计算机程序中插入的破坏计算机功能或破坏数据，影响计算机使用并且能够自我复制的一组计算机指令或程序代码。病毒通常依附在宿主程序或文件中，通过用户运行被感染文件来传播。   木马（Trojan Horse）：是一种后门程序，被黑客用作控制远程计算机的工具。木马与病毒不同的是，木马不会自我繁殖，也不会感染其他文件，它的作用是为黑客打开远程计算机的门户"><meta property="og:type" content="article"><meta property="og:title" content="恶意代码"><meta property="og:url" content="https://blog.wanyanai.top/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/index.html"><meta property="og:site_name" content="wanyanblog"><meta property="og:description" content="1.病毒与木马：   病毒（Virus）：指编制或在计算机程序中插入的破坏计算机功能或破坏数据，影响计算机使用并且能够自我复制的一组计算机指令或程序代码。病毒通常依附在宿主程序或文件中，通过用户运行被感染文件来传播。   木马（Trojan Horse）：是一种后门程序，被黑客用作控制远程计算机的工具。木马与病毒不同的是，木马不会自我繁殖，也不会感染其他文件，它的作用是为黑客打开远程计算机的门户"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://blog.wanyanai.top/img/wanyan.jpg"><meta property="article:published_time" content="2025-11-01T03:51:03.000Z"><meta property="article:modified_time" content="2025-11-01T03:51:03.138Z"><meta property="article:author" content="wan yan"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://blog.wanyanai.top/img/wanyan.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "恶意代码",
+  "url": "https://blog.wanyanai.top/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/",
+  "image": "https://blog.wanyanai.top/img/wanyan.jpg",
+  "datePublished": "2025-11-01T03:51:03.000Z",
+  "dateModified": "2025-11-01T03:51:03.138Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "wan yan",
+      "url": "https://blog.wanyanai.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/wanyan.jpg"><link rel="canonical" href="https://blog.wanyanai.top/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="//busuanzi.ibruce.info"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE={title:"恶意代码",isHighlightShrink:!1,isToc:!0,pageType:"post"}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image:url(/img/background.jpg)"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/wanyan.jpg" onerror='this.onerror=null,this.src="/img/friend_404.gif"' alt="avatar"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><span>分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><span>标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span>归档</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image:url(/img/background.jpg)"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">wanyanblog</span></a><a class="nav-page-title" href="/"><span class="site-name">恶意代码</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><span>分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><span>标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span>归档</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">恶意代码</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-11-01T03:51:03.138Z" title="Updated 2025-11-01 11:51:03">2025-11-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="1病毒与木马"><a class="markdownIt-Anchor" href="#1病毒与木马"></a> 1.病毒与木马：</h2><ol><li><p>病毒（Virus）：指编制或在计算机程序中插入的破坏计算机功能或破坏数据，影响计算机使用并且能够自我复制的一组计算机指令或程序代码。病毒通常依附在宿主程序或文件中，通过用户运行被感染文件来传播。</p></li><li><p>木马（Trojan Horse）：是一种后门程序，被黑客用作控制远程计算机的工具。木马与病毒不同的是，木马不会自我繁殖，也不会感染其他文件，它的作用是为黑客打开远程计算机的门户，使黑客可以远程控制计算机、窃取信息或安装其他恶意程序。</p></li><li><p>蠕虫（Worm）：是一种能够自行复制和传播的独立程序，不依赖宿主文件。蠕虫通常通过网络漏洞、电子邮件或共享资源传播，具有快速扩散和占用大量系统资源的特点，可能导致网络拥塞或系统崩溃。</p></li><li><p>后门程序（Backdoor）：指在系统中预留的一个隐蔽入口，用于绕过正常的安全认证机制。攻击者通过后门程序可以远程访问和控制计算机系统，执行数据窃取、系统破坏等操作。</p></li><li><p>间谍软件（Spyware）：是一种在用户不知情的情况下运行，用于监控用户行为、收集个人隐私信息的软件。它常常记录键盘输入、浏览记录或屏幕内容，并将这些信息发送给攻击者。</p></li><li><p>广告软件（Adware）：是一种在用户计算机上自动显示或弹出广告内容的软件。广告软件通常与免费程序捆绑安装，虽然部分无明显破坏性，但会占用系统资源、干扰用户操作甚至收集用户数据。</p></li><li><p>勒索软件（Ransomware）：是一种通过加密用户文件或锁定系统界面来勒索赎金的恶意程序。受害者若不支付赎金将无法访问被加密的数据。此类软件危害极大，常通过钓鱼邮件或漏洞传播。</p></li><li><p>Rootkit（根套件）：是一种隐藏自身及其他恶意程序存在的工具。它能够修改系统内核或底层组件，使攻击者获得系统最高权限并长期控制计算机，同时让安全软件难以发现。</p></li><li><p>挖矿木马（CryptoMiner）：是一种利用受害者计算机的硬件资源进行虚拟货币挖矿的恶意程序。它通常在后台静默运行，导致计算机性能下降、能耗增加，甚至可能损坏硬件。</p></li><li><p>混合型恶意代码（Blended Threat）：指结合了多种恶意行为特征（如病毒、蠕虫、木马等）的恶意程序。它能够通过多种途径传播，并执行多种破坏活动，具有极强的感染性和危害性。。</p></li></ol><h2 id="2病毒的分类"><a class="markdownIt-Anchor" href="#2病毒的分类"></a> 2.病毒的分类：</h2><ol><li><p>按病毒存在的媒体</p><ul><li><p>网络病毒：通过网络传播，感染网络中的可执行文件。</p></li><li><p>文件病毒：感染计算机中的文件。</p></li><li><p>引导型病毒：感染启动扇区和硬盘的系统引导扇区。</p></li></ul></li><li><p>按病毒传染的方法分类</p><ul><li><p>驻留型病毒：驻留内存，并一直处于激活状态。</p></li><li><p>非驻留型病毒：在得到机会时才会激活，从而去感染计算机。</p></li></ul></li><li><p>按病毒的危害分类</p><ul><li>无危险型病毒：减少磁盘的可用空间、减少内存、显示图像发出声音等，但不影响系统。</li><li>危险型：造成严重的错误，删除程序、破坏数据、清除系统中重要的信息等。</li><li>伴随型：不改变文件本身，但产生EXE文件的伴随体。</li><li>“蠕虫”型：通过网络传播，占用系统内存。</li><li>寄生型：练习型、诡秘型、变型病毒。</li></ul></li></ol><h2 id="3病毒的命名"><a class="markdownIt-Anchor" href="#3病毒的命名"></a> 3.病毒的命名：</h2><ol><li><p>系统病毒</p><p>​	前缀为：Win32、PE、Win95、W32、W95等。此类病毒一般是感染Windows操作系统的.exe和.dll文件，并通过这些文件传播。</p></li><li><p>蠕虫病毒</p><p>​	前缀为：Worm。此类病毒通过网络或系统漏铜传播，所属蠕虫病毒都具有向外发送带毒邮件、阻塞网络的特性，如冲击波(阻塞网络)、小邮差(发带毒邮件)等。</p></li><li><p>木马病毒、黑客病毒</p><p>​	木马病毒前缀：Trojan，黑客病毒前缀：Hack。</p></li><li><p>脚本病毒</p><p>​	前缀为：Script。此类病毒使用脚本语言编写，通过网页传播。有的脚本病毒还会有如下前缀：VBS、JS(表明是哪种脚本编写的)。</p></li><li><p>宏病毒</p><p>​	前缀为：Macro。第二前缀是：Word、Excel其中之一，宏病毒是针对Office系列的。</p></li><li><p>后门病毒</p><p>​	前缀为：Backdoor。此类病毒通过网络传播，给系统开后门，给用户的计算机带来安全隐患。</p></li><li><p>病毒种植程序病毒</p><p>​	前缀为：Dropper。此类病毒是运行时从体内释放出一个或几个新的病毒到系统目录下，由释放出来的新病毒产生破坏。</p></li><li><p>破坏性程序病毒</p><p>​	前缀为：Harm。此类病毒本身具有好看的图标来诱惑用户点击，当用户点击时，病毒会对计算机产生破坏。</p></li><li><p>玩笑病毒</p><p>​	前缀为：Joke，称为恶作剧病毒。此类病毒也是本身具有好看的图标诱惑用户点击，当用户点击时，病毒会做出各种破坏操作来吓唬用户，但其实病毒并没有对计算机产生破坏。</p></li><li><p>捆绑机病毒</p><p>​	前缀为：Binder。此类病毒会使用特定的捆绑程序将病毒与一些应用程序如QQ、浏览器等捆绑起来，表面上看是正常的文件。当用户运行这些被捆绑的应用程序时，会隐藏的运行捆绑在一起的病毒，从而给用户造成危害。</p></li></ol><h2 id="4生命周期"><a class="markdownIt-Anchor" href="#4生命周期"></a> 4.生命周期:</h2><ol><li><strong>休眠阶段（潜伏期）</strong> 在此阶段，病毒处于非活跃状态，通常依附于宿主文件（如可执行程序或文档宏），并通过代码混淆、加密或利用零日漏洞隐藏自身。其目标是规避检测并在系统中驻留。例如，“幻影”勒索病毒可潜伏数周以收集环境信息。防御措施包括使用静态代码分析工具、启用可信启动机制以及定期更新病毒特征库。</li><li><strong>传播阶段（扩散期）</strong> 病毒通过复制自身实现扩散，常见传播途径包括可移动介质（如U盘）、网络漏洞（如SMB协议漏洞）以及钓鱼邮件中的恶意附件。统计显示，大部分初始感染源于钓鱼邮件。防御策略包括应用程序白名单、网络分段隔离以及邮件网关沙箱技术。</li><li><strong>触发阶段（激活期）</strong> 病毒在满足特定条件时激活其恶意功能，触发机制可能包括时间触发（如特定日期）、用户操作触发（如键盘记录器）或系统事件触发（如内存后门）。例如，“计时沙漏”病毒在系统运行720小时后触发数据加密。防御措施包括监控异常进程行为、配置系统审计策略以及实施最小权限原则。</li><li><strong>发作阶段（破坏期）</strong> 病毒在此阶段执行最终的恶意操作，可能表现为数据破坏（如文件加密勒索）、资源占用（如DDoS攻击）或信息窃取（如键盘记录）。防御手段包括实时行为监控、网络流量分析以及离线备份机制以确保数据可恢复。</li></ol></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://blog.wanyanai.top">wan yan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://blog.wanyanai.top/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/">https://blog.wanyanai.top/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/wanyan.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload='this.media="all"'><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E5%AE%89%E5%85%A8/" title="安全"><div class="cover" style="background:var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">安全</div></div><div class="info-2"><div class="info-item-1">1.信息安全的三个最基本原则: 最小化原则 受保护的敏感信息只能在一定范围内被共享，履行工作职责和职能的安全主体，在法律和相关安全策略允许的前提下，为满足工作需要。仅被授予其访问信息的适当权限，称为最小化原则。敏感信息的。知情权”一定要加以限制，是在“满足工作需要”前提下的一种限制性开放。可以将最小化原则细分为知所必须(need to know)和用所必须的原则。 分权制衡原则 在信息系统中，对所有权限应该进行适当地划分，使每个授权主体只能拥有其中的一部分权限，使他们之间相互制约、相互监督，共同保证信息系统的安全。如果—个授权主体分配的权限过大，无人监督和制约，就隐含了“滥用权力”、“一言九鼎”的安全隐患 安全隔离原则 离和控制是实现信息安全的基本方法，而隔离是进行控制的基础。信息安全的一个基本策略就是将信息的主体与客体分离，按照一定的安全策略，在可控和安全的前提下实施主体对客体的访问。 2.信息安全的三个基本原则CIA: 机密性 (Confidentiality)：确保敏感信息仅被授权用户访问。 完整性...</div></div></div></a><a class="pagination-related" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E5%AF%86%E7%A0%81/%E5%BA%94%E7%94%A8/" title="应用"><div class="cover" style="background:var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">应用</div></div><div class="info-2"><div class="info-item-1">1.对密码学的四种攻击方式: 攻击类型 前提 / 攻击者可获得的条件 CTF/攻击者思路（步骤化） 常用工具 / 命令示例 典型脆弱点 / 实例 防御与检测要点 密文仅有 (Ciphertext-only) 只有密文集合（可能大量） 1. 收集尽可能多密文；2. 统计分析（频率、重复块、重复 IV、块模式）；3. 尝试已知语言统计（单字/双字/词频）；4. 对流/置换/经典密码做穷举/频率破解。 python 统计脚本、binwalk（嵌入式），写脚本做字频；自写差分/熵分析 经典替换/置换、单字节异或流漏洞、重复 IV 导致 ECB 模式可见模式 使用 AEAD、CBC-HMAC/ GCM；不可重用 IV/nonce；监控重复密文模式与异常低熵事件 已知明文 (Known-plaintext) 攻击者拥有若干（密文, 明文）对 1. 用明文-密文对恢复密钥材料或部分轮函数信息；2. 对对称分组加密可做密钥猜测减少空间；3. 对流密码可恢复 keystream，从而解出其它密文。 Python/Scapy 回放脚本；xor 工具；针对 RC4/OTP...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/wanyan.jpg" onerror='this.onerror=null,this.src="/img/friend_404.gif"' alt="avatar"></div><div class="author-info-name">wan yan</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wan1yan"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/wan1yan" target="_blank" title="Github"><i class="fab fa-github" style="color:#24292e"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Patience is key in life</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E7%97%85%E6%AF%92%E4%B8%8E%E6%9C%A8%E9%A9%AC"><span class="toc-number">1.</span> <span class="toc-text">1.病毒与木马：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E7%97%85%E6%AF%92%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text">2.病毒的分类：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E7%97%85%E6%AF%92%E7%9A%84%E5%91%BD%E5%90%8D"><span class="toc-number">3.</span> <span class="toc-text">3.病毒的命名：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">4.</span> <span class="toc-text">4.生命周期:</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E5%AF%86%E7%A0%81/%E5%8A%A0%E5%AF%86/" title="加密">加密</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E5%AE%89%E5%85%A8/" title="安全">安全</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" title="恶意代码">恶意代码</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E5%AF%86%E7%A0%81/%E5%BA%94%E7%94%A8/" title="应用">应用</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/JS_%E9%80%86%E5%90%91/%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" title="常用方法">常用方法</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By wan yan</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script src="/js/code-toggle.js"></script><script defer id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span> Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"></div></div><hr><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

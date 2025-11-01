@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>椭圆曲线密码 | wanyanblog</title><meta name="author" content="wan yan"><meta name="copyright" content="wan yan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="椭圆曲线密码(ECC): 基于椭圆曲线离散对数问题（ECDLP）难解性  1. 密钥的生成: 在椭圆曲线加密中，密钥生成包括两部分：私钥和公钥。   私钥：随机选择一个大整数，通常通过一个安全的随机数生成器来生成。   公钥：通过私钥和椭圆曲线的基点（生成点）进行运算生成。公钥是私钥与基点的乘积，记作： Public Key&#x3D;Private Key×G 其中 G 是椭圆曲线的基点。    2.加"><meta property="og:type" content="article"><meta property="og:title" content="椭圆曲线密码"><meta property="og:url" content="https://blog.wanyanai.top/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%AF%86%E7%A0%81/index.html"><meta property="og:site_name" content="wanyanblog"><meta property="og:description" content="椭圆曲线密码(ECC): 基于椭圆曲线离散对数问题（ECDLP）难解性  1. 密钥的生成: 在椭圆曲线加密中，密钥生成包括两部分：私钥和公钥。   私钥：随机选择一个大整数，通常通过一个安全的随机数生成器来生成。   公钥：通过私钥和椭圆曲线的基点（生成点）进行运算生成。公钥是私钥与基点的乘积，记作： Public Key&#x3D;Private Key×G 其中 G 是椭圆曲线的基点。    2.加"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://blog.wanyanai.top/img/wanyan.jpg"><meta property="article:published_time" content="2025-11-01T03:51:03.000Z"><meta property="article:modified_time" content="2025-11-01T03:51:03.162Z"><meta property="article:author" content="wan yan"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://blog.wanyanai.top/img/wanyan.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "椭圆曲线密码",
+  "url": "https://blog.wanyanai.top/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%AF%86%E7%A0%81/",
+  "image": "https://blog.wanyanai.top/img/wanyan.jpg",
+  "datePublished": "2025-11-01T03:51:03.000Z",
+  "dateModified": "2025-11-01T03:51:03.162Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "wan yan",
+      "url": "https://blog.wanyanai.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/wanyan.jpg"><link rel="canonical" href="https://blog.wanyanai.top/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%AF%86%E7%A0%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="//busuanzi.ibruce.info"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE={title:"椭圆曲线密码",isHighlightShrink:!1,isToc:!0,pageType:"post"}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image:url(/img/background.jpg)"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/wanyan.jpg" onerror='this.onerror=null,this.src="/img/friend_404.gif"' alt="avatar"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><span>分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><span>标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span>归档</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image:url(/img/background.jpg)"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">wanyanblog</span></a><a class="nav-page-title" href="/"><span class="site-name">椭圆曲线密码</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><span>分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><span>标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span>归档</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">椭圆曲线密码</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-11-01T03:51:03.162Z" title="Updated 2025-11-01 11:51:03">2025-11-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="椭圆曲线密码ecc"><a class="markdownIt-Anchor" href="#椭圆曲线密码ecc"></a> 椭圆曲线密码(ECC):</h1><p>基于椭圆曲线离散对数问题（ECDLP）难解性</p><h2 id="1-密钥的生成"><a class="markdownIt-Anchor" href="#1-密钥的生成"></a> 1. 密钥的生成:</h2><p>在椭圆曲线加密中，密钥生成包括两部分：<strong>私钥</strong>和<strong>公钥</strong>。</p><ul><li><p><strong>私钥</strong>：随机选择一个大整数，通常通过一个安全的随机数生成器来生成。</p></li><li><p><strong>公钥</strong>：通过私钥和椭圆曲线的基点（生成点）进行运算生成。公钥是私钥与基点的乘积，记作：</p><p>Public Key=Private Key×G</p><p>其中 G 是椭圆曲线的基点。</p></li></ul><h2 id="2加密流程"><a class="markdownIt-Anchor" href="#2加密流程"></a> 2.加密流程:</h2><p>椭圆曲线集成加密方案（ECIES，Elliptic Curve Integrated Encryption Scheme）是一种使用椭圆曲线加密的标准方法，下面是ECIES的加密流程：</p><h4 id="加密方"><a class="markdownIt-Anchor" href="#加密方"></a> 加密方：</h4><ol><li><p><strong>选择公钥</strong>：接收方（Bob）将其公钥提供给发送方（Alice）。</p></li><li><p><strong>生成随机数</strong>：发送方随机选择一个整数 k，该整数与椭圆曲线基点 G 结合来生成加密密钥。</p></li><li><p><strong>计算共享密钥</strong>：发送方使用自己的私钥和接收方的公钥，计算共享密钥（共享密钥的计算基于椭圆曲线Diffie-Hellman协议）：</p><p>K=k×Bob’s Public Key —Bob’s Public Key=Bob的私钥×G</p></li><li><p><strong>生成密文</strong>：使用共享密钥生成对称密钥，用来加密实际的数据（比如AES加密）。然后，计算加密后的数据和随机数的组合：</p><p>C=Encrypt(Message,Key)</p></li><li><p><strong>传输密文</strong>：发送方将密文和随机数 k 一起发送给接收方。</p></li></ol><h4 id="解密方"><a class="markdownIt-Anchor" href="#解密方"></a> 解密方：</h4><ol><li><p><strong>计算共享密钥</strong>：接收方使用自己的私钥和发送方的公钥计算共享密钥。</p><p>K=k×Alice’s Public Key —Alice’s Public Key=Bob的私钥×G</p></li><li><p><strong>解密密文</strong>：接收方使用计算得到的共享密钥解密收到的密文。</p><p>Message=Decrypt(C,Key)</p></li></ol><h2 id="3数字签名ecdsa"><a class="markdownIt-Anchor" href="#3数字签名ecdsa"></a> 3.<strong>数字签名（ECDSA）</strong></h2><h3 id="1作用"><a class="markdownIt-Anchor" href="#1作用"></a> 1.作用:</h3><h4 id="身份验证authentication"><a class="markdownIt-Anchor" href="#身份验证authentication"></a> <strong>身份验证（Authentication）</strong></h4><p>数字签名能够证明消息确实是由消息的发送者发出的，并且没有被篡改。</p><ul><li><strong>公钥基础设施（PKI）</strong>：通过数字签名，接收方能够验证消息是否确实是由声明的发送方发出的。这是因为签名是使用发送方的私钥生成的，而只有拥有对应私钥的人才能生成有效的签名。因此，接收方可以使用发送方的公钥来验证签名是否有效，确保消息的发件人身份。</li></ul><h4 id="数据完整性data-integrity"><a class="markdownIt-Anchor" href="#数据完整性data-integrity"></a> <strong>数据完整性（Data Integrity）</strong></h4><p>数字签名确保了消息在传输过程中未被篡改。</p><ul><li><strong>哈希值</strong>：数字签名通常会对消息进行哈希运算（生成消息摘要），然后使用私钥对这个哈希值进行签名。如果消息内容在传输过程中被修改，计算得到的哈希值就会发生变化，验证签名时就会失败，从而能够检测到数据被篡改。</li></ul><h4 id="不可否认性non-repudiation"><a class="markdownIt-Anchor" href="#不可否认性non-repudiation"></a> <strong>不可否认性（Non-repudiation）</strong></h4><p>数字签名提供了不可否认性，即发送方不能否认自己已签署某个消息。</p><ul><li>由于数字签名是通过发送方的私钥生成的，且只有发送方拥有私钥，因此在签署之后，发送方不能声称自己没有发送过该消息。即使在后续，发送方也不能否认自己发送的消息。</li></ul><h4 id="防篡改"><a class="markdownIt-Anchor" href="#防篡改"></a> <strong>防篡改</strong></h4><p>数字签名还能够保证消息的完整性。任何在消息上的修改都会导致签名验证失败，防止数据在传输过程中被篡改。</p><h2 id="2流程"><a class="markdownIt-Anchor" href="#2流程"></a> 2.流程:</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">发送方:</span><br><span class="line">    1.首先对要发送的二进制数据流进行哈希摘要</span><br><span class="line">                   --- 常用哈希摘要: MD5 ,SHA1  ,SHA256  </span><br><span class="line">    2.使用私钥对摘要进行加密(签名)</span><br><span class="line">接受方:</span><br><span class="line">    1.使用发送方的公钥对摘要进行解密</span><br><span class="line">    2.使用同样的哈希算法对二进制数据流进行计算</span><br><span class="line">    3.对比两次哈希是否一致，一致则未篡改</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://blog.wanyanai.top">wan yan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://blog.wanyanai.top/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%AF%86%E7%A0%81/">https://blog.wanyanai.top/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%AF%86%E7%A0%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/wanyan.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload='this.media="all"'><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/RAS/" title="RAS"><div class="cover" style="background:var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">RAS</div></div><div class="info-2"><div class="info-item-1">RSA: 建立在大整数因式分解难题 1.RSA流程: 1生成密钥 → 加密 → 解密 2.生成密钥: 1234567891011121314151617181. 选择两个大质数 令：`p = 61, q = 53`2. 计算模数 n `n = p × q = 61 × 53 = 3233` ---这个 n 是 公钥 和 私钥 中共同的模数。3.计算欧拉函数 φ(n) `φ(n) = (p - 1)(q - 1) = 60 × 52 = 3120`4. 选择加密指数 e `e = 17`（满足 `gcd(17, 3120) = 1`）5. 计算解密指数 d `d = e⁻¹ mod φ(n) = 2753`（因为 `17 × 2753 ≡ 1 mod 3120`）- ✅ 公钥：`(e, n) = (17, 3233)`- 🔒 私钥：`(d, n) = (2753, 3233)` 3.加密流程: 首先，发送方需要知道接收方的公钥 (e, n)，其中： e 是加密指数，通常是一个公开的较小整数； n...</div></div></div></a><a class="pagination-related" href="/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/JS_%E9%80%86%E5%90%91/python/python/" title="python"><div class="cover" style="background:var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">python</div></div><div class="info-2"><div class="info-item-1">3.python用法: 1.切片: 1切片是 Python 提供的一种用于提取序列（字符串、列表、元组等）子集的机制。它允许你通过 起始索引、结束索引、步长 来访问序列中的元素。 1.切片的基本格式: 1s[start:stop:step] 参数 含义 start 起始索引（包含） stop 结束索引（不包含） step 步长（间隔），可以是负数 2.可切片序列类型: 类型 是否支持切片 字符串 ✅ 支持 列表 ✅ 支持 元组 ✅ 支持 NumPy 数组 ✅ （并支持多维切片） 自定义类 ✅ 只要实现 __getitem__ 2.re模块; 1.基础用法: 函数 用途 示例 re.search() 匹配一个符合的 re.search(r'flag&#123;.*&#125;', s) re.findall() 返回所有匹配内容 re.findall(r'\d+', s) re.sub() 替换匹配项 re.sub(r'sleep\([^)]+\)', '1',...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/wanyan.jpg" onerror='this.onerror=null,this.src="/img/friend_404.gif"' alt="avatar"></div><div class="author-info-name">wan yan</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wan1yan"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/wan1yan" target="_blank" title="Github"><i class="fab fa-github" style="color:#24292e"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Patience is key in life</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A4%AD%E5%9C%86%E6%9B%B2%E7%BA%BF%E5%AF%86%E7%A0%81ecc"><span class="toc-number">1.</span> <span class="toc-text">椭圆曲线密码(ECC):</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AF%86%E9%92%A5%E7%9A%84%E7%94%9F%E6%88%90"><span class="toc-number">1.1.</span> <span class="toc-text">1. 密钥的生成:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E5%8A%A0%E5%AF%86%E6%B5%81%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">2.加密流程:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E6%96%B9"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">加密方：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%AF%86%E6%96%B9"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">解密方：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8Decdsa"><span class="toc-number">1.3.</span> <span class="toc-text">3.数字签名（ECDSA）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E4%BD%9C%E7%94%A8"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.作用:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81authentication"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">身份验证（Authentication）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AE%8C%E6%95%B4%E6%80%A7data-integrity"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">数据完整性（Data Integrity）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%8F%AF%E5%90%A6%E8%AE%A4%E6%80%A7non-repudiation"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">不可否认性（Non-repudiation）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B2%E7%AF%A1%E6%94%B9"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">防篡改</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">2.流程:</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E5%AF%86%E7%A0%81/%E5%8A%A0%E5%AF%86/" title="加密">加密</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E5%AE%89%E5%85%A8/" title="安全">安全</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" title="恶意代码">恶意代码</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E5%AF%86%E7%A0%81/%E5%BA%94%E7%94%A8/" title="应用">应用</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/JS_%E9%80%86%E5%90%91/%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" title="常用方法">常用方法</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By wan yan</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script src="/js/code-toggle.js"></script><script defer id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span> Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"></div></div><hr><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

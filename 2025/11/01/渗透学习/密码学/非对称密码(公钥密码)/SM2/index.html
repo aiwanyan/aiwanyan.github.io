@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>SM2 | wanyanblog</title><meta name="author" content="wan yan"><meta name="copyright" content="wan yan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="article"><meta property="og:title" content="SM2"><meta property="og:url" content="https://blog.wanyanai.top/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/SM2/index.html"><meta property="og:site_name" content="wanyanblog"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://blog.wanyanai.top/img/wanyan.jpg"><meta property="article:published_time" content="2025-11-01T03:51:03.000Z"><meta property="article:modified_time" content="2025-11-01T03:51:03.162Z"><meta property="article:author" content="wan yan"><meta name="twitter:card" content="summary"><meta name="twitter:image" content="https://blog.wanyanai.top/img/wanyan.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "SM2",
+  "url": "https://blog.wanyanai.top/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/SM2/",
+  "image": "https://blog.wanyanai.top/img/wanyan.jpg",
+  "datePublished": "2025-11-01T03:51:03.000Z",
+  "dateModified": "2025-11-01T03:51:03.162Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "wan yan",
+      "url": "https://blog.wanyanai.top/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/wanyan.jpg"><link rel="canonical" href="https://blog.wanyanai.top/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/SM2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="//busuanzi.ibruce.info"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>(() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE={title:"SM2",isHighlightShrink:!1,isToc:!1,pageType:"post"}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image:url(/img/background.jpg)"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/wanyan.jpg" onerror='this.onerror=null,this.src="/img/friend_404.gif"' alt="avatar"></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><span>分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><span>标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span>归档</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image:url(/img/background.jpg)"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">wanyanblog</span></a><a class="nav-page-title" href="/"><span class="site-name">SM2</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><span>首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><span>分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><span>标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><span>归档</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">SM2</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-11-01T03:51:03.162Z" title="Updated 2025-11-01 11:51:03">2025-11-01</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://blog.wanyanai.top">wan yan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://blog.wanyanai.top/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/SM2/">https://blog.wanyanai.top/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/SM2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/wanyan.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload='this.media="all"'><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/linux/linux%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/" title="linux基础命令"><div class="cover" style="background:var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">linux基础命令</div></div><div class="info-2"><div class="info-item-1">linux 常用命令 1.新建虚拟环境 123进入虚拟环境: source venv/bin/activate启动一个 screen 会话：screen -S mysession以后可以用下面的命令重新连接会话： screen -r mysession 2.复制文件命令: 1.cp命令: 1cp [选项] 源文件 目标文件/目录 命令 说明 cp a.txt b.txt 把 a.txt 复制成 b.txt cp a.txt /tmp/ 把 a.txt 复制到 /tmp/ 目录 cp -r dir1 dir2 递归复制目录（必须加 -r） cp -f a b 强制覆盖目标文件 cp -u a b 仅当源文件比目标新时才复制（常用于备份） 2.tee命令: 1command | tee [选项] 文件名 命令 说明 cp a.txt b.txt 把 a.txt 复制成 b.txt cp a.txt /tmp/ 把 a.txt 复制到 /tmp/ 目录 cp -r dir1 dir2 递归复制目录（必须加 -r...</div></div></div></a><a class="pagination-related" href="/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/RAS/" title="RAS"><div class="cover" style="background:var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">RAS</div></div><div class="info-2"><div class="info-item-1">RSA: 建立在大整数因式分解难题 1.RSA流程: 1生成密钥 → 加密 → 解密 2.生成密钥: 1234567891011121314151617181. 选择两个大质数 令：`p = 61, q = 53`2. 计算模数 n `n = p × q = 61 × 53 = 3233` ---这个 n 是 公钥 和 私钥 中共同的模数。3.计算欧拉函数 φ(n) `φ(n) = (p - 1)(q - 1) = 60 × 52 = 3120`4. 选择加密指数 e `e = 17`（满足 `gcd(17, 3120) = 1`）5. 计算解密指数 d `d = e⁻¹ mod φ(n) = 2753`（因为 `17 × 2753 ≡ 1 mod 3120`）- ✅ 公钥：`(e, n) = (17, 3233)`- 🔒 私钥：`(d, n) = (2753, 3233)` 3.加密流程: 首先，发送方需要知道接收方的公钥 (e, n)，其中： e 是加密指数，通常是一个公开的较小整数； n...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/wanyan.jpg" onerror='this.onerror=null,this.src="/img/friend_404.gif"' alt="avatar"></div><div class="author-info-name">wan yan</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wan1yan"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/wan1yan" target="_blank" title="Github"><i class="fab fa-github" style="color:#24292e"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Patience is key in life</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E5%AF%86%E7%A0%81/%E5%8A%A0%E5%AF%86/" title="加密">加密</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E5%AE%89%E5%85%A8/" title="安全">安全</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E4%BF%A1%E5%AE%89%E5%8E%9F%E7%90%86%E5%9F%BA%E7%A1%80/%E6%81%B6%E6%84%8F%E4%BB%A3%E7%A0%81/" title="恶意代码">恶意代码</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%B7%A5%E7%A8%8B%E5%B8%88/%E5%AF%86%E7%A0%81/%E5%BA%94%E7%94%A8/" title="应用">应用</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/JS_%E9%80%86%E5%90%91/%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" title="常用方法">常用方法</a><time datetime="2025-11-01T03:51:03.000Z" title="Created 2025-11-01 11:51:03">2025-11-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By wan yan</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script src="/js/code-toggle.js"></script><script defer id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span> Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"></div></div><hr><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
